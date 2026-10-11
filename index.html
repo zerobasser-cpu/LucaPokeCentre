@@ -4,711 +4,340 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101323">
+<meta name="theme-color" content="#151c35">
 <title>Luca's Pokémon Centre</title>
-<meta name="description" content="Explore Pokémon trading cards, sets, market prices and build and compare decks.">
-
 <style>
-:root {
-  --bg:#0d1020; --panel:#171b30; --panel2:#202640;
-  --text:#f5f6ff; --muted:#a5aec9; --blue:#65a8ff;
-  --purple:#9d80ff; --gold:#ffd66b; --green:#72e3b1;
-  --border:#303854; --red:#ff8090;
-}
+:root{--bg:#101528;--panel:#1b2440;--panel2:#242f50;--gold:#ffd45c;--red:#ff5b68;--blue:#64c9ff;--green:#62e6a5;--text:#f7f8ff;--muted:#aeb9d7;--border:#394668}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-button,input,select{font:inherit}
+body{margin:0;background:radial-gradient(ellipse at top,#263963 0,#101528 55%,#0b1020 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.topbar{position:sticky;top:0;z-index:10;background:#101323f5;
-border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
-.nav{max-width:1450px;margin:auto;padding:13px 22px;display:flex;
-align-items:center;gap:20px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;
-letter-spacing:-.6px;margin-right:auto}
-.ball{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;
-background:linear-gradient(#ff6478 0 47%,#fff 48% 53%,#2b3045 54%);
-border:3px solid #f5f6ff;color:#171b30;font-size:12px}
-.navlinks{display:flex;gap:6px;flex-wrap:wrap}
-.navlinks button,.btn{border:1px solid var(--border);border-radius:10px;
-padding:9px 13px;background:var(--panel2);color:var(--text)}
-.navlinks button.active,.btn.primary{background:var(--blue);color:#101323;
-border-color:var(--blue);font-weight:800}
-button:hover{filter:brightness(1.12)}
-main{max-width:1450px;margin:auto;padding:25px 22px 65px}
-.hero{position:relative;overflow:hidden;padding:34px;border:1px solid #3b4264;
-border-radius:24px;background:radial-gradient(ellipse at 90% 10%,#51418a 0,transparent 40%),
-linear-gradient(125deg,#202746,#15192d 70%);margin-bottom:23px}
-.hero:after{content:"";position:absolute;right:40px;top:-70px;width:200px;height:200px;
-border-radius:50%;border:24px solid #ffffff0b;box-shadow:0 0 0 30px #ffffff05,0 0 0 65px #ffffff03}
-.eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
-h1{font-size:clamp(30px,5vw,54px);letter-spacing:-2px;line-height:1.05;
-margin:12px 0;max-width:750px}
-h2{font-size:23px;letter-spacing:-.5px;margin:0 0 6px}
-h3{margin:0 0 8px}
-p{color:var(--muted)}
-.hero p{max-width:640px}
-.searchrow{display:flex;gap:9px;max-width:850px;margin-top:23px;position:relative;z-index:1}
-input,select{background:#101528;color:var(--text);border:1px solid var(--border);
-border-radius:10px;padding:11px 12px;min-width:0;width:100%}
-.searchrow input{font-size:16px;padding:14px}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 28px}
-.stat,.panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:17px}
-.stat strong{display:block;font-size:25px;margin-top:5px}
-.muted{color:var(--muted)}
-.small{font-size:12px}
-.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;
-flex-wrap:wrap;margin:27px 0 15px}
-.filters{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 1.1fr 1fr;gap:10px;margin:16px 0}
-.filter label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px}
-.card{overflow:hidden;background:var(--panel);border:1px solid var(--border);
-border-radius:15px;min-width:0;transition:transform .18s,border-color .18s}
-.card:hover{transform:translateY(-3px);border-color:#7585c1}
-.cardimg{height:220px;background:radial-gradient(ellipse,#343d5b,#15192b);
-display:flex;align-items:center;justify-content:center;padding:10px;position:relative}
-.cardimg img{height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 8px #0008)}
-.cardbody{padding:12px}
-.cardname{font-size:15px;font-weight:850;line-height:1.3}
-.setname{font-size:12px;color:var(--muted);margin:5px 0}
-.tags{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
-.tag{font-size:10px;border-radius:5px;background:#303753;padding:3px 6px;color:#dce2ff}
-.price{color:var(--gold);font-weight:900;font-size:18px}
-.price small{font-size:11px;color:var(--muted);font-weight:500}
-.cardbuttons{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
-.cardbuttons button{font-size:11px;padding:8px 4px}
-.iconbtn{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px}
-.pagination{display:flex;gap:8px;justify-content:center;align-items:center;margin:24px 0}
-.view{display:none}.view.active{display:block}
-.notice{padding:12px 14px;border:1px solid #59648b;background:#1b2340;
-border-radius:10px;color:#dce3ff;margin:14px 0}
-.error{color:var(--red)}
-.setgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
-.settile{background:var(--panel);border:1px solid var(--border);border-radius:13px;
-padding:15px;cursor:pointer;min-width:0}
-.settile img{width:100%;height:75px;object-fit:contain;margin-bottom:10px}
-.settile strong{display:block}
-.deckcols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.decklist{min-height:150px;margin-top:12px}
-.deckrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
-.deckrow img{width:40px;height:55px;object-fit:contain}
-.deckrow .grow{flex:1;min-width:0}
-.deckrow .grow strong{display:block;overflow-wrap:anywhere}
-.deckrow button{padding:4px 9px}
-.decksummary{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
-.decksummary span{background:var(--panel2);padding:7px 10px;border-radius:8px;font-size:12px}
-.bar{height:7px;background:#303753;border-radius:9px;overflow:hidden;margin:7px 0 14px}
-.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple))}
-.collectiontools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
-.empty{text-align:center;padding:45px 15px;color:var(--muted)}
-footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--muted);font-size:12px}
-.toast{position:fixed;bottom:18px;right:18px;z-index:30;background:#293352;
-border:1px solid #59648b;padding:13px 17px;border-radius:12px;display:none;max-width:90vw}
-.modal{position:fixed;inset:0;z-index:25;background:#060916df;display:none;
-align-items:center;justify-content:center;padding:15px}
+button:disabled{opacity:.45;cursor:not-allowed}
+header{position:sticky;top:0;z-index:20;background:#11182af2;backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar{max-width:1500px;margin:auto;padding:13px 20px;display:flex;align-items:center;gap:15px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;font-size:clamp(18px,3vw,26px);font-weight:900;letter-spacing:-.7px}
+.brand small{display:block;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+.ball{width:42px;height:42px;border:3px solid white;border-radius:50%;background:linear-gradient(#ff5b68 0 46%,#252b3b 46% 54%,#f3f5ff 54%);position:relative;flex-shrink:0;box-shadow:0 0 20px #ff5b6840}
+.ball:after{content:"";position:absolute;width:12px;height:12px;border:3px solid #252b3b;background:#fff;border-radius:50%;top:12px;left:12px}
+.header-right{display:flex;gap:8px;align-items:center}
+.pill{background:#25324f;border:1px solid var(--border);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted)}
+nav{max-width:1500px;margin:auto;padding:0 18px 12px;display:flex;gap:8px;overflow-x:auto}
+.tab{white-space:nowrap;border:1px solid var(--border);border-radius:12px;background:#202b48;color:#dce5ff;padding:10px 15px;font-weight:750}
+.tab.active,.tab:hover{background:var(--gold);color:#20243a;border-color:var(--gold)}
+main{max-width:1500px;margin:auto;padding:24px 20px 55px}
+.page{display:none}.page.active{display:block}
+.hero{border:1px solid #4a5c82;border-radius:24px;padding:clamp(22px,4vw,46px);background:linear-gradient(115deg,#263b64ed,#26315bdd 52%,#4d304bd9);position:relative;overflow:hidden;margin-bottom:24px}
+.hero:after{content:"◉";position:absolute;font-size:250px;right:25px;top:-65px;color:#ffffff0b;pointer-events:none}
+.eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase}
+h1{font-size:clamp(32px,5vw,55px);line-height:1.06;letter-spacing:-1.8px;margin:10px 0 14px}
+h2{font-size:24px;margin:0 0 14px}h3{margin:0 0 8px}
+p{line-height:1.55}
+.sub{color:var(--muted);max-width:760px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{border:1px solid var(--border);background:#293654;color:white;padding:10px 14px;border-radius:11px;font-weight:750}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#24253a}
+.btn.red{background:var(--red);color:#251421;border-color:var(--red)}
+.btn.green{background:var(--green);color:#102a27;border-color:var(--green)}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.stat,.panel{background:linear-gradient(145deg,#202b49,#19223a);border:1px solid var(--border);border-radius:17px;padding:18px}
+.stat strong{display:block;font-size:27px;color:var(--gold)}
+.stat span{color:var(--muted);font-size:12px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 14px;flex-wrap:wrap}
+.filters{display:grid;grid-template-columns:2fr repeat(3,minmax(130px,1fr));gap:10px;margin-bottom:17px}
+input,select,textarea{width:100%;background:#11192d;border:1px solid var(--border);color:var(--text);padding:11px 12px;border-radius:10px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid #64c9ff88;border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px}
+.card{background:#1d2843;border:1px solid #465677;border-radius:15px;overflow:hidden;transition:.18s;position:relative}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px #0005;border-color:var(--gold)}
+.card-art{height:205px;background:radial-gradient(circle,#344c78,#10192d);display:flex;align-items:center;justify-content:center;position:relative;padding:9px}
+.card-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 9px #0005)}
+.card-art .emoji{font-size:90px;filter:drop-shadow(0 5px 10px #0005)}
+.card-info{padding:12px}
+.card-title{font-weight:850;line-height:1.25;min-height:40px}
+.muted{color:var(--muted);font-size:12px}
+.card-price{color:var(--green);font-weight:900;margin-top:8px}
+.card-actions{display:flex;gap:6px;margin-top:10px}
+.card-actions button{flex:1;font-size:12px;padding:8px 5px}
+.tag{display:inline-block;padding:4px 7px;border-radius:6px;background:#334263;color:#dce5ff;font-size:10px;font-weight:800;margin:3px 3px 0 0}
+.rarity{position:absolute;top:8px;left:8px;background:#131a2bd9;border:1px solid #fff3;padding:5px 7px;border-radius:8px;font-size:10px;font-weight:900;max-width:calc(100% - 16px)}
+.empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--border);border-radius:15px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:18px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>*{flex:1}
+.stack{display:grid;gap:12px}
+.small-card{display:flex;align-items:center;gap:12px;background:#121b30;border:1px solid var(--border);border-radius:12px;padding:10px}
+.small-card img{width:52px;height:65px;object-fit:contain}
+.small-card .grow{flex:1;min-width:0}
+.small-card .grow strong{display:block;overflow-wrap:anywhere}
+.small-card button{padding:7px 10px}
+.deck-counts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.count{background:#111a2e;border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px}
+.deck-list{max-height:420px;overflow:auto;display:grid;gap:7px}
+.deck-row{display:flex;align-items:center;gap:8px;background:#131c30;padding:8px;border-radius:9px}
+.deck-row span:nth-child(2){flex:1}
+.deck-row .num{color:var(--gold);font-weight:900;min-width:22px}
+.battle-board{background:linear-gradient(#24416a,#152441 50%,#304c43);border:1px solid #526c85;border-radius:20px;padding:16px;overflow:hidden}
+.battle-side{padding:12px;border-radius:14px;background:#0e1729c9;margin-bottom:12px}
+.battle-side h3{display:flex;justify-content:space-between;gap:8px}
+.active-pokemon{background:linear-gradient(145deg,#344d75,#1b2945);border:2px solid var(--gold);border-radius:14px;padding:12px;margin:8px 0}
+.hpbar{height:9px;border-radius:99px;background:#45516a;overflow:hidden;margin:8px 0}
+.hpfill{height:100%;background:var(--green);transition:width .3s}
+.bench{display:flex;gap:8px;flex-wrap:wrap}
+.bench .mini{background:#263553;border:1px solid #53678b;border-radius:10px;padding:8px;min-width:80px;text-align:center;font-size:12px}
+.battle-log{height:140px;overflow:auto;background:#0b1323;border-radius:10px;padding:10px;font-size:12px;color:#d7e0f6;line-height:1.65}
+.hand{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin:12px 0}
+.hand-card{background:#283958;border:1px solid #53678b;border-radius:10px;padding:8px;font-size:12px;cursor:pointer;text-align:center}
+.hand-card.selected{border:2px solid var(--gold);background:#4a4560}
+.hand-card img{height:90px;width:100%;object-fit:contain}
+.hand-card b{display:block}
+.notice{background:#332f22;border:1px solid #8a7442;border-radius:12px;padding:12px;color:#ffe6a4;font-size:12px;line-height:1.5}
+.price-list{display:grid;gap:9px}
+.price-line{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#111a2d;border:1px solid var(--border);padding:12px;border-radius:10px}
+footer{text-align:center;color:var(--muted);border-top:1px solid var(--border);padding:25px 15px;font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#f6f3e8;color:#182038;border-radius:12px;padding:12px 18px;z-index:100;box-shadow:0 10px 40px #0008;transition:.2s;font-weight:800;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{display:none;position:fixed;inset:0;background:#050914d9;z-index:50;padding:20px;overflow:auto;align-items:center;justify-content:center}
 .modal.open{display:flex}
-.modalbox{width:min(850px,100%);max-height:90vh;overflow:auto;background:var(--panel);
-border:1px solid var(--border);border-radius:20px;padding:20px}
-.detailgrid{display:grid;grid-template-columns:minmax(160px, .8fr) 1.2fr;gap:20px}
-.detailgrid img{width:100%;max-height:460px;object-fit:contain}
-.pricegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.pricebox{background:var(--panel2);padding:12px;border-radius:10px}
-.hidden{display:none!important}
-@media(max-width:1100px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}
-.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.setgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:750px){main{padding:15px 12px 45px}.nav{padding:10px 12px}
-.navlinks{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
-.navlinks button{font-size:12px;padding:9px 4px}.hero{padding:23px 17px}
-.hero:after{right:-100px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.cardimg{height:190px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}
-.setgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.deckcols{grid-template-columns:1fr}.detailgrid{grid-template-columns:1fr 1.2fr;gap:12px}
-.searchrow{flex-wrap:wrap}.searchrow input{flex-basis:100%}}
-@media(max-width:400px){.cardimg{height:155px}.cardbody{padding:9px}
-.filters{grid-template-columns:1fr 1fr}.detailgrid{grid-template-columns:1fr}
-.detailgrid img{max-height:290px}.pricegrid{grid-template-columns:1fr}}
+.modal-box{width:min(800px,100%);background:#1c2743;border:1px solid #53668c;border-radius:18px;padding:20px;max-height:90vh;overflow:auto}
+.modal-grid{display:grid;grid-template-columns:minmax(160px,.7fr) 1.3fr;gap:20px}
+.modal-grid img{width:100%;max-height:420px;object-fit:contain}
+hr{border:0;border-top:1px solid var(--border);margin:15px 0}
+@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){main{padding:16px 12px 35px}.topbar{padding:10px 12px}.header-right .pill{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card-art{height:165px}.card-info{padding:9px}.filters{grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:22px}.modal-grid{grid-template-columns:1fr}.modal-grid img{max-height:260px}.hero:after{right:-65px}.section-head{margin-top:20px}}
 </style>
 </head>
 <body>
-
-<header class="topbar">
-  <div class="nav">
-    <div class="brand"><span class="ball">●</span><span>Luca's <span style="color:var(--blue)">Pokémon</span> Centre</span></div>
-    <nav class="navlinks" aria-label="Main navigation">
-      <button class="active" data-view="explorer">Cards</button>
-      <button data-view="sets">Sets</button>
-      <button data-view="decks">Deck Builder</button>
-      <button data-view="compare">Compare Decks</button>
-      <button data-view="collection">My Collection</button>
-      <button data-view="about">About</button>
-    </nav>
-  </div>
+<header>
+ <div class="topbar">
+  <div class="brand"><div class="ball"></div><div>Luca's Pokémon Centre<small>Collect · Build · Battle</small></div></div>
+  <div class="header-right"><span class="pill" id="savedPill">⭐ 0 saved decks</span><span class="pill">Pokémon TCG fan site</span></div>
+ </div>
+ <nav>
+  <button class="tab active" data-page="home">🏠 Home</button>
+  <button class="tab" data-page="explorer">🃏 Card Explorer</button>
+  <button class="tab" data-page="prices">💷 Price Centre</button>
+  <button class="tab" data-page="deck">📚 Deck Builder</button>
+  <button class="tab" data-page="battle">⚔️ Battle Simulator</button>
+ </nav>
 </header>
 
 <main>
-  <section class="hero">
-    <div class="eyebrow">Your trading card headquarters</div>
-    <h1>Every card.<br>Every set. Your collection.</h1>
-    <p>Discover Pokémon cards, explore expansions, check available market prices and build your dream decks.</p>
-    <div class="searchrow">
-      <input id="search" type="search" placeholder="Search Pokémon, card name, set or number..." aria-label="Search cards">
-      <button class="btn primary" id="searchBtn">Search cards</button>
-    </div>
-  </section>
+<section class="page active" id="home">
+ <div class="hero">
+  <div class="eyebrow">Your Pokémon adventure starts here</div>
+  <h1>Discover cards.<br>Build your dream deck.</h1>
+  <p class="sub">Explore Pokémon cards, check recorded prices, create your own deck and battle a computer opponent in a mini TCG-style simulator.</p>
+  <div class="actions">
+   <button class="btn primary" onclick="showPage('explorer')">🃏 Explore cards</button>
+   <button class="btn" onclick="showPage('deck')">📚 Build a deck</button>
+   <button class="btn" onclick="startBattle()">⚔️ Play a battle</button>
+  </div>
+ </div>
+ <div class="stats">
+  <div class="stat"><strong id="totalCards">24</strong><span>Demo cards loaded</span></div>
+  <div class="stat"><strong id="savedDeckCount">0</strong><span>Saved decks</span></div>
+  <div class="stat"><strong id="deckTotalHome">0 / 60</strong><span>Cards in your deck</span></div>
+  <div class="stat"><strong>GBP £</strong><span>Price display currency</span></div>
+ </div>
+ <div class="section-head"><h2>✨ Featured Pokémon</h2><button class="btn" onclick="showPage('explorer')">View all cards →</button></div>
+ <div class="grid" id="featuredGrid"></div>
+ <div class="section-head"><h2>🚀 What would you like to do?</h2></div>
+ <div class="grid">
+  <div class="panel"><h3>🃏 Discover cards</h3><p class="muted">Search by name, type, rarity and expansion set. Add cards to your deck.</p><button class="btn primary" onclick="showPage('explorer')">Explore cards</button></div>
+  <div class="panel"><h3>💰 Compare prices</h3><p class="muted">Check recorded demo prices or connect card-data sources for current listings.</p><button class="btn primary" onclick="showPage('prices')">Price centre</button></div>
+  <div class="panel"><h3>⚔️ Test your deck</h3><p class="muted">Draw your opening hand, attach Energy, attack and defeat the computer.</p><button class="btn primary" onclick="startBattle()">Start battling</button></div>
+ </div>
+</section>
 
-  <section class="stats">
-    <div class="stat"><span class="muted">Cards found</span><strong id="found">—</strong><span class="small muted">Matching your search</span></div>
-    <div class="stat"><span class="muted">Sets loaded</span><strong id="setCount">—</strong><span class="small muted">Available expansions</span></div>
-    <div class="stat"><span class="muted">Cards collected</span><strong id="ownedCount">0</strong><span class="small muted">Your saved collection</span></div>
-    <div class="stat"><span class="muted">Collection value</span><strong id="collectionValue">£0.00</strong><span class="small muted">Estimated from available prices</span></div>
-  </section>
+<section class="page" id="explorer">
+ <div class="section-head"><div><div class="eyebrow">Find your next favourite card</div><h1>Card Explorer</h1></div><span class="pill" id="resultCount">24 cards</span></div>
+ <div class="filters">
+  <input id="search" placeholder="🔍 Search Pokémon, card name or set…" oninput="renderExplorer()">
+  <select id="typeFilter" onchange="renderExplorer()"><option value="">All types</option><option>Grass</option><option>Fire</option><option>Water</option><option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option><option>Metal</option><option>Dragon</option><option>Colorless</option><option>Trainer</option><option>Energy</option></select>
+  <select id="rarityFilter" onchange="renderExplorer()"><option value="">All rarities</option><option>Common</option><option>Uncommon</option><option>Rare</option><option>Double Rare</option><option>Ultra Rare</option><option>Illustration Rare</option><option>Special Illustration Rare</option><option>Promo</option></select>
+  <select id="setFilter" onchange="renderExplorer()"><option value="">All sets</option></select>
+ </div>
+ <div class="actions" style="margin:0 0 18px">
+  <button class="btn" onclick="loadOnlineCards()">🌐 Load cards from API</button>
+  <button class="btn" onclick="document.getElementById('apiKeyBox').hidden=!document.getElementById('apiKeyBox').hidden">⚙️ API settings</button>
+  <button class="btn" onclick="resetDemo()">↺ Reset demo cards</button>
+ </div>
+ <div class="panel" id="apiKeyBox" hidden style="margin-bottom:18px">
+  <h3>Pokémon TCG API connection</h3>
+  <p class="muted">The public API can provide card details and artwork. A free API key may be required for reliable requests. Do not use a private key in a public GitHub repository.</p>
+  <div class="row"><input id="apiKey" placeholder="Optional Pokémon TCG API key" type="password"><button class="btn primary" onclick="saveApiKey()">Save key in this browser</button></div>
+ </div>
+ <div class="grid" id="explorerGrid"></div>
+ <div class="actions" style="justify-content:center"><button class="btn" id="loadMore" onclick="loadMoreCards()">Show more cards</button></div>
+</section>
 
-  <section id="explorer" class="view active">
-    <div class="sectionhead">
-      <div><h2>Card Explorer</h2><div class="muted small">Search, filter, inspect and add cards to your decks.</div></div>
-      <button class="btn" id="clearFilters">Clear filters</button>
-    </div>
-    <div class="filters">
-      <div class="filter"><label for="setFilter">Expansion / set</label><select id="setFilter"><option value="">All sets</option></select></div>
-      <div class="filter"><label for="typeFilter">Pokémon type</label><select id="typeFilter"><option value="">All types</option><option>Grass</option><option>Fire</option><option>Water</option><option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option><option>Metal</option><option>Dragon</option><option>Fairy</option><option>Colorless</option></select></div>
-      <div class="filter"><label for="rarityFilter">Rarity</label><select id="rarityFilter"><option value="">All rarities</option></select></div>
-      <div class="filter"><label for="categoryFilter">Card category</label><select id="categoryFilter"><option value="">All categories</option><option>Pokémon</option><option>Trainer</option><option>Energy</option></select></div>
-      <div class="filter"><label for="sortFilter">Sort cards</label><select id="sortFilter"><option value="name">Name A–Z</option><option value="priceHigh">Price: high to low</option><option value="priceLow">Price: low to high</option><option value="number">Card number</option></select></div>
-    </div>
-    <div class="notice" id="status" role="status">Connecting to the Pokémon TCG card database...</div>
-    <div class="cards" id="cards"></div>
-    <div class="pagination">
-      <button class="btn" id="prevPage">← Previous</button>
-      <span id="pageLabel" class="muted">Page 1</span>
-      <button class="btn" id="nextPage">Next →</button>
-    </div>
-  </section>
+<section class="page" id="prices">
+ <div class="section-head"><div><div class="eyebrow">Know what your collection is worth</div><h1>Price Centre</h1></div></div>
+ <div class="notice">Prices shown for built-in demo cards are illustrative sample values, not verified live market prices. Online card data may include market-price fields when the source provides them. Card values change frequently; check the linked seller or price source before buying or selling.</div>
+ <div class="panel" style="margin-top:16px">
+  <label for="priceSearch">Search for a card</label>
+  <div class="row" style="margin-top:8px"><input id="priceSearch" placeholder="e.g. Pikachu, Charizard, Mewtwo" oninput="renderPrices()"><select id="priceSort" onchange="renderPrices()"><option value="name">Sort by name</option><option value="high">Highest recorded price</option><option value="low">Lowest recorded price</option></select></div>
+ </div>
+ <div class="section-head"><h2>💷 Available card values</h2><span class="pill">GBP display</span></div>
+ <div class="stack" id="priceList"></div>
+ <hr>
+ <div class="panel"><h3>🔎 External price sources</h3><p class="muted">These searches can help you check current listings. Actual prices vary by condition, language, edition, seller and grading.</p>
+ <div class="actions">
+ <a class="btn" target="_blank" rel="noopener" href="https://www.cardmarket.com/en/Pokemon">Cardmarket</a>
+ <a class="btn" target="_blank" rel="noopener" href="https://www.tcgplayer.com/categories/trading-and-collectible-card-games/pokemon">TCGplayer</a>
+ <a class="btn" target="_blank" rel="noopener" href="https://www.ebay.co.uk/sch/i.html?_nkw=pokemon+card&LH_Sold=1&LH_Complete=1">eBay sold listings</a>
+ </div></div>
+</section>
 
-  <section id="sets" class="view">
-    <div class="sectionhead"><div><h2>Explore Sets</h2><p>Choose an expansion to see its cards.</p></div></div>
-    <input id="setSearch" type="search" placeholder="Find an expansion..." style="max-width:500px;margin-bottom:15px">
-    <div class="setgrid" id="setGrid"></div>
-    <div class="pagination"><button class="btn" id="moreSets">Load more sets</button></div>
-  </section>
+<section class="page" id="deck">
+ <div class="section-head"><div><div class="eyebrow">Your collection, your strategy</div><h1>Deck Builder</h1></div><span class="pill" id="deckCounter">0 / 60 cards</span></div>
+ <div class="layout">
+  <div class="panel">
+   <h2>🧰 Build your deck</h2>
+   <p class="muted">Choose a card below or use the explorer. This deck builder supports a 60-card target, card counts and import/export. For real tournament legality, check the current official format rules.</p>
+   <div class="row"><input id="deckName" placeholder="Name your deck" value="My Pokémon Deck"><button class="btn primary" onclick="saveDeck()">💾 Save deck</button></div>
+   <div class="deck-counts"><span class="count">Total: <b id="dTotal">0</b>/60</span><span class="count">Pokémon: <b id="dPokemon">0</b></span><span class="count">Trainers: <b id="dTrainer">0</b></span><span class="count">Energy: <b id="dEnergy">0</b></span></div>
+   <div class="actions"><button class="btn" onclick="exportDeck()">⬇ Export deck</button><button class="btn" onclick="document.getElementById('importFile').click()">⬆ Import deck</button><input id="importFile" type="file" accept=".txt,.csv" hidden onchange="importDeckFile(event)"><button class="btn red" onclick="clearDeck()">Clear deck</button></div>
+   <textarea id="deckText" rows="4" placeholder="Or paste a deck list here, e.g.&#10;4 Pikachu&#10;10 Lightning Energy"></textarea>
+   <button class="btn" style="margin-top:8px" onclick="importDeckText()">Import pasted list</button>
+   <hr>
+   <div class="section-head"><h3>Your cards</h3><span class="muted">Click − or + to edit</span></div>
+   <div class="deck-list" id="deckList"></div>
+  </div>
+  <div class="panel">
+   <h2>📦 Add cards</h2>
+   <input id="deckSearch" placeholder="Search cards to add…" oninput="renderDeckPicker()">
+   <div class="stack" id="deckPicker" style="margin-top:12px;max-height:610px;overflow:auto"></div>
+   <hr>
+   <h3>💾 Saved decks</h3>
+   <div class="stack" id="savedDecks"></div>
+  </div>
+ </div>
+</section>
 
-  <section id="decks" class="view">
-    <div class="sectionhead"><div><h2>Deck Builder</h2><p>Build two decks and calculate their card values. Standard constructed decks usually contain 60 cards.</p></div></div>
-    <div class="notice">Choose cards in Card Explorer and press “+ Deck A” or “+ Deck B”. Deck lists are saved in this browser.</div>
-    <div class="deckcols">
-      <div class="panel">
-        <h3>🔵 Deck A</h3>
-        <input id="deckAName" value="My Pokémon Deck" aria-label="Deck A name">
-        <div class="decksummary" id="deckASummary"></div>
-        <div class="decklist" id="deckAList"></div>
-        <button class="btn" id="clearA">Clear Deck A</button>
-      </div>
-      <div class="panel">
-        <h3>🟣 Deck B</h3>
-        <input id="deckBName" value="My Rival's Deck" aria-label="Deck B name">
-        <div class="decksummary" id="deckBSummary"></div>
-        <div class="decklist" id="deckBList"></div>
-        <button class="btn" id="clearB">Clear Deck B</button>
-      </div>
-    </div>
-    <div class="panel" style="margin-top:16px">
-      <h3>Deck notes</h3>
-      <p>Use the Compare Decks tab to compare card counts, types and estimated market values. This is a deck-building aid, not an official game simulator or tournament legality checker.</p>
-    </div>
-  </section>
-
-  <section id="compare" class="view">
-    <div class="sectionhead"><div><h2>Deck Comparison</h2><p>Compare your saved lists side by side.</p></div><button class="btn primary" id="runCompare">Compare now</button></div>
-    <div id="comparison" class="deckcols"></div>
-    <div class="panel" style="margin-top:16px">
-      <h3>Cards in both decks</h3>
-      <div id="sharedCards" class="muted">Build your decks to see shared cards.</div>
-    </div>
-  </section>
-
-  <section id="collection" class="view">
-    <div class="sectionhead"><div><h2>My Collection</h2><p>Cards marked as owned on this device.</p></div>
-      <button class="btn" id="exportCollection">Export collection CSV</button></div>
-    <div class="notice">Use the “♡ Own” button on any card to add it to or remove it from your collection.</div>
-    <div class="cards" id="ownedCards"></div>
-  </section>
-
-  <section id="about" class="view">
-    <div class="panel">
-      <h2>About Luca's Pokémon Centre</h2>
-      <p>A Pokémon Trading Card Game collection and deck-building companion.</p>
-      <h3>Where does the card information come from?</h3>
-      <p>This site retrieves card details, expansion information, artwork and available price data from the public Pokémon TCG API. Card prices are not guaranteed to be live, complete or available for every printing. Prices are estimates, and USD prices are converted to GBP using an adjustable approximate exchange rate.</p>
-      <p>Price availability depends on the data supplied for each card. Clicking a price-source link opens the provider's card listing when one is available.</p>
-      <h3>Your data</h3>
-      <p>Your deck lists and collection are stored in your browser using local storage. They are not automatically synced to another device.</p>
-      <h3>Important</h3>
-      <p>This is an unofficial fan-made project and is not affiliated with or endorsed by The Pokémon Company. Pokémon and related names and imagery belong to their respective owners.</p>
-    </div>
-  </section>
+<section class="page" id="battle">
+ <div class="section-head"><div><div class="eyebrow">Choose your Pokémon and fight!</div><h1>Battle Simulator</h1></div><span class="pill" id="battleStatus">Ready to play</span></div>
+ <div class="notice">This is a fan-made simplified battle simulator, not the official Pokémon TCG rules engine. Attacks, Energy requirements and evolution rules are simplified so you can play directly in your browser.</div>
+ <div class="layout" style="margin-top:16px">
+  <div class="battle-board">
+   <div class="battle-side">
+    <h3>🤖 Computer opponent <span id="aiPrizes">Prizes: 3</span></h3>
+    <div id="aiActive"></div><div class="muted">Bench</div><div id="aiBench" class="bench"></div>
+   </div>
+   <div style="text-align:center;font-weight:900;color:var(--gold);padding:8px">⚡ VS ⚡</div>
+   <div class="battle-side">
+    <h3>🧢 Your team <span id="playerPrizes">Prizes: 3</span></h3>
+    <div id="playerActive"></div><div class="muted">Your bench — tap a Pokémon to switch</div><div id="playerBench" class="bench"></div>
+   </div>
+   <div class="actions">
+    <button class="btn primary" id="attackBtn" onclick="playerAttack()">⚔️ Attack</button>
+    <button class="btn" onclick="attachEnergy()">⚡ Attach Energy</button>
+    <button class="btn" onclick="switchPokemon()">🔁 Switch Pokémon</button>
+    <button class="btn" onclick="drawCard()">🃏 Draw card</button>
+    <button class="btn red" onclick="startBattle()">↻ New battle</button>
+   </div>
+   <hr>
+   <h3>Your hand</h3><div class="hand" id="battleHand"></div>
+   <div class="muted">Select a Pokémon card in your hand to play it onto your bench or into the active spot.</div>
+  </div>
+  <div class="panel">
+   <h2>📜 Battle log</h2>
+   <div class="battle-log" id="battleLog">Welcome to the battle arena! Start a new battle to play.</div>
+   <hr>
+   <h3>How to play</h3>
+   <p class="muted">1. Start a battle and receive your opening hand.<br>2. Play a Pokémon from your hand if you need one.<br>3. Attach Energy once per turn.<br>4. Attack the opposing active Pokémon.<br>5. Knock out Pokémon to collect prizes. The first side to claim all prizes wins.</p>
+   <div class="notice">Tip: You can draw cards and attach Energy once per turn. If your active Pokémon is knocked out, promote a benched Pokémon.</div>
+  </div>
+ </div>
+</section>
 </main>
 
-<footer>Luca's Pokémon Centre · Unofficial fan project · Card prices are estimates, not offers to sell.</footer>
-<div class="toast" id="toast" role="status"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Card details">
-  <div class="modalbox">
-    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px">
-      <h2 id="modalTitle">Card details</h2>
-      <button class="btn" id="closeModal">✕ Close</button>
-    </div>
-    <div id="modalContent"></div>
-  </div>
-</div>
+<footer>Luca's Pokémon Centre · Unofficial fan-made project · Pokémon and Pokémon TCG are trademarks of their respective owners. Not affiliated with Nintendo, Creatures Inc. or The Pokémon Company.</footer>
+<div class="toast" id="toast"></div>
+<div class="modal" id="cardModal" onclick="if(event.target===this)closeModal()"><div class="modal-box" id="modalContent"></div></div>
 
 <script>
-(() => {
-"use strict";
-
-// ======================================================
-// SETTINGS
-// ======================================================
-const API = "https://api.pokemontcg.io/v2";
-const PAGE_SIZE = 30;
-const USD_TO_GBP = 0.79; // Approximate conversion; change when needed.
-const $ = id => document.getElementById(id);
-
-let currentPage = 1;
-let totalCards = 0;
-let loadedSets = [];
-let setOffset = 0;
-let lastCards = [];
-let allLoadedCards = new Map();
-let requestNumber = 0;
-let toastTimer;
-let owned = readStore("lpc_owned", {});
-let decks = readStore("lpc_decks", {A:[],B:[]});
-let deckNames = readStore("lpc_decknames", {A:"My Pokémon Deck",B:"My Rival's Deck"});
-
-function readStore(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
-  catch { return fallback; }
-}
-function saveStore(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); }
-  catch { showToast("Browser storage is full. Export your data and remove some entries."); }
-}
-function escapeHTML(s) {
-  return String(s ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-function money(n) {
-  return n == null || !Number.isFinite(Number(n)) ? "N/A" :
-    new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP"}).format(Number(n));
-}
-function getPrices(card) {
-  const p = card.tcgplayer?.prices;
-  if (!p) return [];
-  return Object.entries(p).map(([variant,v]) => ({
-    source:"TCGplayer", variant, usd:v.market ?? v.mid ?? v.low ?? null,
-    gbp:(v.market ?? v.mid ?? v.low) == null ? null : (v.market ?? v.mid ?? v.low)*USD_TO_GBP,
-    url:card.tcgplayer?.url || ""
-  }));
-}
-function bestPrice(card) {
-  const prices = getPrices(card).filter(p=>p.gbp != null);
-  if (!prices.length) return null;
-  return Math.min(...prices.map(p=>p.gbp));
-}
-function priceLabel(card) {
-  const p=bestPrice(card);
-  return p == null ? "Price unavailable" : money(p);
-}
-function showToast(message) {
-  $("toast").textContent=message;
-  $("toast").style.display="block";
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>$("toast").style.display="none",2600);
-}
-function imageURL(card, large=false) {
-  return card.images?.[large ? "large":"small"] || "";
-}
-function category(card) {
-  if (card.supertype === "Pokémon") return "Pokémon";
-  if (card.supertype === "Trainer") return "Trainer";
-  if (card.supertype === "Energy") return "Energy";
-  return card.supertype || "Other";
-}
-function cardTypes(card) {
-  return [...(card.types || [])].join(", ");
-}
-function updateStats() {
-  $("ownedCount").textContent=Object.keys(owned).length;
-  let total=0;
-  for (const [id,entry] of Object.entries(owned)) {
-    const c=allLoadedCards.get(id);
-    const p=c ? bestPrice(c) : entry.price;
-    if (p != null) total += Number(p)*(entry.quantity || 1);
-  }
-  $("collectionValue").textContent=money(total);
-}
-function apiHeaders() {
-  // Optional API key. Never put a private server credential in a public HTML file.
-  return {};
-}
-async function fetchJSON(url) {
-  const res=await fetch(url,{headers:apiHeaders()});
-  if(!res.ok) throw new Error("API returned HTTP "+res.status);
-  return res.json();
-}
-
-// ======================================================
-// NAVIGATION
-// ======================================================
-document.querySelectorAll("[data-view]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b===button));
-    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===button.dataset.view));
-    if(button.dataset.view==="collection") renderCollection();
-    if(button.dataset.view==="decks") renderDecks();
-    if(button.dataset.view==="compare") renderComparison();
-    if(button.dataset.view==="sets") renderSets();
-    window.scrollTo({top:0,behavior:"smooth"});
-  });
-});
-
-// ======================================================
-// CARD SEARCH AND FILTERS
-// ======================================================
-function makeQuery() {
-  const terms=[];
-  const raw=$("search").value.trim();
-  if(raw) {
-    const safe=raw.replace(/["\\]/g," ").trim();
-    if(safe) terms.push('name:"*'+safe+'*"');
-  }
-  if($("setFilter").value) terms.push('set.id:'+safeQuery($("setFilter").value));
-  if($("typeFilter").value) terms.push('types:'+safeQuery($("typeFilter").value));
-  if($("rarityFilter").value) terms.push('rarity:"'+safeQuery($("rarityFilter").value)+'"');
-  if($("categoryFilter").value) terms.push('supertype:"'+safeQuery($("categoryFilter").value)+'"');
-  return terms.join(" ");
-}
-function safeQuery(s){return String(s).replace(/[{}[\]^~*?:\\" ]/g," ").trim();}
-function updateStatus(msg, error=false) {
-  $("status").textContent=msg;
-  $("status").classList.toggle("error",error);
-}
-async function loadCards(reset=true) {
-  if(reset) currentPage=1;
-  const ticket=++requestNumber;
-  $("cards").innerHTML='<div class="empty">Loading cards…</div>';
-  updateStatus("Searching the card database…");
-  $("prevPage").disabled=currentPage<=1;
-  $("nextPage").disabled=true;
-  const query=makeQuery();
-  const params=new URLSearchParams({page:String(currentPage),pageSize:String(PAGE_SIZE),orderBy:"name"});
-  if(query) params.set("q",query);
-  try {
-    const result=await fetchJSON(API+"/cards?"+params.toString());
-    if(ticket!==requestNumber)return;
-    lastCards=result.data || [];
-    totalCards=result.totalCount || 0;
-    lastCards.forEach(c=>allLoadedCards.set(c.id,c));
-    $("found").textContent=totalCards.toLocaleString("en-GB");
-    $("pageLabel").textContent=`Page ${currentPage} · ${lastCards.length} cards`;
-    $("prevPage").disabled=currentPage<=1;
-    $("nextPage").disabled=currentPage*PAGE_SIZE>=totalCards;
-    updateStatus(`${totalCards.toLocaleString("en-GB")} matching cards. Prices are shown where available.`);
-    renderCards(lastCards,$("cards"));
-    updateStats();
-  } catch(err) {
-    if(ticket!==requestNumber)return;
-    $("cards").innerHTML="";
-    updateStatus("Could not load cards. Check your internet connection or try a simpler search. "+err.message,true);
-  }
-}
-function renderCards(cards, container) {
-  container.innerHTML="";
-  if(!cards.length){container.innerHTML='<div class="empty">No cards found. Try changing your filters.</div>';return;}
-  for(const c of cards) {
-    const img=imageURL(c);
-    const isOwned=!!owned[c.id];
-    const article=document.createElement("article");
-    article.className="card";
-    article.innerHTML=`
-      <div class="cardimg">${img?`<img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(c.name)}" onerror="this.style.display='none'">`:'<span class="muted">No image</span>'}</div>
-      <div class="cardbody">
-        <div class="cardname">${escapeHTML(c.name)}</div>
-        <div class="setname">${escapeHTML(c.set?.name||"Unknown set")} · #${escapeHTML(c.number||"—")}</div>
-        <div class="tags"><span class="tag">${escapeHTML(c.rarity||"Rarity unknown")}</span><span class="tag">${escapeHTML(category(c))}</span></div>
-        <div class="price">${escapeHTML(priceLabel(c))}</div>
-        <div class="small muted">${getPrices(c).length?"TCGplayer market estimate · converted to GBP":"No market price supplied"}</div>
-        <div class="cardbuttons">
-          <button class="btn" data-action="details">Details</button>
-          <button class="iconbtn" data-action="own">${isOwned?"♥ Owned":"♡ Own"}</button>
-          <button class="iconbtn" data-action="A">+ Deck A</button>
-          <button class="iconbtn" data-action="B">+ Deck B</button>
-        </div>
-      </div>`;
-    article.querySelector('[data-action="details"]').addEventListener("click",()=>showDetails(c));
-    article.querySelector('[data-action="own"]').addEventListener("click",()=>toggleOwned(c));
-    article.querySelector('[data-action="A"]').addEventListener("click",()=>addToDeck("A",c));
-    article.querySelector('[data-action="B"]').addEventListener("click",()=>addToDeck("B",c));
-    container.appendChild(article);
-  }
-}
-$("searchBtn").addEventListener("click",()=>loadCards(true));
-$("search").addEventListener("keydown",e=>{if(e.key==="Enter")loadCards(true)});
-["setFilter","typeFilter","rarityFilter","categoryFilter","sortFilter"].forEach(id=>{
-  $(id).addEventListener("change",()=>{
-    if(id==="sortFilter"){sortVisibleCards();return;}
-    loadCards(true);
-  });
-});
-$("clearFilters").addEventListener("click",()=>{
-  $("search").value="";
-  ["setFilter","typeFilter","rarityFilter","categoryFilter"].forEach(id=>$(id).value="");
-  $("sortFilter").value="name";
-  loadCards(true);
-});
-$("prevPage").addEventListener("click",()=>{if(currentPage>1){currentPage--;loadCards(false)}});
-$("nextPage").addEventListener("click",()=>{if(currentPage*PAGE_SIZE<totalCards){currentPage++;loadCards(false)}});
-function sortVisibleCards() {
-  const mode=$("sortFilter").value;
-  let list=[...lastCards];
-  if(mode==="priceHigh")list.sort((a,b)=>(bestPrice(b)??-1)-(bestPrice(a)??-1));
-  if(mode==="priceLow")list.sort((a,b)=>(bestPrice(a)??Infinity)-(bestPrice(b)??Infinity));
-  if(mode==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
-  if(mode==="number")list.sort((a,b)=>(parseInt(a.number)||0)-(parseInt(b.number)||0));
-  renderCards(list,$("cards"));
-}
-
-// ======================================================
-// SETS
-// ======================================================
-async function loadSets() {
-  try {
-    const result=await fetchJSON(API+"/sets?pageSize=250&orderBy=-releaseDate");
-    loadedSets=result.data||[];
-    $("setCount").textContent=loadedSets.length.toLocaleString("en-GB");
-    const old=$("setFilter").value;
-    $("setFilter").innerHTML='<option value="">All sets</option>';
-    [...loadedSets].sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
-      const o=document.createElement("option");o.value=s.id;o.textContent=s.name;$("setFilter").appendChild(o);
-    });
-    $("setFilter").value=old;
-    renderSets();
-    const rarities=new Set();
-    // Populate rarity options from cards returned by the first search.
-    lastCards.forEach(c=>{if(c.rarity)rarities.add(c.rarity)});
-    if(rarities.size) {
-      const select=$("rarityFilter"), current=select.value;
-      select.innerHTML='<option value="">All rarities</option>';
-      [...rarities].sort().forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;select.appendChild(o)});
-      select.value=current;
-    }
-  } catch(e) {
-    $("setCount").textContent="—";
-    $("setGrid").innerHTML='<div class="notice">Could not load sets. Try refreshing the page.</div>';
-  }
-}
-function renderSets() {
-  const q=$("setSearch").value.trim().toLowerCase();
-  const filtered=loadedSets.filter(s=>s.name.toLowerCase().includes(q));
-  const slice=filtered.slice(0,setOffset+24);
-  $("setGrid").innerHTML="";
-  slice.forEach(s=>{
-    const tile=document.createElement("div");tile.className="settile";
-    tile.innerHTML=`<img loading="lazy" src="${escapeHTML(s.images?.logo||s.images?.symbol||"")}" alt=""><strong>${escapeHTML(s.name)}</strong><div class="small muted">${escapeHTML(s.series||"")} · ${escapeHTML(s.releaseDate||"")}</div><div class="small muted">${s.printedTotal??"?"} cards in set</div>`;
-    tile.addEventListener("click",()=>{
-      $("setFilter").value=s.id;$("search").value="";
-      document.querySelector('[data-view="explorer"]').click();loadCards(true);
-    });
-    $("setGrid").appendChild(tile);
-  });
-  $("moreSets").style.display=slice.length<filtered.length?"inline-block":"none";
-}
-$("setSearch").addEventListener("input",()=>{setOffset=0;renderSets()});
-$("moreSets").addEventListener("click",()=>{setOffset+=24;renderSets()});
-
-// ======================================================
-// CARD DETAILS
-// ======================================================
-function showDetails(c) {
-  const img=imageURL(c,true);
-  const prices=getPrices(c);
-  $("modalTitle").textContent=c.name;
-  $("modalContent").innerHTML=`
-    <div class="detailgrid">
-      <div>${img?`<img src="${escapeHTML(img)}" alt="${escapeHTML(c.name)}">`:""}</div>
-      <div>
-        <div class="eyebrow">${escapeHTML(c.set?.name||"Pokémon card")}</div>
-        <h2>${escapeHTML(c.name)}</h2>
-        <p>${escapeHTML(category(c))} · Card ${escapeHTML(c.number||"—")} of ${escapeHTML(c.set?.printedTotal||c.set?.total||"—")}</p>
-        <div class="price" style="font-size:25px">${escapeHTML(priceLabel(c))}</div>
-        <div class="tags">${(c.types||[]).map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join("")}<span class="tag">${escapeHTML(c.rarity||"Unknown rarity")}</span></div>
-        <div class="pricegrid">
-          <div class="pricebox"><div class="muted small">HP</div><strong>${escapeHTML(c.hp||"—")}</strong></div>
-          <div class="pricebox"><div class="muted small">Artist</div><strong>${escapeHTML(c.artist||"Unknown")}</strong></div>
-          <div class="pricebox"><div class="muted small">Set release</div><strong>${escapeHTML(c.set?.releaseDate||"—")}</strong></div>
-          <div class="pricebox"><div class="muted small">Set total</div><strong>${escapeHTML(c.set?.printedTotal||c.set?.total||"—")}</strong></div>
-        </div>
-        <h3 style="margin-top:18px">Market price information</h3>
-        ${prices.length?prices.map(p=>`<div class="pricebox" style="margin:7px 0"><strong>${escapeHTML(p.variant)}</strong><br>${money(p.gbp)} <span class="muted small">(approximate GBP conversion)</span>${p.url?`<br><a style="color:var(--blue)" target="_blank" rel="noopener noreferrer" href="${escapeHTML(p.url)}">View TCGplayer listing ↗</a>`:""}</div>`).join(""):'<p>No TCGplayer market prices are currently supplied for this card.</p>'}
-        <h3 style="margin-top:18px">Attacks</h3>
-        ${(c.attacks||[]).map(a=>`<div class="pricebox" style="margin:6px 0"><strong>${escapeHTML(a.name)}</strong> <span style="float:right">${escapeHTML(a.damage||"—")}</span><div class="small muted">${escapeHTML((a.cost||[]).join(" · "))}</div><div class="small">${escapeHTML(a.text||"")}</div></div>`).join("")||'<p class="muted">No attacks listed.</p>'}
-        <h3 style="margin-top:18px">Weaknesses and retreat</h3>
-        <p>${escapeHTML((c.weaknesses||[]).map(w=>w.type+" "+w.value).join(", ")||"—")} · Retreat: ${escapeHTML((c.retreatCost||[]).join(", ")||"—")}</p>
-        <div class="cardbuttons">
-          <button class="btn primary" id="detailA">+ Deck A</button>
-          <button class="btn" id="detailB">+ Deck B</button>
-          <button class="btn" id="detailOwn">${owned[c.id]?"♥ Owned":"♡ Add to collection"}</button>
-          ${c.tcgplayer?.url?`<a class="btn" target="_blank" rel="noopener noreferrer" href="${escapeHTML(c.tcgplayer.url)}">Price source ↗</a>`:""}
-        </div>
-      </div>
-    </div>`;
-  $("detailA").addEventListener("click",()=>addToDeck("A",c));
-  $("detailB").addEventListener("click",()=>addToDeck("B",c));
-  $("detailOwn").addEventListener("click",()=>{toggleOwned(c);$("detailOwn").textContent=owned[c.id]?"♥ Owned":"♡ Add to collection"});
-  $("modal").classList.add("open");
-}
-$("closeModal").addEventListener("click",()=>$("modal").classList.remove("open"));
-$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").classList.remove("open")});
-
-// ======================================================
-// COLLECTION
-// ======================================================
-function toggleOwned(c) {
-  if(owned[c.id]) delete owned[c.id];
-  else owned[c.id]={id:c.id,name:c.name,set:c.set?.name||"",price:bestPrice(c),quantity:1};
-  allLoadedCards.set(c.id,c);
-  saveStore("lpc_owned",owned);updateStats();
-  renderCards(lastCards,$("cards"));
-  showToast(owned[c.id]?"Added to your collection":"Removed from your collection");
-}
-function renderCollection() {
-  const container=$("ownedCards");
-  container.innerHTML="";
-  const entries=Object.keys(owned);
-  if(!entries.length){container.innerHTML='<div class="empty">Your collection is empty. Explore cards and tap ♡ Own to get started.</div>';return;}
-  const cards=entries.map(id=>allLoadedCards.get(id)).filter(Boolean);
-  renderCards(cards,container);
-  const missing=entries.filter(id=>!allLoadedCards.has(id));
-  if(missing.length) {
-    const note=document.createElement("div");note.className="notice";
-    note.textContent=`${missing.length} saved card(s) are not currently loaded into the page. Search for those cards to see their artwork and current available prices.`;
-    container.prepend(note);
-  }
-}
-$("exportCollection").addEventListener("click",()=>{
-  const rows=[["ID","Name","Set","Quantity","Estimated GBP"]];
-  Object.entries(owned).forEach(([id,e])=>rows.push([id,e.name,e.set,e.quantity||1,e.price??""]));
-  downloadCSV("lucas-pokemon-collection.csv",rows);
-});
-function downloadCSV(filename,rows) {
-  const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
-  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");a.href=url;a.download=filename;a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-
-// ======================================================
-// DECK BUILDER
-// ======================================================
-function addToDeck(which,c) {
-  const list=decks[which];
-  const existing=list.find(x=>x.id===c.id);
-  if(existing) {
-    if(existing.qty>=4 && c.supertype!=="Energy") {showToast("Most cards are limited to four copies per deck.");return;}
-    existing.qty++;
-  } else list.push({id:c.id,name:c.name,set:c.set?.name||"",qty:1,price:bestPrice(c),supertype:c.supertype,types:c.types||[],image:imageURL(c)});
-  allLoadedCards.set(c.id,c);
-  saveStore("lpc_decks",decks);
-  renderDecks();
-  showToast("Added to Deck "+which);
-}
-function deckTotals(which) {
-  const list=decks[which];
-  let count=0,value=0,pokemon=0,trainer=0,energy=0;
-  list.forEach(x=>{
-    count+=x.qty;
-    value+=(bestPrice(allLoadedCards.get(x.id)||{})??x.price??0)*x.qty;
-    const c=allLoadedCards.get(x.id);
-    const cat=c?category(c):x.supertype;
-    if(cat==="Pokémon")pokemon+=x.qty;
-    else if(cat==="Trainer")trainer+=x.qty;
-    else if(cat==="Energy")energy+=x.qty;
-  });
-  return {count,value,pokemon,trainer,energy};
-}
-function renderDecks() {
-  ["A","B"].forEach(which=>{
-    const input=$("deck"+which+"Name");
-    if(document.activeElement!==input)input.value=deckNames[which]||("Deck "+which);
-    const t=deckTotals(which);
-    $("deck"+which+"Summary").innerHTML=`<span>${t.count}/60 cards</span><span>${money(t.value)}</span><span>Pokémon ${t.pokemon}</span><span>Trainers ${t.trainer}</span><span>Energy ${t.energy}</span>`;
-    $("deck"+which+"List").innerHTML="";
-    if(!decks[which].length)$("deck"+which+"List").innerHTML='<div class="empty">No cards yet. Visit Card Explorer to add cards.</div>';
-    decks[which].forEach(entry=>{
-      const row=document.createElement("div");row.className="deckrow";
-      row.innerHTML=`${entry.image?`<img src="${escapeHTML(entry.image)}" alt="">`:""}<div class="grow"><strong>${escapeHTML(entry.name)}</strong><span class="small muted">${escapeHTML(entry.set||"")}</span><br><span class="small">${entry.qty} × ${money(bestPrice(allLoadedCards.get(entry.id)||{})??entry.price)}</span></div><button class="iconbtn" data-less>−</button><strong>${entry.qty}</strong><button class="iconbtn" data-more>+</button><button class="iconbtn" data-remove>✕</button>`;
-      row.querySelector("[data-less]").addEventListener("click",()=>changeQty(which,entry.id,-1));
-      row.querySelector("[data-more]").addEventListener("click",()=>changeQty(which,entry.id,1));
-      row.querySelector("[data-remove]").addEventListener("click",()=>removeDeckCard(which,entry.id));
-      $("deck"+which+"List").appendChild(row);
-    });
-  });
-  updateStats();
-}
-function changeQty(which,id,delta) {
-  const entry=decks[which].find(x=>x.id===id);if(!entry)return;
-  const card=allLoadedCards.get(id);
-  const limit=card?.supertype==="Energy"?60:4;
-  if(delta>0&&entry.qty>=limit){showToast("Copy limit reached for this card.");return;}
-  entry.qty+=delta;if(entry.qty<=0)decks[which]=decks[which].filter(x=>x.id!==id);
-  saveStore("lpc_decks",decks);renderDecks();
-}
-function removeDeckCard(which,id){decks[which]=decks[which].filter(x=>x.id!==id);saveStore("lpc_decks",decks);renderDecks()}
-["A","B"].forEach(which=>{
-  $("clear"+which).addEventListener("click",()=>{
-    if(confirm("Clear all cards from Deck "+which+"?")){decks[which]=[];saveStore("lpc_decks",decks);renderDecks()}
-  });
-  $("deck"+which+"Name").addEventListener("input",e=>{
-    deckNames[which]=e.target.value;saveStore("lpc_decknames",deckNames);
-  });
-});
-
-// ======================================================
-// COMPARE DECKS
-// ======================================================
-function renderComparison() {
-  renderDecks();
-  const a=deckTotals("A"),b=deckTotals("B");
-  const decksHTML=[["A",a],["B",b]].map(([key,t])=>`
-    <div class="panel">
-      <h3>${escapeHTML(deckNames[key]||("Deck "+key))}</h3>
-      <div class="price" style="font-size:26px">${money(t.value)}</div>
-      <p>${t.count} total cards ${t.count===60?"✓":t.count>60?"· over 60 cards":"· fewer than 60 cards"}</p>
-      <div class="muted small">Pokémon: ${t.pokemon}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.pokemon/t.count*100:0)}%"></span></div>
-      <div class="muted small">Trainers: ${t.trainer}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.trainer/t.count*100:0)}%"></span></div>
-      <div class="muted small">Energy: ${t.energy}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.energy/t.count*100:0)}%"></span></div>
-    </div>`).join("");
-  $("comparison").innerHTML=decksHTML;
-  const bMap=new Map(decks.B.map(c=>[c.id,c.qty]));
-  const shared=decks.A.filter(c=>bMap.has(c.id));
-  $("sharedCards").innerHTML=shared.length?
-    shared.map(c=>`<div class="deckrow"><div class="grow"><strong>${escapeHTML(c.name)}</strong><span class="small muted">${escapeHTML(c.set||"")}</span></div><span>${c.qty} in A · ${bMap.get(c.id)} in B</span></div>`).join("")
-    :"No shared card printings yet.";
-}
-$("runCompare").addEventListener("click",renderComparison);
-
-// ======================================================
-// STARTUP
-// ======================================================
-loadSets();
-loadCards(true);
-updateStats();
-renderDecks();
-})();
+const demoCards=[
+{id:"pika",name:"Pikachu",type:"Lightning",rarity:"Common",set:"Scarlet & Violet",number:"025",hp:70,attack:"Thunder Jolt",damage:30,cost:1,price:1.25,emoji:"⚡",colour:"#e5b83c"},
+{id:"char",name:"Charizard ex",type:"Fire",rarity:"Double Rare",set:"Obsidian Flames",number:"125",hp:330,attack:"Infernal Reign",damage:180,cost:3,price:24.99,emoji:"🔥",colour:"#ef7049"},
+{id:"mew",name:"Mew ex",type:"Psychic",rarity:"Ultra Rare",set:"151",number:"151",hp:180,attack:"Genome Hacking",damage:130,cost:2,price:18.5,emoji:"🩷",colour:"#dc8cbf"},
+{id:"bulb",name:"Bulbasaur",type:"Grass",rarity:"Common",set:"151",number:"001",hp:70,attack:"Vine Whip",damage:20,cost:1,price:1.5,emoji:"🌿",colour:"#60b96b"},
+{id:"squirt",name:"Squirtle",type:"Water",rarity:"Common",set:"151",number:"007",hp:70,attack:"Water Gun",damage:20,cost:1,price:1.35,emoji:"💧",colour:"#65b8f2"},
+{id:"venu",name:"Venusaur ex",type:"Grass",rarity:"Double Rare",set:"151",number:"003",hp:340,attack:"Dangerous Toxwhip",damage:150,cost:3,price:8.75,emoji:"🌺",colour:"#4aaf7b"},
+{id:"blast",name:"Blastoise ex",type:"Water",rarity:"Double Rare",set:"151",number:"009",hp:330,attack:"Twin Cannons",damage:140,cost:3,price:9.5,emoji:"🌊",colour:"#4b9be6"},
+{id:"eevee",name:"Eevee",type:"Colorless",rarity:"Common",set:"Prismatic Evolutions",number:"055",hp:60,attack:"Quick Draw",damage:20,cost:1,price:2.4,emoji:"🦊",colour:"#c69b68"},
+{id:"umbreon",name:"Umbreon ex",type:"Darkness",rarity:"Special Illustration Rare",set:"Prismatic Evolutions",number:"161",hp:280,attack:"Onyx",damage:160,cost:3,price:280,emoji:"🌙",colour:"#545d80"},
+{id:"ray",name:"Rayquaza",type:"Dragon",rarity:"Ultra Rare",set:"Evolving Skies",number:"110",hp:120,attack:"Dragon Pulse",damage:80,cost:2,price:22,emoji:"🐉",colour:"#60b5b8"},
+{id:"gengar",name:"Gengar",type:"Psychic",rarity:"Rare",set:"151",number:"094",hp:130,attack:"Shadowy Spellbind",damage:70,cost:2,price:3.75,emoji:"👻",colour:"#9273cc"},
+{id:"lucario",name:"Lucario",type:"Fighting",rarity:"Rare",set:"Brilliant Stars",number:"079",hp:130,attack:"Aura Sphere",damage:90,cost:2,price:2.1,emoji:"🥊",colour:"#9c9fd7"},
+{id:"snorlax",name:"Snorlax",type:"Colorless",rarity:"Rare",set:"151",number:"143",hp:150,attack:"Body Slam",damage:60,cost:2,price:2.8,emoji:"😴",colour:"#91a2b7"},
+{id:"mewtwo",name:"Mewtwo",type:"Psychic",rarity:"Rare",set:"151",number:"150",hp:130,attack:"Psystrike",damage:90,cost:2,price:4.25,emoji:"🧠",colour:"#b18ad9"},
+{id:"arcanine",name:"Arcanine ex",type:"Fire",rarity:"Ultra Rare",set:"Scarlet & Violet",number:"032",hp:280,attack:"Raging Claws",damage:120,cost:2,price:5.5,emoji:"🐕",colour:"#ee8753"},
+{id:"dragonite",name:"Dragonite",type:"Dragon",rarity:"Rare",set:"151",number:"149",hp:160,attack:"Dragon Claw",damage:100,cost:3,price:3.25,emoji:"🐲",colour:"#e5a46b"},
+{id:"togepi",name:"Togepi",type:"Colorless",rarity:"Common",set:"151",number:"175",hp:50,attack:"Fairy Wind",damage:10,cost:1,price:1.15,emoji:"🥚",colour:"#d8c8aa"},
+{id:"potion",name:"Potion",type:"Trainer",rarity:"Common",set:"Trainer Collection",number:"001",hp:0,attack:"Heal 20 HP",damage:0,cost:0,price:.25,emoji:"🧪",colour:"#69c8a3"},
+{id:"research",name:"Professor's Research",type:"Trainer",rarity:"Uncommon",set:"Trainer Collection",number:"002",hp:0,attack:"Draw 2 cards",damage:0,cost:0,price:.5,emoji:"📖",colour:"#a2b9d9"},
+{id:"switch",name:"Switch",type:"Trainer",rarity:"Common",set:"Trainer Collection",number:"003",hp:0,attack:"Switch Pokémon",damage:0,cost:0,price:.2,emoji:"🔄",colour:"#c4cbdc"},
+{id:"energyL",name:"Lightning Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"001",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"⚡",colour:"#e5c24c"},
+{id:"energyF",name:"Fire Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"002",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"🔥",colour:"#e97854"},
+{id:"energyW",name:"Water Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"003",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"💧",colour:"#61a8ed"},
+{id:"energyG",name:"Grass Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"004",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"🌿",colour:"#6dc17b"}
+];
+let cards=[...demoCards], explorerLimit=24, deck={}, savedDecks={}, apiPage=1, apiTotal=0;
+let battle=null, apiKey=localStorage.getItem("lpc_api_key")||"";
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return n==null||!Number.isFinite(Number(n))?"Not available":"£"+Number(n).toFixed(2)}
+function getCard(id){return cards.find(c=>c.id===id)||demoCards.find(c=>c.id===id)}
+function art(c){return c.image?`<img loading="lazy" src="${esc(c.image)}" alt="${esc(c.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="emoji" style="display:none">${c.emoji||"🃏"}</span>`:`<span class="emoji">${c.emoji||"🃏"}</span>`}
+function cardHTML(c){return `<article class="card"><div class="card-art" style="background:radial-gradient(circle,${esc(c.colour||"#435d83")},#111a2d)">${art(c)}<span class="rarity">${esc(c.rarity||"Card")}</span></div><div class="card-info"><div class="card-title">${esc(c.name)}</div><div class="muted">${esc(c.set||"Unknown set")} · #${esc(c.number||"—")}</div><div>${c.type?`<span class="tag">${esc(c.type)}</span>`:""}${c.hp?`<span class="tag">${c.hp} HP</span>`:""}</div><div class="card-price">${c.demoPrice? "Sample: ":""}${money(c.price)}</div><div class="card-actions"><button class="btn" onclick="openCard('${esc(c.id)}')">Details</button><button class="btn primary" onclick="addToDeck('${esc(c.id)}')">+ Deck</button></div></div></article>`}
+function toast(msg){let t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),2400)}
+function showPage(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.page===page));if(page==="explorer")renderExplorer();if(page==="prices")renderPrices();if(page==="deck")renderDeck();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function initSets(){let s=$("setFilter");let old=s.value;let sets=[...new Set(cards.map(c=>c.set).filter(Boolean))].sort();s.innerHTML='<option value="">All sets</option>'+sets.map(x=>`<option>${esc(x)}</option>`).join("");if(sets.includes(old))s.value=old}
+function renderExplorer(){initSets();let q=$("search").value.toLowerCase(),type=$("typeFilter").value,rarity=$("rarityFilter").value,set=$("setFilter").value;let list=cards.filter(c=>(`${c.name} ${c.set} ${c.number} ${c.type}`.toLowerCase().includes(q))&&(!type||c.type===type)&&(!rarity||c.rarity===rarity)&&(!set||c.set===set));$("resultCount").textContent=list.length+" cards";$("explorerGrid").innerHTML=list.slice(0,explorerLimit).map(cardHTML).join("")||'<div class="empty">No cards found. Try a different search or load cards from the API.</div>';$("loadMore").style.display=list.length>explorerLimit?"block":"none"}
+function loadMoreCards(){explorerLimit+=24;renderExplorer()}
+function renderHome(){ $("totalCards").textContent=cards.length;$("featuredGrid").innerHTML=cards.slice(0,8).map(cardHTML).join("");$("savedDeckCount").textContent=Object.keys(savedDecks).length;$("savedPill").textContent="⭐ "+Object.keys(savedDecks).length+" saved decks";$("deckTotalHome").textContent=Object.values(deck).reduce((a,b)=>a+b,0)+" / 60"}
+function openCard(id){let c=getCard(id);if(!c)return;$("modalContent").innerHTML=`<div class="row" style="align-items:flex-start"><h2>${esc(c.name)}</h2><button class="btn" style="flex:0" onclick="closeModal()">✕</button></div><div class="modal-grid"><div class="card-art" style="height:360px;border-radius:12px;background:radial-gradient(circle,${esc(c.colour||"#435d83")},#10182b)">${art(c)}</div><div><span class="tag">${esc(c.rarity||"Unknown rarity")}</span><span class="tag">${esc(c.type||"Unknown type")}</span><h3 style="margin-top:15px">${c.hp?esc(c.hp)+" HP":"Card details"}</h3><p class="muted">Set: ${esc(c.set||"Not available")}<br>Card number: ${esc(c.number||"Not available")}</p><hr><h3>Attack / effect</h3><p>${esc(c.attack||"Not available")} ${c.damage?`— ${c.damage} damage`:""}</p><hr><h3>Price information</h3><p class="card-price">${c.demoPrice?"Illustrative sample: ":""}${money(c.price)}</p><p class="muted">${c.demoPrice?"Sample data only — not a verified market quote.":"Prices may be unavailable or out of date. Check current listings before buying."}</p><div class="actions"><button class="btn primary" onclick="addToDeck('${esc(c.id)}');closeModal()">+ Add to deck</button><button class="btn" onclick="searchSeller('${esc(c.name)}')">Search sellers ↗</button></div></div></div>`;$("cardModal").classList.add("open")}
+function closeModal(){$("cardModal").classList.remove("open")}
+function searchSeller(name){window.open("https://www.ebay.co.uk/sch/i.html?_nkw="+encodeURIComponent(name+" pokemon card"),"_blank","noopener")}
+function renderPrices(){let q=$("priceSearch").value.toLowerCase();let list=cards.filter(c=>c.name.toLowerCase().includes(q));let sort=$("priceSort").value;if(sort==="high")list.sort((a,b)=>(b.price??-1)-(a.price??-1));else if(sort==="low")list.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));else list.sort((a,b)=>a.name.localeCompare(b.name));$("priceList").innerHTML=list.map(c=>`<div class="price-line"><div><b>${esc(c.name)}</b><div class="muted">${esc(c.set||"Unknown set")} · ${esc(c.rarity||"")}</div><div class="muted">${c.demoPrice?"Illustrative demo value":"Source price not independently verified"}</div></div><div style="text-align:right"><b style="color:var(--green)">${money(c.price)}</b><div><button class="btn" style="margin-top:5px;padding:6px 9px;font-size:12px" onclick="searchSeller('${esc(c.name)}')">Find listings ↗</button></div></div></div>`).join("")||'<div class="empty">No matching cards.</div>'}
+function addToDeck(id){let c=getCard(id);if(!c)return;let total=Object.values(deck).reduce((a,b)=>a+b,0);if(total>=60)return toast("Your deck already has 60 cards.");if((deck[id]||0)>=4&&c.type!=="Energy")return toast("Maximum 4 copies of this card in this deck.");deck[id]=(deck[id]||0)+1;renderDeck();renderHome();toast(c.name+" added to deck")}
+function removeFromDeck(id){if(!deck[id])return;deck[id]--;if(deck[id]<=0)delete deck[id];renderDeck();renderHome()}
+function clearDeck(){if(!confirm("Clear all cards from your current deck?"))return;deck={};renderDeck();renderHome()}
+function renderDeck(){let entries=Object.entries(deck).map(([id,n])=>({c:getCard(id),n})).filter(x=>x.c);let total=entries.reduce((s,x)=>s+x.n,0);$("deckCounter").textContent=total+" / 60 cards";$("dTotal").textContent=total;$("dPokemon").textContent=entries.filter(x=>x.c.type!=="Trainer"&&x.c.type!=="Energy").reduce((s,x)=>s+x.n,0);$("dTrainer").textContent=entries.filter(x=>x.c.type==="Trainer").reduce((s,x)=>s+x.n,0);$("dEnergy").textContent=entries.filter(x=>x.c.type==="Energy").reduce((s,x)=>s+x.n,0);$("deckTotalHome").textContent=total+" / 60";$("deckList").innerHTML=entries.map(({c,n})=>`<div class="deck-row"><span class="num">${n}×</span><span>${esc(c.name)}<div class="muted">${esc(c.type)}</div></span><button class="btn" onclick="removeFromDeck('${esc(c.id)}')">−</button><button class="btn" onclick="addToDeck('${esc(c.id)}')">+</button></div>`).join("")||'<div class="empty">Your deck is empty. Add cards from the panel.</div>';renderDeckPicker();renderSavedDecks()}
+function renderDeckPicker(){if(!$("deckPicker"))return;let q=$("deckSearch").value.toLowerCase();$("deckPicker").innerHTML=cards.filter(c=>c.name.toLowerCase().includes(q)||c.type.toLowerCase().includes(q)).slice(0,80).map(c=>`<div class="small-card">${c.image?`<img loading="lazy" src="${esc(c.image)}" alt="">`:`<div style="font-size:27px;width:52px;text-align:center">${c.emoji||"🃏"}</div>`}<div class="grow"><strong>${esc(c.name)}</strong><div class="muted">${esc(c.type)} · ${money(c.price)}</div></div><button class="btn primary" onclick="addToDeck('${esc(c.id)}')">+</button></div>`).join("")||'<div class="empty">No cards found.</div>'}
+function saveDeck(){let name=$("deckName").value.trim()||"My Deck";savedDecks[name]={...deck};localStorage.setItem("lpc_decks",JSON.stringify(savedDecks));renderDeck();renderHome();toast("Deck saved: "+name)}
+function loadSavedDeck(name){deck={...savedDecks[name]};$("deckName").value=name;renderDeck();renderHome();toast("Loaded "+name)}
+function deleteSavedDeck(name){if(!confirm("Delete saved deck "+name+"?"))return;delete savedDecks[name];localStorage.setItem("lpc_decks",JSON.stringify(savedDecks));renderDeck();renderHome()}
+function renderSavedDecks(){$("savedDecks").innerHTML=Object.keys(savedDecks).map(n=>`<div class="small-card"><div class="grow"><strong>${esc(n)}</strong><div class="muted">${Object.values(savedDecks[n]).reduce((a,b)=>a+b,0)} cards</div></div><button class="btn" onclick="loadSavedDeck('${esc(n)}')">Load</button><button class="btn red" onclick="deleteSavedDeck('${esc(n)}')">×</button></div>`).join("")||'<p class="muted">No saved decks yet.</p>'}
+function exportDeck(){let lines=[];Object.entries(deck).forEach(([id,n])=>{let c=getCard(id);if(c)lines.push(`${n} ${c.name}`)});if(!lines.length)return toast("Add cards before exporting.");let blob=new Blob([lines.join("\n")+"\n"],{type:"text/plain"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=($("deckName").value.trim()||"pokemon-deck").replace(/[^a-z0-9-_]/gi,"-")+".txt";a.click();URL.revokeObjectURL(url)}
+function importDeckText(){let text=$("deckText").value.trim();if(!text)return toast("Paste a deck list first.");let next={};for(let line of text.split(/\r?\n/)){let m=line.trim().match(/^(\d+)\s*[x×]?\s+(.+)$/i);if(!m)continue;let name=m[2].replace(/\s+\([^)]+\)\s*$/,"").trim();let c=cards.find(x=>x.name.toLowerCase()===name.toLowerCase())||cards.find(x=>x.name.toLowerCase().includes(name.toLowerCase()));if(c)next[c.id]=(next[c.id]||0)+Number(m[1])}let total=Object.values(next).reduce((a,b)=>a+b,0);if(total>60)return toast("That list has more than 60 cards.");deck=next;renderDeck();renderHome();toast("Imported "+total+" cards")}
+function importDeckFile(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{$("deckText").value=r.result;importDeckText()};r.readAsText(f);e.target.value=""}
+function resetDemo(){if(!confirm("Reset to the built-in demo cards? Online-loaded cards will be removed."))return;cards=[...demoCards];explorerLimit=24;renderAll();toast("Demo cards restored")}
+function saveApiKey(){apiKey=$("apiKey").value.trim();if(apiKey)localStorage.setItem("lpc_api_key",apiKey);else localStorage.removeItem("lpc_api_key");toast(apiKey?"API key saved in this browser":"API key removed")}
+async function loadOnlineCards(){let key=apiKey||$("apiKey").value.trim();let headers={};if(key)headers["X-Api-Key"]=key;toast("Loading cards from Pokémon TCG API…");try{let res=await fetch("https://api.pokemontcg.io/v2/cards?page="+apiPage+"&pageSize=100&orderBy=name",{headers});if(!res.ok)throw new Error("API responded with "+res.status);let data=await res.json();apiTotal=data.totalCount||0;let incoming=(data.data||[]).map(x=>{let tcg=x.tcgplayer?.prices||{},first=tcg.holofoil||tcg.normal||tcg.reverseHolofoil||tcg.unlimitedHolofoil;let usd=first?.market??first?.mid??null;return{id:"api-"+x.id,name:x.name,type:x.supertype==="Trainer"?"Trainer":x.supertype==="Energy"?"Energy":(x.types?.[0]||"Colorless"),rarity:x.rarity||"Unknown",set:x.set?.name||"Unknown set",number:x.number||"",hp:Number(x.hp)||0,attack:x.attacks?.[0]?.name||"No attack data",damage:parseInt(x.attacks?.[0]?.damage)||0,cost:x.attacks?.[0]?.convertedEnergyCost||1,price:usd==null?null:usd*.79,sourceUSD:usd,priceSource:usd==null?"No TCGplayer market value returned":"TCGplayer API market value converted at a rough £0.79/$1",image:x.images?.large||x.images?.small||null,apiId:x.id,emoji:"🃏",colour:"#405779"}});let existing=new Set(cards.map(c=>c.id));incoming.forEach(c=>{if(!existing.has(c.id))cards.push(c)});renderAll();toast("Loaded "+incoming.length+" cards. API total: "+apiTotal.toLocaleString());}catch(err){console.error(err);toast("Could not load API cards. Check connection or API key.");alert("Could not load online cards. The API may require a key or the request may have been blocked. Details: "+err.message)}}
+function renderAll(){renderExplorer();renderPrices();renderDeck();renderHome()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function battleCard(c){return{id:c.id,name:c.name,type:c.type,hp:Math.max(50,c.hp||80),maxHp:Math.max(50,c.hp||80),attack:c.attack||"Basic Strike",damage:c.damage||30,cost:c.cost||1,energy:0,emoji:c.emoji||"🃏",image:c.image||null,knocked:false}}
+function buildBattleDeck(){let mons=cards.filter(c=>c.type!=="Trainer"&&c.type!=="Energy"&&c.hp);let out=[];for(let i=0;i<30;i++){let c=mons[i%mons.length];out.push({...c})}for(let i=0;i<15;i++)out.push({...cards.find(c=>c.type==="Energy")||demoCards[20]});for(let i=0;i<15;i++)out.push({...cards.find(c=>c.type==="Trainer")||demoCards[17]});return shuffle(out)}
+function startBattle(){let deck1=buildBattleDeck(),deck2=buildBattleDeck();battle={playerDeck:deck1,aiDeck:deck2,hand:deck1.splice(0,7),playerActive:null,playerBench:[],aiActive:null,aiBench:[],playerPrizes:3,aiPrizes:3,turn:1,energyUsed:false,drew:false,over:false,selected:null};for(let i=0;i<6;i++){let p=battle.hand.findIndex(c=>c.type!=="Trainer"&&c.type!=="Energy"&&c.hp);if(p>=0){let c=battle.hand.splice(p,1)[0];battle.playerActive=battleCard(c);break}}if(!battle.playerActive){let c=battle.playerDeck.shift();battle.playerActive=battleCard(c||demoCards[0])}for(let i=0;i<7;i++){let c=battle.aiDeck.shift();if(c&&c.type!=="Trainer"&&c.type!=="Energy"&&c.hp)battle.aiBench.push(battleCard(c));else if(c)battle.aiDeck.push(c)}if(!battle.aiBench.length)battle.aiBench.push(battleCard(demoCards[0]));battle.aiActive=battle.aiBench.shift();battle.aiDeck=shuffle(battle.aiDeck);battleLog("Battle started! You go first. Choose a card, attach Energy and attack.");battleLog("Your active Pokémon is "+battle.playerActive.name+".");renderBattle();showPage("battle")}
+function battleLog(msg){if(!battle)return;let el=$("battleLog");el.innerHTML+=`<div>• ${esc(msg)}</div>`;el.scrollTop=el.scrollHeight}
+function hpMarkup(p){if(!p)return'<div class="muted">No Pokémon</div>';let pct=Math.max(0,p.hp/p.maxHp*100);return`<div class="active-pokemon"><div style="display:flex;gap:10px;align-items:center">${p.image?`<img src="${esc(p.image)}" alt="" style="width:70px;height:85px;object-fit:contain">`:`<div style="font-size:42px">${p.emoji}</div>`}<div style="flex:1"><b>${esc(p.name)}</b><div class="muted">${esc(p.type)} · ${p.energy} Energy</div><div class="hpbar"><div class="hpfill" style="width:${pct}%;background:${pct<30?"var(--red)":"var(--green)"}"></div></div><b>${Math.max(0,p.hp)} / ${p.maxHp} HP</b></div></div><div class="muted" style="margin-top:8px">Attack: ${esc(p.attack)} · ${p.damage} damage</div></div>`}
+function renderBattle(){if(!battle)return;$("aiActive").innerHTML=hpMarkup(battle.aiActive);$("playerActive").innerHTML=hpMarkup(battle.playerActive);$("aiBench").innerHTML=battle.aiBench.map((p,i)=>`<div class="mini">${p.emoji}<br>${esc(p.name)}<br>${p.hp}/${p.maxHp} HP</div>`).join("")||'<span class="muted">No bench Pokémon</span>';$("playerBench").innerHTML=battle.playerBench.map((p,i)=>`<button class="mini" onclick="promoteBench(${i})">${p.emoji}<br>${esc(p.name)}<br>${p.hp}/${p.maxHp} HP</button>`).join("")||'<span class="muted">No bench Pokémon</span>';$("battleHand").innerHTML=battle.hand.map((c,i)=>`<div class="hand-card ${battle.selected===i?"selected":""}" onclick="playHandCard(${i})">${c.image?`<img src="${esc(c.image)}" alt="">`:`<div style="font-size:28px">${c.emoji||"🃏"}</div>`}<b>${esc(c.name)}</b><span class="muted">${esc(c.type)}</span></div>`).join("")||'<div class="empty">No cards in hand</div>';$("playerPrizes").textContent="Prizes: "+battle.playerPrizes;$("aiPrizes").textContent="Prizes: "+battle.aiPrizes;$("battleStatus").textContent=battle.over?"Battle over":"Turn "+battle.turn+(battle.energyUsed?" · Energy used":"");$("attackBtn").disabled=battle.over||!battle.playerActive||battle.playerActive.energy<battle.playerActive.cost}
+function playHandCard(i){if(!battle||battle.over)return;let c=battle.hand[i];if(!c)return;if(c.type==="Trainer"){battle.hand.splice(i,1);if(/research/i.test(c.name)){for(let j=0;j<2&&battle.playerDeck.length;j++)battle.hand.push(battle.playerDeck.shift());battleLog("Professor's Research: drew up to 2 cards.")}else if(/potion/i.test(c.name)){battle.playerActive.hp=Math.min(battle.playerActive.maxHp,battle.playerActive.hp+20);battleLog("Potion healed your active Pokémon by 20 HP.")}else battleLog(c.name+" was played. Trainer effects are simplified.");renderBattle();return}if(c.type==="Energy"){battle.hand.splice(i,1);if(battle.playerActive&&!battle.energyUsed){battle.playerActive.energy++;battle.energyUsed=true;battleLog("Attached Energy to "+battle.playerActive.name+".")}else{battle.hand.splice(i,0,c);toast("You have already attached Energy this turn.")}renderBattle();return}if(!c.hp)return;if(!battle.playerActive){battle.playerActive=battleCard(c);battle.hand.splice(i,1);battleLog(c.name+" is now active.")}else if(battle.playerBench.length<5){battle.playerBench.push(battleCard(c));battle.hand.splice(i,1);battleLog(c.name+" joined your bench.")}else toast("Your bench is full.");renderBattle()}
+function attachEnergy(){if(!battle||battle.over)return;if(battle.energyUsed)return toast("You already attached Energy this turn.");let i=battle.hand.findIndex(c=>c.type==="Energy");if(i<0)return toast("No Energy cards in your hand.");battle.hand.splice(i,1);battle.playerActive.energy++;battle.energyUsed=true;battleLog("Attached Energy to "+battle.playerActive.name+".");renderBattle()}
+function drawCard(){if(!battle||battle.over)return;if(battle.drew)return toast("You already drew a card this turn.");if(!battle.playerDeck.length)return toast("Your deck is empty.");battle.hand.push(battle.playerDeck.shift());battle.drew=true;battleLog("You drew a card.");renderBattle()}
+function playerAttack(){if(!battle||battle.over)return;if(!battle.playerActive||!battle.aiActive)return;if(battle.playerActive.energy<battle.playerActive.cost)return toast("Attach more Energy before attacking.");let damage=battle.playerActive.damage||30;battle.aiActive.hp-=damage;battleLog(battle.playerActive.name+" used "+battle.playerActive.attack+" for "+damage+" damage!");if(battle.aiActive.hp<=0){battleLog("Computer's "+battle.aiActive.name+" was knocked out!");battle.playerPrizes--;battle.aiActive=battle.aiBench.shift()||null;if(!battle.aiActive){if(battle.aiDeck.length){let c=battle.aiDeck.find(x=>x.hp&&x.type!=="Energy"&&x.type!=="Trainer");battle.aiActive=battleCard(c||demoCards[0])}else battle.aiActive=null}if(battle.playerPrizes<=0||!battle.aiActive){endBattle(true);return}}battle.energyUsed=false;battle.drew=false;renderBattle();setTimeout(aiTurn,700)}
+function aiTurn(){if(!battle||battle.over)return;if(!battle.aiActive){endBattle(true);return}let energyIndex=battle.aiDeck.findIndex(c=>c.type==="Energy");if(energyIndex>=0){battle.aiDeck.splice(energyIndex,1);battle.aiActive.energy++}else battle.aiActive.energy++;if(battle.aiActive.energy>=battle.aiActive.cost){let damage=battle.aiActive.damage||30;battle.playerActive.hp-=damage;battleLog("Computer's "+battle.aiActive.name+" attacked for "+damage+" damage!");if(battle.playerActive.hp<=0){battleLog("Your "+battle.playerActive.name+" was knocked out!");battle.aiPrizes--;battle.playerActive=battle.playerBench.shift()||null;if(!battle.playerActive){let i=battle.hand.findIndex(c=>c.hp&&c.type!=="Energy"&&c.type!=="Trainer");if(i>=0)battle.playerActive=battleCard(battle.hand.splice(i,1)[0]);else{endBattle(false);return}}if(battle.aiPrizes<=0){endBattle(false);return}}}battle.turn++;battle.energyUsed=false;battle.drew=false;renderBattle()}
+function promoteBench(i){if(!battle||battle.over||!battle.playerBench[i])return;let p=battle.playerBench[i];battle.playerBench[i]=battle.playerActive;battle.playerActive=p;battleLog("Switched active Pokémon to "+p.name+".");renderBattle()}
+function switchPokemon(){if(!battle||battle.over)return;if(!battle.playerBench.length)return toast("You have no Pokémon on your bench.");promoteBench(0)}
+function endBattle(won){if(!battle)return;battle.over=true;battleLog(won?"🏆 YOU WIN! The computer has been defeated!":"💥 The computer wins this battle. Try a different strategy!");$("battleStatus").textContent=won?"🏆 Victory!":"Defeat";renderBattle();toast(won?"Victory!":"Battle over")}
+window.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+try{savedDecks=JSON.parse(localStorage.getItem("lpc_decks")||"{}")}catch{savedDecks={}}
+if(apiKey)$("apiKey").value=apiKey;
+renderAll();
 </script>
 </body>
 </html>
