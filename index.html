@@ -1,343 +1,1137 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#151c35">
+<meta name="theme-color" content="#111827">
 <title>Luca's Pokémon Centre</title>
 <style>
-:root{--bg:#101528;--panel:#1b2440;--panel2:#242f50;--gold:#ffd45c;--red:#ff5b68;--blue:#64c9ff;--green:#62e6a5;--text:#f7f8ff;--muted:#aeb9d7;--border:#394668}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#263963 0,#101528 55%,#0b1020 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.45;cursor:not-allowed}
-header{position:sticky;top:0;z-index:20;background:#11182af2;backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
-.topbar{max-width:1500px;margin:auto;padding:13px 20px;display:flex;align-items:center;gap:15px;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:12px;font-size:clamp(18px,3vw,26px);font-weight:900;letter-spacing:-.7px}
-.brand small{display:block;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
-.ball{width:42px;height:42px;border:3px solid white;border-radius:50%;background:linear-gradient(#ff5b68 0 46%,#252b3b 46% 54%,#f3f5ff 54%);position:relative;flex-shrink:0;box-shadow:0 0 20px #ff5b6840}
-.ball:after{content:"";position:absolute;width:12px;height:12px;border:3px solid #252b3b;background:#fff;border-radius:50%;top:12px;left:12px}
-.header-right{display:flex;gap:8px;align-items:center}
-.pill{background:#25324f;border:1px solid var(--border);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted)}
-nav{max-width:1500px;margin:auto;padding:0 18px 12px;display:flex;gap:8px;overflow-x:auto}
-.tab{white-space:nowrap;border:1px solid var(--border);border-radius:12px;background:#202b48;color:#dce5ff;padding:10px 15px;font-weight:750}
-.tab.active,.tab:hover{background:var(--gold);color:#20243a;border-color:var(--gold)}
-main{max-width:1500px;margin:auto;padding:24px 20px 55px}
-.page{display:none}.page.active{display:block}
-.hero{border:1px solid #4a5c82;border-radius:24px;padding:clamp(22px,4vw,46px);background:linear-gradient(115deg,#263b64ed,#26315bdd 52%,#4d304bd9);position:relative;overflow:hidden;margin-bottom:24px}
-.hero:after{content:"◉";position:absolute;font-size:250px;right:25px;top:-65px;color:#ffffff0b;pointer-events:none}
-.eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase}
-h1{font-size:clamp(32px,5vw,55px);line-height:1.06;letter-spacing:-1.8px;margin:10px 0 14px}
-h2{font-size:24px;margin:0 0 14px}h3{margin:0 0 8px}
-p{line-height:1.55}
-.sub{color:var(--muted);max-width:760px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.btn{border:1px solid var(--border);background:#293654;color:white;padding:10px 14px;border-radius:11px;font-weight:750}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#24253a}
-.btn.red{background:var(--red);color:#251421;border-color:var(--red)}
-.btn.green{background:var(--green);color:#102a27;border-color:var(--green)}
-.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
-.stat,.panel{background:linear-gradient(145deg,#202b49,#19223a);border:1px solid var(--border);border-radius:17px;padding:18px}
-.stat strong{display:block;font-size:27px;color:var(--gold)}
-.stat span{color:var(--muted);font-size:12px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 14px;flex-wrap:wrap}
-.filters{display:grid;grid-template-columns:2fr repeat(3,minmax(130px,1fr));gap:10px;margin-bottom:17px}
-input,select,textarea{width:100%;background:#11192d;border:1px solid var(--border);color:var(--text);padding:11px 12px;border-radius:10px;min-width:0}
-input:focus,select:focus,textarea:focus{outline:2px solid #64c9ff88;border-color:var(--blue)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px}
-.card{background:#1d2843;border:1px solid #465677;border-radius:15px;overflow:hidden;transition:.18s;position:relative}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px #0005;border-color:var(--gold)}
-.card-art{height:205px;background:radial-gradient(circle,#344c78,#10192d);display:flex;align-items:center;justify-content:center;position:relative;padding:9px}
-.card-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 9px #0005)}
-.card-art .emoji{font-size:90px;filter:drop-shadow(0 5px 10px #0005)}
-.card-info{padding:12px}
-.card-title{font-weight:850;line-height:1.25;min-height:40px}
-.muted{color:var(--muted);font-size:12px}
-.card-price{color:var(--green);font-weight:900;margin-top:8px}
-.card-actions{display:flex;gap:6px;margin-top:10px}
-.card-actions button{flex:1;font-size:12px;padding:8px 5px}
-.tag{display:inline-block;padding:4px 7px;border-radius:6px;background:#334263;color:#dce5ff;font-size:10px;font-weight:800;margin:3px 3px 0 0}
-.rarity{position:absolute;top:8px;left:8px;background:#131a2bd9;border:1px solid #fff3;padding:5px 7px;border-radius:8px;font-size:10px;font-weight:900;max-width:calc(100% - 16px)}
-.empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--border);border-radius:15px;color:var(--muted)}
-.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:18px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.row>*{flex:1}
-.stack{display:grid;gap:12px}
-.small-card{display:flex;align-items:center;gap:12px;background:#121b30;border:1px solid var(--border);border-radius:12px;padding:10px}
-.small-card img{width:52px;height:65px;object-fit:contain}
-.small-card .grow{flex:1;min-width:0}
-.small-card .grow strong{display:block;overflow-wrap:anywhere}
-.small-card button{padding:7px 10px}
-.deck-counts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.count{background:#111a2e;border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px}
-.deck-list{max-height:420px;overflow:auto;display:grid;gap:7px}
-.deck-row{display:flex;align-items:center;gap:8px;background:#131c30;padding:8px;border-radius:9px}
-.deck-row span:nth-child(2){flex:1}
-.deck-row .num{color:var(--gold);font-weight:900;min-width:22px}
-.battle-board{background:linear-gradient(#24416a,#152441 50%,#304c43);border:1px solid #526c85;border-radius:20px;padding:16px;overflow:hidden}
-.battle-side{padding:12px;border-radius:14px;background:#0e1729c9;margin-bottom:12px}
-.battle-side h3{display:flex;justify-content:space-between;gap:8px}
-.active-pokemon{background:linear-gradient(145deg,#344d75,#1b2945);border:2px solid var(--gold);border-radius:14px;padding:12px;margin:8px 0}
-.hpbar{height:9px;border-radius:99px;background:#45516a;overflow:hidden;margin:8px 0}
-.hpfill{height:100%;background:var(--green);transition:width .3s}
-.bench{display:flex;gap:8px;flex-wrap:wrap}
-.bench .mini{background:#263553;border:1px solid #53678b;border-radius:10px;padding:8px;min-width:80px;text-align:center;font-size:12px}
-.battle-log{height:140px;overflow:auto;background:#0b1323;border-radius:10px;padding:10px;font-size:12px;color:#d7e0f6;line-height:1.65}
-.hand{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin:12px 0}
-.hand-card{background:#283958;border:1px solid #53678b;border-radius:10px;padding:8px;font-size:12px;cursor:pointer;text-align:center}
-.hand-card.selected{border:2px solid var(--gold);background:#4a4560}
-.hand-card img{height:90px;width:100%;object-fit:contain}
-.hand-card b{display:block}
-.notice{background:#332f22;border:1px solid #8a7442;border-radius:12px;padding:12px;color:#ffe6a4;font-size:12px;line-height:1.5}
-.price-list{display:grid;gap:9px}
-.price-line{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#111a2d;border:1px solid var(--border);padding:12px;border-radius:10px}
-footer{text-align:center;color:var(--muted);border-top:1px solid var(--border);padding:25px 15px;font-size:12px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#f6f3e8;color:#182038;border-radius:12px;padding:12px 18px;z-index:100;box-shadow:0 10px 40px #0008;transition:.2s;font-weight:800;max-width:90vw}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-.modal{display:none;position:fixed;inset:0;background:#050914d9;z-index:50;padding:20px;overflow:auto;align-items:center;justify-content:center}
-.modal.open{display:flex}
-.modal-box{width:min(800px,100%);background:#1c2743;border:1px solid #53668c;border-radius:18px;padding:20px;max-height:90vh;overflow:auto}
-.modal-grid{display:grid;grid-template-columns:minmax(160px,.7fr) 1.3fr;gap:20px}
-.modal-grid img{width:100%;max-height:420px;object-fit:contain}
-hr{border:0;border-top:1px solid var(--border);margin:15px 0}
-@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){main{padding:16px 12px 35px}.topbar{padding:10px 12px}.header-right .pill{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card-art{height:165px}.card-info{padding:9px}.filters{grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:22px}.modal-grid{grid-template-columns:1fr}.modal-grid img{max-height:260px}.hero:after{right:-65px}.section-head{margin-top:20px}}
+:root {
+  --bg:#0b1020;
+  --panel:#141c30;
+  --panel2:#1b2640;
+  --line:#2c3b58;
+  --text:#f4f7ff;
+  --muted:#aab6ce;
+  --yellow:#ffd447;
+  --blue:#59a9ff;
+  --green:#4ade80;
+  --red:#fb7185;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(ellipse at top,#1c2c4c 0,#0b1020 55%);
+  color:var(--text);
+  min-height:100vh;
+}
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+button:disabled { opacity:.45;cursor:not-allowed; }
+header {
+  padding:25px 16px;
+  text-align:center;
+  background:linear-gradient(120deg,#17294c,#39256b,#163a58);
+  border-bottom:2px solid #435c88;
+}
+.logo {
+  font-size:clamp(28px,5vw,48px);
+  font-weight:1000;
+  letter-spacing:-1.5px;
+}
+.logo span { color:var(--yellow); }
+header p { color:#d5def3;margin:9px 0 0; }
+.status {
+  display:inline-block;
+  margin-top:13px;
+  padding:7px 12px;
+  background:#0b1326a8;
+  border:1px solid #647ba4;
+  border-radius:20px;
+  color:#dbeafe;
+  font-size:12px;
+}
+nav {
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding:13px;
+  background:#0c1425;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+nav button,.btn {
+  border:1px solid #405474;
+  border-radius:10px;
+  padding:10px 14px;
+  color:var(--text);
+  background:#1b2942;
+  font-weight:700;
+}
+nav button.active, .btn.primary {
+  background:var(--yellow);
+  color:#171717;
+  border-color:var(--yellow);
+}
+.btn.green { background:#166534;border-color:#22c55e; }
+.btn.red { background:#7f1d1d;border-color:#ef4444; }
+.btn.small { padding:6px 9px;font-size:12px; }
+main { max-width:1450px;margin:auto;padding:20px 16px 55px; }
+.page { display:none; }
+.page.active { display:block; }
+h2 { margin:0 0 8px;font-size:25px; }
+h3 { margin:0 0 10px; }
+.sub { color:var(--muted);line-height:1.55;margin:0 0 18px; }
+.panel {
+  background:linear-gradient(145deg,#17223a,#111a2c);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:17px;
+  margin-bottom:17px;
+  min-width:0;
+}
+.controls {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+label { display:block;font-size:12px;color:var(--muted);margin-bottom:6px; }
+input,select {
+  width:100%;
+  min-width:0;
+  background:#0b1324;
+  color:var(--text);
+  border:1px solid #354765;
+  border-radius:9px;
+  padding:11px;
+}
+.actions { display:flex;gap:8px;flex-wrap:wrap;margin-top:12px; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:17px;
+}
+.stat {
+  background:#17223a;
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:12px;
+}
+.stat strong { display:block;font-size:24px;color:var(--yellow); }
+.stat span { font-size:12px;color:var(--muted); }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+  gap:15px;
+}
+.card {
+  min-width:0;
+  background:#17223a;
+  border:1px solid #334563;
+  border-radius:13px;
+  padding:10px;
+  overflow:hidden;
+  transition:transform .15s,border-color .15s;
+}
+.card:hover { transform:translateY(-3px);border-color:#facc15; }
+.card img {
+  width:100%;
+  display:block;
+  object-fit:contain;
+  aspect-ratio:2.5/3.5;
+  border-radius:8px;
+  background:#0c1425;
+}
+.card h3 { font-size:14px;margin:10px 0 5px;line-height:1.35; }
+.card .meta { color:var(--muted);font-size:11px;line-height:1.55; }
+.price { color:#86efac;font-size:14px;font-weight:800;margin:8px 0; }
+.card .actions button { flex:1; }
+.empty {
+  padding:35px 15px;
+  text-align:center;
+  color:var(--muted);
+  border:1px dashed #3c4e70;
+  border-radius:13px;
+}
+.toolbar {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;margin:12px 0;
+}
+.notice { color:#c6d4ef;font-size:12px;line-height:1.6; }
+.badge {
+  display:inline-block;
+  border:1px solid #53698d;
+  color:#dbeafe;
+  border-radius:20px;
+  padding:3px 7px;
+  font-size:10px;
+  margin:2px 2px 2px 0;
+}
+.set-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:12px;
+}
+.set-card {
+  display:flex;gap:12px;align-items:center;
+  background:#17223a;border:1px solid var(--line);
+  border-radius:12px;padding:12px;
+}
+.set-card img { width:55px;height:55px;object-fit:contain; }
+.set-card h3 { font-size:13px;margin:0 0 5px; }
+.set-card p { color:var(--muted);font-size:11px;margin:0 0 7px; }
+.two-col { display:grid;grid-template-columns:1fr 1fr;gap:15px; }
+.deck-row {
+  display:flex;align-items:center;gap:10px;
+  padding:9px 0;border-bottom:1px solid var(--line);
+}
+.deck-row img { width:42px;height:58px;object-fit:contain; }
+.deck-row .grow { flex:1;min-width:0; }
+.deck-row strong { display:block;font-size:13px; }
+.deck-row small { color:var(--muted); }
+.deck-row button { padding:5px 9px; }
+.battle-board {
+  display:grid;grid-template-columns:1fr 1fr;gap:15px;
+}
+.battle-side {
+  background:#101a2e;border:1px solid #354765;
+  border-radius:13px;padding:13px;min-width:0;
+}
+.battle-side h3 { display:flex;justify-content:space-between;gap:8px; }
+.battle-slots { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+.battle-pokemon {
+  min-width:0;text-align:center;border:1px dashed #3a4e70;
+  border-radius:12px;padding:8px;background:#17223a;
+}
+.battle-pokemon img {
+  width:100%;max-width:145px;aspect-ratio:2.5/3.5;
+  object-fit:contain;display:block;margin:auto;
+}
+.battle-pokemon strong { display:block;font-size:12px;margin:6px 0; }
+.hpbar { background:#35415a;height:8px;border-radius:20px;overflow:hidden; }
+.hpbar span { display:block;height:100%;background:#4ade80; }
+.battle-pokemon .meta { color:var(--muted);font-size:11px; }
+.log {
+  background:#080e1a;border:1px solid #2e3d58;
+  border-radius:10px;padding:12px;min-height:105px;
+  max-height:220px;overflow:auto;font-size:12px;line-height:1.65;
+}
+.log p { margin:0 0 5px; }
+footer { text-align:center;padding:25px;color:#8998b4;font-size:12px; }
+@media(max-width:850px) {
+  .controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .two-col { grid-template-columns:1fr; }
+}
+@media(max-width:560px) {
+  main { padding:14px 10px 35px; }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:9px; }
+  .card { padding:7px; }
+  .card .actions { flex-direction:column; }
+  nav { position:static; }
+  nav button { flex:1; }
+  .battle-board { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
+
 <header>
- <div class="topbar">
-  <div class="brand"><div class="ball"></div><div>Luca's Pokémon Centre<small>Collect · Build · Battle</small></div></div>
-  <div class="header-right"><span class="pill" id="savedPill">⭐ 0 saved decks</span><span class="pill">Pokémon TCG fan site</span></div>
- </div>
- <nav>
-  <button class="tab active" data-page="home">🏠 Home</button>
-  <button class="tab" data-page="explorer">🃏 Card Explorer</button>
-  <button class="tab" data-page="prices">💷 Price Centre</button>
-  <button class="tab" data-page="deck">📚 Deck Builder</button>
-  <button class="tab" data-page="battle">⚔️ Battle Simulator</button>
- </nav>
+  <div class="logo">⚡ LUCA'S <span>POKÉMON</span> CENTRE</div>
+  <p>Your card collection, set explorer, prices and Pokémon battles — all in one place.</p>
+  <div class="status" id="connectionStatus">Connecting to the card catalogue…</div>
 </header>
 
+<nav>
+  <button class="active" data-page="home">🏠 Home</button>
+  <button data-page="cards">🃏 Card Explorer</button>
+  <button data-page="sets">📚 All Sets</button>
+  <button data-page="prices">💰 Price Centre</button>
+  <button data-page="deck">🧩 Deck Builder</button>
+  <button data-page="battle">⚔️ Battle Simulator</button>
+</nav>
+
 <main>
-<section class="page active" id="home">
- <div class="hero">
-  <div class="eyebrow">Your Pokémon adventure starts here</div>
-  <h1>Discover cards.<br>Build your dream deck.</h1>
-  <p class="sub">Explore Pokémon cards, check recorded prices, create your own deck and battle a computer opponent in a mini TCG-style simulator.</p>
-  <div class="actions">
-   <button class="btn primary" onclick="showPage('explorer')">🃏 Explore cards</button>
-   <button class="btn" onclick="showPage('deck')">📚 Build a deck</button>
-   <button class="btn" onclick="startBattle()">⚔️ Play a battle</button>
-  </div>
- </div>
- <div class="stats">
-  <div class="stat"><strong id="totalCards">24</strong><span>Demo cards loaded</span></div>
-  <div class="stat"><strong id="savedDeckCount">0</strong><span>Saved decks</span></div>
-  <div class="stat"><strong id="deckTotalHome">0 / 60</strong><span>Cards in your deck</span></div>
-  <div class="stat"><strong>GBP £</strong><span>Price display currency</span></div>
- </div>
- <div class="section-head"><h2>✨ Featured Pokémon</h2><button class="btn" onclick="showPage('explorer')">View all cards →</button></div>
- <div class="grid" id="featuredGrid"></div>
- <div class="section-head"><h2>🚀 What would you like to do?</h2></div>
- <div class="grid">
-  <div class="panel"><h3>🃏 Discover cards</h3><p class="muted">Search by name, type, rarity and expansion set. Add cards to your deck.</p><button class="btn primary" onclick="showPage('explorer')">Explore cards</button></div>
-  <div class="panel"><h3>💰 Compare prices</h3><p class="muted">Check recorded demo prices or connect card-data sources for current listings.</p><button class="btn primary" onclick="showPage('prices')">Price centre</button></div>
-  <div class="panel"><h3>⚔️ Test your deck</h3><p class="muted">Draw your opening hand, attach Energy, attack and defeat the computer.</p><button class="btn primary" onclick="startBattle()">Start battling</button></div>
- </div>
-</section>
+  <section class="page active" id="home">
+    <div class="panel">
+      <h2>Welcome to your Pokémon card hub!</h2>
+      <p class="sub">Search Pokémon cards, browse expansions, check available market prices, build a deck and battle the computer.</p>
+      <div class="controls">
+        <div class="stat"><strong id="setCount">—</strong><span>Sets discovered</span></div>
+        <div class="stat"><strong id="cardCount">—</strong><span>Cards loaded this session</span></div>
+        <div class="stat"><strong id="deckCount">0 / 60</strong><span>Cards in your deck</span></div>
+        <div class="stat"><strong id="savedCount">0</strong><span>Saved cards</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="showPage('cards')">Explore cards</button>
+        <button class="btn" onclick="showPage('sets')">Browse every set</button>
+        <button class="btn" onclick="showPage('deck')">Build a deck</button>
+      </div>
+    </div>
 
-<section class="page" id="explorer">
- <div class="section-head"><div><div class="eyebrow">Find your next favourite card</div><h1>Card Explorer</h1></div><span class="pill" id="resultCount">24 cards</span></div>
- <div class="filters">
-  <input id="search" placeholder="🔍 Search Pokémon, card name or set…" oninput="renderExplorer()">
-  <select id="typeFilter" onchange="renderExplorer()"><option value="">All types</option><option>Grass</option><option>Fire</option><option>Water</option><option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option><option>Metal</option><option>Dragon</option><option>Colorless</option><option>Trainer</option><option>Energy</option></select>
-  <select id="rarityFilter" onchange="renderExplorer()"><option value="">All rarities</option><option>Common</option><option>Uncommon</option><option>Rare</option><option>Double Rare</option><option>Ultra Rare</option><option>Illustration Rare</option><option>Special Illustration Rare</option><option>Promo</option></select>
-  <select id="setFilter" onchange="renderExplorer()"><option value="">All sets</option></select>
- </div>
- <div class="actions" style="margin:0 0 18px">
-  <button class="btn" onclick="loadOnlineCards()">🌐 Load cards from API</button>
-  <button class="btn" onclick="document.getElementById('apiKeyBox').hidden=!document.getElementById('apiKeyBox').hidden">⚙️ API settings</button>
-  <button class="btn" onclick="resetDemo()">↺ Reset demo cards</button>
- </div>
- <div class="panel" id="apiKeyBox" hidden style="margin-bottom:18px">
-  <h3>Pokémon TCG API connection</h3>
-  <p class="muted">The public API can provide card details and artwork. A free API key may be required for reliable requests. Do not use a private key in a public GitHub repository.</p>
-  <div class="row"><input id="apiKey" placeholder="Optional Pokémon TCG API key" type="password"><button class="btn primary" onclick="saveApiKey()">Save key in this browser</button></div>
- </div>
- <div class="grid" id="explorerGrid"></div>
- <div class="actions" style="justify-content:center"><button class="btn" id="loadMore" onclick="loadMoreCards()">Show more cards</button></div>
-</section>
+    <div class="panel">
+      <h2>✨ Quick card search</h2>
+      <p class="sub">Search the online catalogue by Pokémon name.</p>
+      <div class="controls">
+        <div style="grid-column:span 3">
+          <label for="homeSearch">Card or Pokémon name</label>
+          <input id="homeSearch" placeholder="Try Charizard, Pikachu, Mew…" />
+        </div>
+        <div style="display:flex;align-items:end">
+          <button class="btn primary" style="width:100%" onclick="homeSearch()">Search</button>
+        </div>
+      </div>
+    </div>
 
-<section class="page" id="prices">
- <div class="section-head"><div><div class="eyebrow">Know what your collection is worth</div><h1>Price Centre</h1></div></div>
- <div class="notice">Prices shown for built-in demo cards are illustrative sample values, not verified live market prices. Online card data may include market-price fields when the source provides them. Card values change frequently; check the linked seller or price source before buying or selling.</div>
- <div class="panel" style="margin-top:16px">
-  <label for="priceSearch">Search for a card</label>
-  <div class="row" style="margin-top:8px"><input id="priceSearch" placeholder="e.g. Pikachu, Charizard, Mewtwo" oninput="renderPrices()"><select id="priceSort" onchange="renderPrices()"><option value="name">Sort by name</option><option value="high">Highest recorded price</option><option value="low">Lowest recorded price</option></select></div>
- </div>
- <div class="section-head"><h2>💷 Available card values</h2><span class="pill">GBP display</span></div>
- <div class="stack" id="priceList"></div>
- <hr>
- <div class="panel"><h3>🔎 External price sources</h3><p class="muted">These searches can help you check current listings. Actual prices vary by condition, language, edition, seller and grading.</p>
- <div class="actions">
- <a class="btn" target="_blank" rel="noopener" href="https://www.cardmarket.com/en/Pokemon">Cardmarket</a>
- <a class="btn" target="_blank" rel="noopener" href="https://www.tcgplayer.com/categories/trading-and-collectible-card-games/pokemon">TCGplayer</a>
- <a class="btn" target="_blank" rel="noopener" href="https://www.ebay.co.uk/sch/i.html?_nkw=pokemon+card&LH_Sold=1&LH_Complete=1">eBay sold listings</a>
- </div></div>
-</section>
+    <div class="panel">
+      <h2>🌟 Featured cards</h2>
+      <p class="sub">A selection from the latest cards loaded into the catalogue.</p>
+      <div id="featuredGrid" class="grid"></div>
+    </div>
+  </section>
 
-<section class="page" id="deck">
- <div class="section-head"><div><div class="eyebrow">Your collection, your strategy</div><h1>Deck Builder</h1></div><span class="pill" id="deckCounter">0 / 60 cards</span></div>
- <div class="layout">
-  <div class="panel">
-   <h2>🧰 Build your deck</h2>
-   <p class="muted">Choose a card below or use the explorer. This deck builder supports a 60-card target, card counts and import/export. For real tournament legality, check the current official format rules.</p>
-   <div class="row"><input id="deckName" placeholder="Name your deck" value="My Pokémon Deck"><button class="btn primary" onclick="saveDeck()">💾 Save deck</button></div>
-   <div class="deck-counts"><span class="count">Total: <b id="dTotal">0</b>/60</span><span class="count">Pokémon: <b id="dPokemon">0</b></span><span class="count">Trainers: <b id="dTrainer">0</b></span><span class="count">Energy: <b id="dEnergy">0</b></span></div>
-   <div class="actions"><button class="btn" onclick="exportDeck()">⬇ Export deck</button><button class="btn" onclick="document.getElementById('importFile').click()">⬆ Import deck</button><input id="importFile" type="file" accept=".txt,.csv" hidden onchange="importDeckFile(event)"><button class="btn red" onclick="clearDeck()">Clear deck</button></div>
-   <textarea id="deckText" rows="4" placeholder="Or paste a deck list here, e.g.&#10;4 Pikachu&#10;10 Lightning Energy"></textarea>
-   <button class="btn" style="margin-top:8px" onclick="importDeckText()">Import pasted list</button>
-   <hr>
-   <div class="section-head"><h3>Your cards</h3><span class="muted">Click − or + to edit</span></div>
-   <div class="deck-list" id="deckList"></div>
-  </div>
-  <div class="panel">
-   <h2>📦 Add cards</h2>
-   <input id="deckSearch" placeholder="Search cards to add…" oninput="renderDeckPicker()">
-   <div class="stack" id="deckPicker" style="margin-top:12px;max-height:610px;overflow:auto"></div>
-   <hr>
-   <h3>💾 Saved decks</h3>
-   <div class="stack" id="savedDecks"></div>
-  </div>
- </div>
-</section>
+  <section class="page" id="cards">
+    <div class="panel">
+      <h2>🃏 Card Explorer</h2>
+      <p class="sub">Search the online card database or load a complete set. Results include genuine card artwork when supplied by the API.</p>
+      <div class="controls">
+        <div>
+          <label for="cardSearch">Name search</label>
+          <input id="cardSearch" placeholder="Charizard, Pikachu…" />
+        </div>
+        <div>
+          <label for="setFilter">Set</label>
+          <select id="setFilter"><option value="">All sets</option></select>
+        </div>
+        <div>
+          <label for="typeFilter">Pokémon type</label>
+          <select id="typeFilter">
+            <option value="">All types</option>
+            <option>Grass</option><option>Fire</option><option>Water</option>
+            <option>Lightning</option><option>Psychic</option><option>Fighting</option>
+            <option>Darkness</option><option>Metal</option><option>Colorless</option>
+            <option>Dragon</option><option>Fairy</option>
+          </select>
+        </div>
+        <div>
+          <label for="rarityFilter">Rarity contains</label>
+          <input id="rarityFilter" placeholder="Illustration Rare…" />
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="searchCards()">🔍 Search cards</button>
+        <button class="btn" onclick="loadSelectedSet()">Load selected set</button>
+        <button class="btn" onclick="resetCardFilters()">Reset filters</button>
+      </div>
+      <div class="toolbar">
+        <span class="notice" id="cardResultsInfo">Search for a card or select a set.</span>
+        <button class="btn small" onclick="loadMoreCards()">Load next results page</button>
+      </div>
+    </div>
+    <div id="cardsGrid" class="grid"></div>
+  </section>
 
-<section class="page" id="battle">
- <div class="section-head"><div><div class="eyebrow">Choose your Pokémon and fight!</div><h1>Battle Simulator</h1></div><span class="pill" id="battleStatus">Ready to play</span></div>
- <div class="notice">This is a fan-made simplified battle simulator, not the official Pokémon TCG rules engine. Attacks, Energy requirements and evolution rules are simplified so you can play directly in your browser.</div>
- <div class="layout" style="margin-top:16px">
-  <div class="battle-board">
-   <div class="battle-side">
-    <h3>🤖 Computer opponent <span id="aiPrizes">Prizes: 3</span></h3>
-    <div id="aiActive"></div><div class="muted">Bench</div><div id="aiBench" class="bench"></div>
-   </div>
-   <div style="text-align:center;font-weight:900;color:var(--gold);padding:8px">⚡ VS ⚡</div>
-   <div class="battle-side">
-    <h3>🧢 Your team <span id="playerPrizes">Prizes: 3</span></h3>
-    <div id="playerActive"></div><div class="muted">Your bench — tap a Pokémon to switch</div><div id="playerBench" class="bench"></div>
-   </div>
-   <div class="actions">
-    <button class="btn primary" id="attackBtn" onclick="playerAttack()">⚔️ Attack</button>
-    <button class="btn" onclick="attachEnergy()">⚡ Attach Energy</button>
-    <button class="btn" onclick="switchPokemon()">🔁 Switch Pokémon</button>
-    <button class="btn" onclick="drawCard()">🃏 Draw card</button>
-    <button class="btn red" onclick="startBattle()">↻ New battle</button>
-   </div>
-   <hr>
-   <h3>Your hand</h3><div class="hand" id="battleHand"></div>
-   <div class="muted">Select a Pokémon card in your hand to play it onto your bench or into the active spot.</div>
-  </div>
-  <div class="panel">
-   <h2>📜 Battle log</h2>
-   <div class="battle-log" id="battleLog">Welcome to the battle arena! Start a new battle to play.</div>
-   <hr>
-   <h3>How to play</h3>
-   <p class="muted">1. Start a battle and receive your opening hand.<br>2. Play a Pokémon from your hand if you need one.<br>3. Attach Energy once per turn.<br>4. Attack the opposing active Pokémon.<br>5. Knock out Pokémon to collect prizes. The first side to claim all prizes wins.</p>
-   <div class="notice">Tip: You can draw cards and attach Energy once per turn. If your active Pokémon is knocked out, promote a benched Pokémon.</div>
-  </div>
- </div>
-</section>
+  <section class="page" id="sets">
+    <div class="panel">
+      <h2>📚 Pokémon TCG Set Catalogue</h2>
+      <p class="sub">Browse the sets returned by the online catalogue, from older expansions to newer releases. Select a set to load its cards.</p>
+      <div class="controls">
+        <div style="grid-column:span 3">
+          <label for="setSearch">Find a set</label>
+          <input id="setSearch" placeholder="Search set name or series…" oninput="renderSets()" />
+        </div>
+        <div style="display:flex;align-items:end">
+          <button class="btn primary" style="width:100%" onclick="loadSets(true)">Refresh sets</button>
+        </div>
+      </div>
+      <p class="notice" id="setInfo">Loading set catalogue…</p>
+    </div>
+    <div id="setsGrid" class="set-grid"></div>
+  </section>
+
+  <section class="page" id="prices">
+    <div class="panel">
+      <h2>💰 Price Centre</h2>
+      <p class="sub">Check market-price fields supplied for cards. TCGplayer prices are in USD and Cardmarket prices are in EUR. The GBP figures below are estimates, not live exchange rates.</p>
+      <div class="controls">
+        <div style="grid-column:span 3">
+          <label for="priceSearch">Find a card to price</label>
+          <input id="priceSearch" placeholder="Search for a card name…" />
+        </div>
+        <div style="display:flex;align-items:end">
+          <button class="btn primary" style="width:100%" onclick="searchPriceCards()">Find prices</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="showPage('cards')">Open Card Explorer</button>
+      </div>
+      <p class="notice">Prices may be missing, stale or unavailable for some cards. The website does not invent a price when a source has no market value.</p>
+    </div>
+    <div id="pricesGrid" class="grid"></div>
+  </section>
+
+  <section class="page" id="deck">
+    <div class="panel">
+      <h2>🧩 Deck Builder</h2>
+      <p class="sub">Add cards from the Card Explorer to build your collection. The usual constructed Pokémon TCG deck size is 60 cards, with a maximum of four cards of the same name in most cases, excluding basic Energy.</p>
+      <div class="stats">
+        <div class="stat"><strong id="deckTotal">0</strong><span>Total cards</span></div>
+        <div class="stat"><strong id="pokemonTotal">0</strong><span>Pokémon cards</span></div>
+        <div class="stat"><strong id="energyTotal">0</strong><span>Energy cards</span></div>
+        <div class="stat"><strong id="trainerTotal">0</strong><span>Trainer cards</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="showPage('cards')">Find cards to add</button>
+        <button class="btn green" onclick="startBattle()">⚔️ Battle with this deck</button>
+        <button class="btn" onclick="exportDeck()">Export deck list</button>
+        <button class="btn red" onclick="clearDeck()">Clear deck</button>
+      </div>
+      <p class="notice" id="deckMessage">Your deck is saved in this browser.</p>
+    </div>
+    <div class="panel">
+      <h3>Your deck</h3>
+      <div id="deckList"></div>
+    </div>
+  </section>
+
+  <section class="page" id="battle">
+    <div class="panel">
+      <h2>⚔️ Pokémon Battle Simulator</h2>
+      <p class="sub">A simplified fan-made battle mode inspired by the Pokémon TCG. It is not an official rules engine. Build a deck first or use the demo battle deck.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="startBattle()">Start new battle</button>
+        <button class="btn" onclick="showPage('deck')">Edit my deck</button>
+        <button class="btn green" id="endTurnBtn" onclick="endPlayerTurn()">➡️ End Turn</button>
+      </div>
+      <p class="notice" id="turnInfo">Start a battle to play.</p>
+    </div>
+    <div id="battleArea"></div>
+  </section>
 </main>
 
-<footer>Luca's Pokémon Centre · Unofficial fan-made project · Pokémon and Pokémon TCG are trademarks of their respective owners. Not affiliated with Nintendo, Creatures Inc. or The Pokémon Company.</footer>
-<div class="toast" id="toast"></div>
-<div class="modal" id="cardModal" onclick="if(event.target===this)closeModal()"><div class="modal-box" id="modalContent"></div></div>
+<footer>
+  Luca's Pokémon Centre · Fan-made Pokémon TCG collection project · Not affiliated with Nintendo, Game Freak or The Pokémon Company.
+</footer>
 
 <script>
-const demoCards=[
-{id:"pika",name:"Pikachu",type:"Lightning",rarity:"Common",set:"Scarlet & Violet",number:"025",hp:70,attack:"Thunder Jolt",damage:30,cost:1,price:1.25,emoji:"⚡",colour:"#e5b83c"},
-{id:"char",name:"Charizard ex",type:"Fire",rarity:"Double Rare",set:"Obsidian Flames",number:"125",hp:330,attack:"Infernal Reign",damage:180,cost:3,price:24.99,emoji:"🔥",colour:"#ef7049"},
-{id:"mew",name:"Mew ex",type:"Psychic",rarity:"Ultra Rare",set:"151",number:"151",hp:180,attack:"Genome Hacking",damage:130,cost:2,price:18.5,emoji:"🩷",colour:"#dc8cbf"},
-{id:"bulb",name:"Bulbasaur",type:"Grass",rarity:"Common",set:"151",number:"001",hp:70,attack:"Vine Whip",damage:20,cost:1,price:1.5,emoji:"🌿",colour:"#60b96b"},
-{id:"squirt",name:"Squirtle",type:"Water",rarity:"Common",set:"151",number:"007",hp:70,attack:"Water Gun",damage:20,cost:1,price:1.35,emoji:"💧",colour:"#65b8f2"},
-{id:"venu",name:"Venusaur ex",type:"Grass",rarity:"Double Rare",set:"151",number:"003",hp:340,attack:"Dangerous Toxwhip",damage:150,cost:3,price:8.75,emoji:"🌺",colour:"#4aaf7b"},
-{id:"blast",name:"Blastoise ex",type:"Water",rarity:"Double Rare",set:"151",number:"009",hp:330,attack:"Twin Cannons",damage:140,cost:3,price:9.5,emoji:"🌊",colour:"#4b9be6"},
-{id:"eevee",name:"Eevee",type:"Colorless",rarity:"Common",set:"Prismatic Evolutions",number:"055",hp:60,attack:"Quick Draw",damage:20,cost:1,price:2.4,emoji:"🦊",colour:"#c69b68"},
-{id:"umbreon",name:"Umbreon ex",type:"Darkness",rarity:"Special Illustration Rare",set:"Prismatic Evolutions",number:"161",hp:280,attack:"Onyx",damage:160,cost:3,price:280,emoji:"🌙",colour:"#545d80"},
-{id:"ray",name:"Rayquaza",type:"Dragon",rarity:"Ultra Rare",set:"Evolving Skies",number:"110",hp:120,attack:"Dragon Pulse",damage:80,cost:2,price:22,emoji:"🐉",colour:"#60b5b8"},
-{id:"gengar",name:"Gengar",type:"Psychic",rarity:"Rare",set:"151",number:"094",hp:130,attack:"Shadowy Spellbind",damage:70,cost:2,price:3.75,emoji:"👻",colour:"#9273cc"},
-{id:"lucario",name:"Lucario",type:"Fighting",rarity:"Rare",set:"Brilliant Stars",number:"079",hp:130,attack:"Aura Sphere",damage:90,cost:2,price:2.1,emoji:"🥊",colour:"#9c9fd7"},
-{id:"snorlax",name:"Snorlax",type:"Colorless",rarity:"Rare",set:"151",number:"143",hp:150,attack:"Body Slam",damage:60,cost:2,price:2.8,emoji:"😴",colour:"#91a2b7"},
-{id:"mewtwo",name:"Mewtwo",type:"Psychic",rarity:"Rare",set:"151",number:"150",hp:130,attack:"Psystrike",damage:90,cost:2,price:4.25,emoji:"🧠",colour:"#b18ad9"},
-{id:"arcanine",name:"Arcanine ex",type:"Fire",rarity:"Ultra Rare",set:"Scarlet & Violet",number:"032",hp:280,attack:"Raging Claws",damage:120,cost:2,price:5.5,emoji:"🐕",colour:"#ee8753"},
-{id:"dragonite",name:"Dragonite",type:"Dragon",rarity:"Rare",set:"151",number:"149",hp:160,attack:"Dragon Claw",damage:100,cost:3,price:3.25,emoji:"🐲",colour:"#e5a46b"},
-{id:"togepi",name:"Togepi",type:"Colorless",rarity:"Common",set:"151",number:"175",hp:50,attack:"Fairy Wind",damage:10,cost:1,price:1.15,emoji:"🥚",colour:"#d8c8aa"},
-{id:"potion",name:"Potion",type:"Trainer",rarity:"Common",set:"Trainer Collection",number:"001",hp:0,attack:"Heal 20 HP",damage:0,cost:0,price:.25,emoji:"🧪",colour:"#69c8a3"},
-{id:"research",name:"Professor's Research",type:"Trainer",rarity:"Uncommon",set:"Trainer Collection",number:"002",hp:0,attack:"Draw 2 cards",damage:0,cost:0,price:.5,emoji:"📖",colour:"#a2b9d9"},
-{id:"switch",name:"Switch",type:"Trainer",rarity:"Common",set:"Trainer Collection",number:"003",hp:0,attack:"Switch Pokémon",damage:0,cost:0,price:.2,emoji:"🔄",colour:"#c4cbdc"},
-{id:"energyL",name:"Lightning Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"001",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"⚡",colour:"#e5c24c"},
-{id:"energyF",name:"Fire Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"002",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"🔥",colour:"#e97854"},
-{id:"energyW",name:"Water Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"003",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"💧",colour:"#61a8ed"},
-{id:"energyG",name:"Grass Energy",type:"Energy",rarity:"Common",set:"Energy Collection",number:"004",hp:0,attack:"Basic Energy",damage:0,cost:0,price:.15,emoji:"🌿",colour:"#6dc17b"}
-];
-let cards=[...demoCards], explorerLimit=24, deck={}, savedDecks={}, apiPage=1, apiTotal=0;
-let battle=null, apiKey=localStorage.getItem("lpc_api_key")||"";
-const $=id=>document.getElementById(id);
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function money(n){return n==null||!Number.isFinite(Number(n))?"Not available":"£"+Number(n).toFixed(2)}
-function getCard(id){return cards.find(c=>c.id===id)||demoCards.find(c=>c.id===id)}
-function art(c){return c.image?`<img loading="lazy" src="${esc(c.image)}" alt="${esc(c.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="emoji" style="display:none">${c.emoji||"🃏"}</span>`:`<span class="emoji">${c.emoji||"🃏"}</span>`}
-function cardHTML(c){return `<article class="card"><div class="card-art" style="background:radial-gradient(circle,${esc(c.colour||"#435d83")},#111a2d)">${art(c)}<span class="rarity">${esc(c.rarity||"Card")}</span></div><div class="card-info"><div class="card-title">${esc(c.name)}</div><div class="muted">${esc(c.set||"Unknown set")} · #${esc(c.number||"—")}</div><div>${c.type?`<span class="tag">${esc(c.type)}</span>`:""}${c.hp?`<span class="tag">${c.hp} HP</span>`:""}</div><div class="card-price">${c.demoPrice? "Sample: ":""}${money(c.price)}</div><div class="card-actions"><button class="btn" onclick="openCard('${esc(c.id)}')">Details</button><button class="btn primary" onclick="addToDeck('${esc(c.id)}')">+ Deck</button></div></div></article>`}
-function toast(msg){let t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),2400)}
-function showPage(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.page===page));if(page==="explorer")renderExplorer();if(page==="prices")renderPrices();if(page==="deck")renderDeck();window.scrollTo({top:0,behavior:"smooth"})}
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-function initSets(){let s=$("setFilter");let old=s.value;let sets=[...new Set(cards.map(c=>c.set).filter(Boolean))].sort();s.innerHTML='<option value="">All sets</option>'+sets.map(x=>`<option>${esc(x)}</option>`).join("");if(sets.includes(old))s.value=old}
-function renderExplorer(){initSets();let q=$("search").value.toLowerCase(),type=$("typeFilter").value,rarity=$("rarityFilter").value,set=$("setFilter").value;let list=cards.filter(c=>(`${c.name} ${c.set} ${c.number} ${c.type}`.toLowerCase().includes(q))&&(!type||c.type===type)&&(!rarity||c.rarity===rarity)&&(!set||c.set===set));$("resultCount").textContent=list.length+" cards";$("explorerGrid").innerHTML=list.slice(0,explorerLimit).map(cardHTML).join("")||'<div class="empty">No cards found. Try a different search or load cards from the API.</div>';$("loadMore").style.display=list.length>explorerLimit?"block":"none"}
-function loadMoreCards(){explorerLimit+=24;renderExplorer()}
-function renderHome(){ $("totalCards").textContent=cards.length;$("featuredGrid").innerHTML=cards.slice(0,8).map(cardHTML).join("");$("savedDeckCount").textContent=Object.keys(savedDecks).length;$("savedPill").textContent="⭐ "+Object.keys(savedDecks).length+" saved decks";$("deckTotalHome").textContent=Object.values(deck).reduce((a,b)=>a+b,0)+" / 60"}
-function openCard(id){let c=getCard(id);if(!c)return;$("modalContent").innerHTML=`<div class="row" style="align-items:flex-start"><h2>${esc(c.name)}</h2><button class="btn" style="flex:0" onclick="closeModal()">✕</button></div><div class="modal-grid"><div class="card-art" style="height:360px;border-radius:12px;background:radial-gradient(circle,${esc(c.colour||"#435d83")},#10182b)">${art(c)}</div><div><span class="tag">${esc(c.rarity||"Unknown rarity")}</span><span class="tag">${esc(c.type||"Unknown type")}</span><h3 style="margin-top:15px">${c.hp?esc(c.hp)+" HP":"Card details"}</h3><p class="muted">Set: ${esc(c.set||"Not available")}<br>Card number: ${esc(c.number||"Not available")}</p><hr><h3>Attack / effect</h3><p>${esc(c.attack||"Not available")} ${c.damage?`— ${c.damage} damage`:""}</p><hr><h3>Price information</h3><p class="card-price">${c.demoPrice?"Illustrative sample: ":""}${money(c.price)}</p><p class="muted">${c.demoPrice?"Sample data only — not a verified market quote.":"Prices may be unavailable or out of date. Check current listings before buying."}</p><div class="actions"><button class="btn primary" onclick="addToDeck('${esc(c.id)}');closeModal()">+ Add to deck</button><button class="btn" onclick="searchSeller('${esc(c.name)}')">Search sellers ↗</button></div></div></div>`;$("cardModal").classList.add("open")}
-function closeModal(){$("cardModal").classList.remove("open")}
-function searchSeller(name){window.open("https://www.ebay.co.uk/sch/i.html?_nkw="+encodeURIComponent(name+" pokemon card"),"_blank","noopener")}
-function renderPrices(){let q=$("priceSearch").value.toLowerCase();let list=cards.filter(c=>c.name.toLowerCase().includes(q));let sort=$("priceSort").value;if(sort==="high")list.sort((a,b)=>(b.price??-1)-(a.price??-1));else if(sort==="low")list.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));else list.sort((a,b)=>a.name.localeCompare(b.name));$("priceList").innerHTML=list.map(c=>`<div class="price-line"><div><b>${esc(c.name)}</b><div class="muted">${esc(c.set||"Unknown set")} · ${esc(c.rarity||"")}</div><div class="muted">${c.demoPrice?"Illustrative demo value":"Source price not independently verified"}</div></div><div style="text-align:right"><b style="color:var(--green)">${money(c.price)}</b><div><button class="btn" style="margin-top:5px;padding:6px 9px;font-size:12px" onclick="searchSeller('${esc(c.name)}')">Find listings ↗</button></div></div></div>`).join("")||'<div class="empty">No matching cards.</div>'}
-function addToDeck(id){let c=getCard(id);if(!c)return;let total=Object.values(deck).reduce((a,b)=>a+b,0);if(total>=60)return toast("Your deck already has 60 cards.");if((deck[id]||0)>=4&&c.type!=="Energy")return toast("Maximum 4 copies of this card in this deck.");deck[id]=(deck[id]||0)+1;renderDeck();renderHome();toast(c.name+" added to deck")}
-function removeFromDeck(id){if(!deck[id])return;deck[id]--;if(deck[id]<=0)delete deck[id];renderDeck();renderHome()}
-function clearDeck(){if(!confirm("Clear all cards from your current deck?"))return;deck={};renderDeck();renderHome()}
-function renderDeck(){let entries=Object.entries(deck).map(([id,n])=>({c:getCard(id),n})).filter(x=>x.c);let total=entries.reduce((s,x)=>s+x.n,0);$("deckCounter").textContent=total+" / 60 cards";$("dTotal").textContent=total;$("dPokemon").textContent=entries.filter(x=>x.c.type!=="Trainer"&&x.c.type!=="Energy").reduce((s,x)=>s+x.n,0);$("dTrainer").textContent=entries.filter(x=>x.c.type==="Trainer").reduce((s,x)=>s+x.n,0);$("dEnergy").textContent=entries.filter(x=>x.c.type==="Energy").reduce((s,x)=>s+x.n,0);$("deckTotalHome").textContent=total+" / 60";$("deckList").innerHTML=entries.map(({c,n})=>`<div class="deck-row"><span class="num">${n}×</span><span>${esc(c.name)}<div class="muted">${esc(c.type)}</div></span><button class="btn" onclick="removeFromDeck('${esc(c.id)}')">−</button><button class="btn" onclick="addToDeck('${esc(c.id)}')">+</button></div>`).join("")||'<div class="empty">Your deck is empty. Add cards from the panel.</div>';renderDeckPicker();renderSavedDecks()}
-function renderDeckPicker(){if(!$("deckPicker"))return;let q=$("deckSearch").value.toLowerCase();$("deckPicker").innerHTML=cards.filter(c=>c.name.toLowerCase().includes(q)||c.type.toLowerCase().includes(q)).slice(0,80).map(c=>`<div class="small-card">${c.image?`<img loading="lazy" src="${esc(c.image)}" alt="">`:`<div style="font-size:27px;width:52px;text-align:center">${c.emoji||"🃏"}</div>`}<div class="grow"><strong>${esc(c.name)}</strong><div class="muted">${esc(c.type)} · ${money(c.price)}</div></div><button class="btn primary" onclick="addToDeck('${esc(c.id)}')">+</button></div>`).join("")||'<div class="empty">No cards found.</div>'}
-function saveDeck(){let name=$("deckName").value.trim()||"My Deck";savedDecks[name]={...deck};localStorage.setItem("lpc_decks",JSON.stringify(savedDecks));renderDeck();renderHome();toast("Deck saved: "+name)}
-function loadSavedDeck(name){deck={...savedDecks[name]};$("deckName").value=name;renderDeck();renderHome();toast("Loaded "+name)}
-function deleteSavedDeck(name){if(!confirm("Delete saved deck "+name+"?"))return;delete savedDecks[name];localStorage.setItem("lpc_decks",JSON.stringify(savedDecks));renderDeck();renderHome()}
-function renderSavedDecks(){$("savedDecks").innerHTML=Object.keys(savedDecks).map(n=>`<div class="small-card"><div class="grow"><strong>${esc(n)}</strong><div class="muted">${Object.values(savedDecks[n]).reduce((a,b)=>a+b,0)} cards</div></div><button class="btn" onclick="loadSavedDeck('${esc(n)}')">Load</button><button class="btn red" onclick="deleteSavedDeck('${esc(n)}')">×</button></div>`).join("")||'<p class="muted">No saved decks yet.</p>'}
-function exportDeck(){let lines=[];Object.entries(deck).forEach(([id,n])=>{let c=getCard(id);if(c)lines.push(`${n} ${c.name}`)});if(!lines.length)return toast("Add cards before exporting.");let blob=new Blob([lines.join("\n")+"\n"],{type:"text/plain"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=($("deckName").value.trim()||"pokemon-deck").replace(/[^a-z0-9-_]/gi,"-")+".txt";a.click();URL.revokeObjectURL(url)}
-function importDeckText(){let text=$("deckText").value.trim();if(!text)return toast("Paste a deck list first.");let next={};for(let line of text.split(/\r?\n/)){let m=line.trim().match(/^(\d+)\s*[x×]?\s+(.+)$/i);if(!m)continue;let name=m[2].replace(/\s+\([^)]+\)\s*$/,"").trim();let c=cards.find(x=>x.name.toLowerCase()===name.toLowerCase())||cards.find(x=>x.name.toLowerCase().includes(name.toLowerCase()));if(c)next[c.id]=(next[c.id]||0)+Number(m[1])}let total=Object.values(next).reduce((a,b)=>a+b,0);if(total>60)return toast("That list has more than 60 cards.");deck=next;renderDeck();renderHome();toast("Imported "+total+" cards")}
-function importDeckFile(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{$("deckText").value=r.result;importDeckText()};r.readAsText(f);e.target.value=""}
-function resetDemo(){if(!confirm("Reset to the built-in demo cards? Online-loaded cards will be removed."))return;cards=[...demoCards];explorerLimit=24;renderAll();toast("Demo cards restored")}
-function saveApiKey(){apiKey=$("apiKey").value.trim();if(apiKey)localStorage.setItem("lpc_api_key",apiKey);else localStorage.removeItem("lpc_api_key");toast(apiKey?"API key saved in this browser":"API key removed")}
-async function loadOnlineCards(){let key=apiKey||$("apiKey").value.trim();let headers={};if(key)headers["X-Api-Key"]=key;toast("Loading cards from Pokémon TCG API…");try{let res=await fetch("https://api.pokemontcg.io/v2/cards?page="+apiPage+"&pageSize=100&orderBy=name",{headers});if(!res.ok)throw new Error("API responded with "+res.status);let data=await res.json();apiTotal=data.totalCount||0;let incoming=(data.data||[]).map(x=>{let tcg=x.tcgplayer?.prices||{},first=tcg.holofoil||tcg.normal||tcg.reverseHolofoil||tcg.unlimitedHolofoil;let usd=first?.market??first?.mid??null;return{id:"api-"+x.id,name:x.name,type:x.supertype==="Trainer"?"Trainer":x.supertype==="Energy"?"Energy":(x.types?.[0]||"Colorless"),rarity:x.rarity||"Unknown",set:x.set?.name||"Unknown set",number:x.number||"",hp:Number(x.hp)||0,attack:x.attacks?.[0]?.name||"No attack data",damage:parseInt(x.attacks?.[0]?.damage)||0,cost:x.attacks?.[0]?.convertedEnergyCost||1,price:usd==null?null:usd*.79,sourceUSD:usd,priceSource:usd==null?"No TCGplayer market value returned":"TCGplayer API market value converted at a rough £0.79/$1",image:x.images?.large||x.images?.small||null,apiId:x.id,emoji:"🃏",colour:"#405779"}});let existing=new Set(cards.map(c=>c.id));incoming.forEach(c=>{if(!existing.has(c.id))cards.push(c)});renderAll();toast("Loaded "+incoming.length+" cards. API total: "+apiTotal.toLocaleString());}catch(err){console.error(err);toast("Could not load API cards. Check connection or API key.");alert("Could not load online cards. The API may require a key or the request may have been blocked. Details: "+err.message)}}
-function renderAll(){renderExplorer();renderPrices();renderDeck();renderHome()}
-function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function battleCard(c){return{id:c.id,name:c.name,type:c.type,hp:Math.max(50,c.hp||80),maxHp:Math.max(50,c.hp||80),attack:c.attack||"Basic Strike",damage:c.damage||30,cost:c.cost||1,energy:0,emoji:c.emoji||"🃏",image:c.image||null,knocked:false}}
-function buildBattleDeck(){let mons=cards.filter(c=>c.type!=="Trainer"&&c.type!=="Energy"&&c.hp);let out=[];for(let i=0;i<30;i++){let c=mons[i%mons.length];out.push({...c})}for(let i=0;i<15;i++)out.push({...cards.find(c=>c.type==="Energy")||demoCards[20]});for(let i=0;i<15;i++)out.push({...cards.find(c=>c.type==="Trainer")||demoCards[17]});return shuffle(out)}
-function startBattle(){let deck1=buildBattleDeck(),deck2=buildBattleDeck();battle={playerDeck:deck1,aiDeck:deck2,hand:deck1.splice(0,7),playerActive:null,playerBench:[],aiActive:null,aiBench:[],playerPrizes:3,aiPrizes:3,turn:1,energyUsed:false,drew:false,over:false,selected:null};for(let i=0;i<6;i++){let p=battle.hand.findIndex(c=>c.type!=="Trainer"&&c.type!=="Energy"&&c.hp);if(p>=0){let c=battle.hand.splice(p,1)[0];battle.playerActive=battleCard(c);break}}if(!battle.playerActive){let c=battle.playerDeck.shift();battle.playerActive=battleCard(c||demoCards[0])}for(let i=0;i<7;i++){let c=battle.aiDeck.shift();if(c&&c.type!=="Trainer"&&c.type!=="Energy"&&c.hp)battle.aiBench.push(battleCard(c));else if(c)battle.aiDeck.push(c)}if(!battle.aiBench.length)battle.aiBench.push(battleCard(demoCards[0]));battle.aiActive=battle.aiBench.shift();battle.aiDeck=shuffle(battle.aiDeck);battleLog("Battle started! You go first. Choose a card, attach Energy and attack.");battleLog("Your active Pokémon is "+battle.playerActive.name+".");renderBattle();showPage("battle")}
-function battleLog(msg){if(!battle)return;let el=$("battleLog");el.innerHTML+=`<div>• ${esc(msg)}</div>`;el.scrollTop=el.scrollHeight}
-function hpMarkup(p){if(!p)return'<div class="muted">No Pokémon</div>';let pct=Math.max(0,p.hp/p.maxHp*100);return`<div class="active-pokemon"><div style="display:flex;gap:10px;align-items:center">${p.image?`<img src="${esc(p.image)}" alt="" style="width:70px;height:85px;object-fit:contain">`:`<div style="font-size:42px">${p.emoji}</div>`}<div style="flex:1"><b>${esc(p.name)}</b><div class="muted">${esc(p.type)} · ${p.energy} Energy</div><div class="hpbar"><div class="hpfill" style="width:${pct}%;background:${pct<30?"var(--red)":"var(--green)"}"></div></div><b>${Math.max(0,p.hp)} / ${p.maxHp} HP</b></div></div><div class="muted" style="margin-top:8px">Attack: ${esc(p.attack)} · ${p.damage} damage</div></div>`}
-function renderBattle(){if(!battle)return;$("aiActive").innerHTML=hpMarkup(battle.aiActive);$("playerActive").innerHTML=hpMarkup(battle.playerActive);$("aiBench").innerHTML=battle.aiBench.map((p,i)=>`<div class="mini">${p.emoji}<br>${esc(p.name)}<br>${p.hp}/${p.maxHp} HP</div>`).join("")||'<span class="muted">No bench Pokémon</span>';$("playerBench").innerHTML=battle.playerBench.map((p,i)=>`<button class="mini" onclick="promoteBench(${i})">${p.emoji}<br>${esc(p.name)}<br>${p.hp}/${p.maxHp} HP</button>`).join("")||'<span class="muted">No bench Pokémon</span>';$("battleHand").innerHTML=battle.hand.map((c,i)=>`<div class="hand-card ${battle.selected===i?"selected":""}" onclick="playHandCard(${i})">${c.image?`<img src="${esc(c.image)}" alt="">`:`<div style="font-size:28px">${c.emoji||"🃏"}</div>`}<b>${esc(c.name)}</b><span class="muted">${esc(c.type)}</span></div>`).join("")||'<div class="empty">No cards in hand</div>';$("playerPrizes").textContent="Prizes: "+battle.playerPrizes;$("aiPrizes").textContent="Prizes: "+battle.aiPrizes;$("battleStatus").textContent=battle.over?"Battle over":"Turn "+battle.turn+(battle.energyUsed?" · Energy used":"");$("attackBtn").disabled=battle.over||!battle.playerActive||battle.playerActive.energy<battle.playerActive.cost}
-function playHandCard(i){if(!battle||battle.over)return;let c=battle.hand[i];if(!c)return;if(c.type==="Trainer"){battle.hand.splice(i,1);if(/research/i.test(c.name)){for(let j=0;j<2&&battle.playerDeck.length;j++)battle.hand.push(battle.playerDeck.shift());battleLog("Professor's Research: drew up to 2 cards.")}else if(/potion/i.test(c.name)){battle.playerActive.hp=Math.min(battle.playerActive.maxHp,battle.playerActive.hp+20);battleLog("Potion healed your active Pokémon by 20 HP.")}else battleLog(c.name+" was played. Trainer effects are simplified.");renderBattle();return}if(c.type==="Energy"){battle.hand.splice(i,1);if(battle.playerActive&&!battle.energyUsed){battle.playerActive.energy++;battle.energyUsed=true;battleLog("Attached Energy to "+battle.playerActive.name+".")}else{battle.hand.splice(i,0,c);toast("You have already attached Energy this turn.")}renderBattle();return}if(!c.hp)return;if(!battle.playerActive){battle.playerActive=battleCard(c);battle.hand.splice(i,1);battleLog(c.name+" is now active.")}else if(battle.playerBench.length<5){battle.playerBench.push(battleCard(c));battle.hand.splice(i,1);battleLog(c.name+" joined your bench.")}else toast("Your bench is full.");renderBattle()}
-function attachEnergy(){if(!battle||battle.over)return;if(battle.energyUsed)return toast("You already attached Energy this turn.");let i=battle.hand.findIndex(c=>c.type==="Energy");if(i<0)return toast("No Energy cards in your hand.");battle.hand.splice(i,1);battle.playerActive.energy++;battle.energyUsed=true;battleLog("Attached Energy to "+battle.playerActive.name+".");renderBattle()}
-function drawCard(){if(!battle||battle.over)return;if(battle.drew)return toast("You already drew a card this turn.");if(!battle.playerDeck.length)return toast("Your deck is empty.");battle.hand.push(battle.playerDeck.shift());battle.drew=true;battleLog("You drew a card.");renderBattle()}
-function playerAttack(){if(!battle||battle.over)return;if(!battle.playerActive||!battle.aiActive)return;if(battle.playerActive.energy<battle.playerActive.cost)return toast("Attach more Energy before attacking.");let damage=battle.playerActive.damage||30;battle.aiActive.hp-=damage;battleLog(battle.playerActive.name+" used "+battle.playerActive.attack+" for "+damage+" damage!");if(battle.aiActive.hp<=0){battleLog("Computer's "+battle.aiActive.name+" was knocked out!");battle.playerPrizes--;battle.aiActive=battle.aiBench.shift()||null;if(!battle.aiActive){if(battle.aiDeck.length){let c=battle.aiDeck.find(x=>x.hp&&x.type!=="Energy"&&x.type!=="Trainer");battle.aiActive=battleCard(c||demoCards[0])}else battle.aiActive=null}if(battle.playerPrizes<=0||!battle.aiActive){endBattle(true);return}}battle.energyUsed=false;battle.drew=false;renderBattle();setTimeout(aiTurn,700)}
-function aiTurn(){if(!battle||battle.over)return;if(!battle.aiActive){endBattle(true);return}let energyIndex=battle.aiDeck.findIndex(c=>c.type==="Energy");if(energyIndex>=0){battle.aiDeck.splice(energyIndex,1);battle.aiActive.energy++}else battle.aiActive.energy++;if(battle.aiActive.energy>=battle.aiActive.cost){let damage=battle.aiActive.damage||30;battle.playerActive.hp-=damage;battleLog("Computer's "+battle.aiActive.name+" attacked for "+damage+" damage!");if(battle.playerActive.hp<=0){battleLog("Your "+battle.playerActive.name+" was knocked out!");battle.aiPrizes--;battle.playerActive=battle.playerBench.shift()||null;if(!battle.playerActive){let i=battle.hand.findIndex(c=>c.hp&&c.type!=="Energy"&&c.type!=="Trainer");if(i>=0)battle.playerActive=battleCard(battle.hand.splice(i,1)[0]);else{endBattle(false);return}}if(battle.aiPrizes<=0){endBattle(false);return}}}battle.turn++;battle.energyUsed=false;battle.drew=false;renderBattle()}
-function promoteBench(i){if(!battle||battle.over||!battle.playerBench[i])return;let p=battle.playerBench[i];battle.playerBench[i]=battle.playerActive;battle.playerActive=p;battleLog("Switched active Pokémon to "+p.name+".");renderBattle()}
-function switchPokemon(){if(!battle||battle.over)return;if(!battle.playerBench.length)return toast("You have no Pokémon on your bench.");promoteBench(0)}
-function endBattle(won){if(!battle)return;battle.over=true;battleLog(won?"🏆 YOU WIN! The computer has been defeated!":"💥 The computer wins this battle. Try a different strategy!");$("battleStatus").textContent=won?"🏆 Victory!":"Defeat";renderBattle();toast(won?"Victory!":"Battle over")}
-window.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
-try{savedDecks=JSON.parse(localStorage.getItem("lpc_decks")||"{}")}catch{savedDecks={}}
-if(apiKey)$("apiKey").value=apiKey;
-renderAll();
+"use strict";
+
+/* -------------------------------------------------------
+   API AND CATALOGUE
+   The Pokémon TCG API supplies the set and card catalogue.
+------------------------------------------------------- */
+const API = "https://api.pokemontcg.io/v2";
+const GBP_PER_USD_ESTIMATE = 0.79;
+const GBP_PER_EUR_ESTIMATE = 0.86;
+
+let sets = [];
+let cards = [];
+let displayedCards = [];
+let currentPage = 1;
+let currentQuery = "";
+let currentSetId = "";
+let savedCards = new Set();
+let deck = loadSavedDeck();
+let battle = null;
+let requestBusy = false;
+
+const $ = id => document.getElementById(id);
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[ch]);
+}
+
+function money(value, currency = "GBP") {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "Unavailable";
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency", currency, maximumFractionDigits:2
+  }).format(n);
+}
+
+function priceData(card) {
+  const p = card.tcgplayer?.prices || {};
+  const candidates = [
+    p.holofoil?.market,
+    p.reverseHolofoil?.market,
+    p.normal?.market,
+    p["1stEditionHolofoil"]?.market,
+    p["1stEditionNormal"]?.market
+  ];
+  const usd = candidates.find(v => Number.isFinite(Number(v)) && Number(v) >= 0);
+  const eur = card.cardmarket?.prices?.trendPrice ??
+              card.cardmarket?.prices?.averageSellPrice ??
+              null;
+  return {
+    usd: usd == null ? null : Number(usd),
+    eur: eur == null || !Number.isFinite(Number(eur)) ? null : Number(eur)
+  };
+}
+
+function estimateGBP(card) {
+  const p = priceData(card);
+  if (p.usd !== null) return p.usd * GBP_PER_USD_ESTIMATE;
+  if (p.eur !== null) return p.eur * GBP_PER_EUR_ESTIMATE;
+  return null;
+}
+
+function cardImage(card) {
+  return card.images?.large || card.images?.small || "";
+}
+
+function fallbackImage(name) {
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="330">
+      <rect width="100%" height="100%" rx="16" fill="#17223a"/>
+      <circle cx="120" cy="105" r="55" fill="#ffd447" stroke="#fff" stroke-width="7"/>
+      <path d="M65 105h110" stroke="#fff" stroke-width="7"/>
+      <circle cx="120" cy="105" r="17" fill="#17223a" stroke="#fff" stroke-width="6"/>
+      <text x="120" y="205" font-family="Arial" font-size="15" text-anchor="middle" fill="#fff">Card artwork</text>
+      <text x="120" y="230" font-family="Arial" font-size="13" text-anchor="middle" fill="#b9c8e5">${esc(name).slice(0,22)}</text>
+    </svg>`
+  );
+}
+
+async function apiGet(path) {
+  const response = await fetch(API + path);
+  if (!response.ok) {
+    throw new Error("Catalogue request failed (" + response.status + ").");
+  }
+  return response.json();
+}
+
+function setStatus(message) {
+  $("connectionStatus").textContent = message;
+}
+
+async function loadSets(force = false) {
+  if (sets.length && !force) {
+    renderSets();
+    return;
+  }
+  $("setInfo").textContent = "Loading set catalogue…";
+  setStatus("Loading sets…");
+  try {
+    const result = await apiGet("/sets?orderBy=-releaseDate&pageSize=250");
+    sets = result.data || [];
+    populateSetDropdown();
+    renderSets();
+    $("setCount").textContent = sets.length;
+    $("setInfo").textContent =
+      sets.length + " sets loaded on this request. Use the search box to find an expansion.";
+    setStatus("Connected · " + sets.length + " sets loaded");
+  } catch (error) {
+    $("setInfo").textContent = error.message + " Please refresh or try again later.";
+    setStatus("Catalogue unavailable — retry later");
+  }
+}
+
+function populateSetDropdown() {
+  const select = $("setFilter");
+  const previous = select.value;
+  select.innerHTML = '<option value="">All sets</option>' +
+    sets.map(s => `<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.series || "Other")})</option>`).join("");
+  if ([...select.options].some(o => o.value === previous)) select.value = previous;
+}
+
+function renderSets() {
+  const q = ($("setSearch")?.value || "").trim().toLowerCase();
+  const filtered = sets.filter(s =>
+    (s.name || "").toLowerCase().includes(q) ||
+    (s.series || "").toLowerCase().includes(q) ||
+    (s.id || "").toLowerCase().includes(q)
+  );
+  $("setsGrid").innerHTML = filtered.length ? filtered.map(s => `
+    <div class="set-card">
+      <img src="${esc(s.images?.logo || s.images?.symbol || fallbackImage(s.name))}"
+           alt="" loading="lazy" onerror="this.src='${fallbackImage("Pokémon set")}'">
+      <div style="min-width:0">
+        <h3>${esc(s.name)}</h3>
+        <p>${esc(s.series || "Pokémon TCG")} · ${esc(s.releaseDate || "Release date unavailable")}</p>
+        <p>${Number(s.total || s.printedTotal || 0)} cards listed</p>
+        <button class="btn small primary" onclick="openSet('${esc(s.id)}')">View cards</button>
+      </div>
+    </div>`).join("") :
+    '<div class="empty">No matching sets found.</div>';
+}
+
+function openSet(id) {
+  $("setFilter").value = id;
+  showPage("cards");
+  loadSelectedSet();
+}
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+  const target = $(""+page);
+  if (target) target.classList.add("active");
+  document.querySelectorAll("nav button").forEach(b =>
+    b.classList.toggle("active", b.dataset.page === page)
+  );
+  if (page === "sets" && !sets.length) loadSets();
+  if (page === "deck") renderDeck();
+  if (page === "battle") renderBattle();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav button").forEach(button =>
+  button.addEventListener("click", () => showPage(button.dataset.page))
+);
+
+function homeSearch() {
+  $("cardSearch").value = $("homeSearch").value;
+  showPage("cards");
+  searchCards();
+}
+
+async function searchCards(next = false) {
+  if (requestBusy) return;
+  const q = $("cardSearch").value.trim();
+  const setId = $("setFilter").value;
+  const type = $("typeFilter").value;
+  const rarity = $("rarityFilter").value.trim();
+
+  if (!next) {
+    currentPage = 1;
+    currentQuery = q;
+    currentSetId = setId;
+    displayedCards = [];
+  } else {
+    currentPage++;
+  }
+
+  const parts = [];
+  if (q) parts.push(`name:"${q.replace(/["\\]/g,"")}"`
+    );
+  if (setId) parts.push(`set.id:${setId}`);
+  if (type) parts.push(`types:${type}`);
+  if (rarity) parts.push(`rarity:"${rarity.replace(/["\\]/g,"")}"`);
+
+  let url = `/cards?page=${currentPage}&pageSize=50&orderBy=name`;
+  if (parts.length) url += "&q=" + encodeURIComponent(parts.join(" "));
+
+  requestBusy = true;
+  $("cardResultsInfo").textContent = "Searching the online card catalogue…";
+  try {
+    const result = await apiGet(url);
+    const incoming = result.data || [];
+    displayedCards = next ? displayedCards.concat(incoming) : incoming;
+    cards = mergeCards(cards, incoming);
+    $("cardCount").textContent = cards.length;
+    $("cardResultsInfo").textContent =
+      `${displayedCards.length} cards displayed · ${result.totalCount ?? "?"} matching cards in the catalogue`;
+    renderCardGrid("cardsGrid", displayedCards);
+    renderFeatured();
+  } catch (error) {
+    $("cardResultsInfo").textContent = error.message;
+    if (!displayedCards.length) $("cardsGrid").innerHTML =
+      '<div class="empty">Could not load cards. Check your connection and try again.</div>';
+  } finally {
+    requestBusy = false;
+  }
+}
+
+function mergeCards(existing, incoming) {
+  const map = new Map(existing.map(c => [c.id,c]));
+  incoming.forEach(c => map.set(c.id,c));
+  return [...map.values()];
+}
+
+function loadMoreCards() {
+  searchCards(true);
+}
+
+function loadSelectedSet() {
+  if (!$("setFilter").value) {
+    $("cardResultsInfo").textContent = "Choose a set first, or search by card name.";
+    return;
+  }
+  $("cardSearch").value = "";
+  $("typeFilter").value = "";
+  $("rarityFilter").value = "";
+  searchCards();
+}
+
+function resetCardFilters() {
+  $("cardSearch").value = "";
+  $("setFilter").value = "";
+  $("typeFilter").value = "";
+  $("rarityFilter").value = "";
+  displayedCards = [];
+  $("cardsGrid").innerHTML = "";
+  $("cardResultsInfo").textContent = "Filters reset. Search for cards or choose a set.";
+}
+
+function renderCardGrid(containerId, list) {
+  const container = $(containerId);
+  if (!list.length) {
+    container.innerHTML = '<div class="empty">No cards to show. Try another search.</div>';
+    return;
+  }
+  container.innerHTML = list.map(c => {
+    const p = priceData(c);
+    const gbp = estimateGBP(c);
+    const image = cardImage(c) || fallbackImage(c.name);
+    const isSaved = savedCards.has(c.id);
+    return `
+    <article class="card">
+      <img src="${esc(image)}" alt="${esc(c.name)}" loading="lazy"
+           onerror="this.onerror=null;this.src='${fallbackImage(c.name)}'">
+      <h3>${esc(c.name)}</h3>
+      <div class="meta">
+        ${esc(c.set?.name || "Unknown set")}<br>
+        No. ${esc(c.number || "—")} · ${esc(c.rarity || "Rarity unknown")}
+      </div>
+      <div class="price">${gbp === null ? "Price unavailable" : "≈ " + money(gbp)}</div>
+      <div class="meta">
+        ${p.usd === null ? "" : "TCGplayer: " + money(p.usd,"USD") + "<br>"}
+        ${p.eur === null ? "" : "Cardmarket: " + money(p.eur,"EUR")}
+      </div>
+      <div class="actions">
+        <button class="btn small primary" onclick="addToDeck('${esc(c.id)}')">+ Deck</button>
+        <button class="btn small" onclick="toggleSaved('${esc(c.id)}')">${isSaved ? "★ Saved" : "☆ Save"}</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function renderFeatured() {
+  const list = cards.slice(-8).reverse();
+  if (list.length) renderCardGrid("featuredGrid", list);
+}
+
+function toggleSaved(id) {
+  if (savedCards.has(id)) savedCards.delete(id);
+  else savedCards.add(id);
+  $("savedCount").textContent = savedCards.size;
+  renderCardGrid("cardsGrid", displayedCards);
+}
+
+async function searchPriceCards() {
+  const q = $("priceSearch").value.trim();
+  if (!q) {
+    $("pricesGrid").innerHTML = '<div class="empty">Enter a card name first.</div>';
+    return;
+  }
+  $("pricesGrid").innerHTML = '<div class="empty">Loading price information…</div>';
+  try {
+    const result = await apiGet("/cards?q=" + encodeURIComponent(`name:"${q.replace(/["\\]/g,"")}"`) +
+      "&pageSize=50&orderBy=-set.releaseDate");
+    const list = result.data || [];
+    cards = mergeCards(cards, list);
+    renderCardGrid("pricesGrid", list);
+  } catch (error) {
+    $("pricesGrid").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+/* -------------------------------------------------------
+   DECK BUILDER
+------------------------------------------------------- */
+function loadSavedDeck() {
+  try { return JSON.parse(localStorage.getItem("lucasPokemonDeck") || "[]"); }
+  catch { return []; }
+}
+function saveDeck() {
+  try { localStorage.setItem("lucasPokemonDeck",JSON.stringify(deck)); } catch {}
+  $("deckCount").textContent = `${deck.reduce((n,d)=>n+d.qty,0)} / 60`;
+}
+function getCard(id) {
+  return cards.find(c => c.id === id) ||
+    displayedCards.find(c => c.id === id) ||
+    null;
+}
+function addToDeck(id) {
+  const c = getCard(id);
+  if (!c) {
+    $("deckMessage").textContent = "Card details are not available yet. Try loading the card again.";
+    showPage("deck");
+    return;
+  }
+  const entry = deck.find(d => d.id === id);
+  if (entry) entry.qty++;
+  else deck.push({id,qty:1,card:c});
+  saveDeck();
+  renderDeck();
+  $("deckMessage").textContent = c.name + " added to your deck.";
+}
+function removeFromDeck(id) {
+  const entry = deck.find(d=>d.id===id);
+  if (!entry) return;
+  entry.qty--;
+  if (entry.qty <= 0) deck = deck.filter(d=>d.id!==id);
+  saveDeck();
+  renderDeck();
+}
+function clearDeck() {
+  if (!confirm("Clear your entire deck?")) return;
+  deck = [];
+  saveDeck();
+  renderDeck();
+}
+function deckCardsFlat() {
+  const list = [];
+  deck.forEach(entry => {
+    const c = entry.card || getCard(entry.id);
+    if (!c) return;
+    for (let i=0;i<entry.qty;i++) list.push(c);
+  });
+  return list;
+}
+function renderDeck() {
+  const total = deck.reduce((n,d)=>n+d.qty,0);
+  let pokemon=0, energy=0, trainer=0;
+  deck.forEach(d => {
+    const c=d.card || getCard(d.id);
+    if (!c) return;
+    if (c.supertype==="Pokémon") pokemon+=d.qty;
+    else if (c.supertype==="Energy") energy+=d.qty;
+    else trainer+=d.qty;
+  });
+  $("deckTotal").textContent=total;
+  $("pokemonTotal").textContent=pokemon;
+  $("energyTotal").textContent=energy;
+  $("trainerTotal").textContent=trainer;
+  $("deckCount").textContent=`${total} / 60`;
+  $("deckList").innerHTML = deck.length ? deck.map(d=>{
+    const c=d.card || getCard(d.id);
+    if (!c) return "";
+    return `<div class="deck-row">
+      <img src="${esc(cardImage(c)||fallbackImage(c.name))}" alt="" loading="lazy"
+           onerror="this.src='${fallbackImage(c.name)}'">
+      <div class="grow">
+        <strong>${esc(c.name)}</strong>
+        <small>${esc(c.set?.name||"Unknown set")} · ${esc(c.supertype||"Card")}</small>
+      </div>
+      <strong>×${d.qty}</strong>
+      <button class="btn small" onclick="removeFromDeck('${esc(d.id)}')">−</button>
+      <button class="btn small" onclick="addToDeck('${esc(d.id)}')">+</button>
+    </div>`;
+  }).join("") : '<div class="empty">Your deck is empty. Explore cards and press + Deck.</div>';
+  saveDeck();
+}
+function exportDeck() {
+  const lines = ["Luca's Pokémon Centre — Deck List",""];
+  deck.forEach(d=>{
+    const c=d.card || getCard(d.id);
+    if (c) lines.push(`${d.qty}x ${c.name} (${c.set?.name || "Unknown set"} ${c.number || ""})`);
+  });
+  const blob = new Blob([lines.join("\n")],{type:"text/plain"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="pokemon-deck.txt";a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* -------------------------------------------------------
+   BATTLE SIMULATOR
+   Simplified fan-made mechanics:
+   - Active Pokémon and Bench
+   - Energy attachment
+   - Attacks and knockouts
+   - Prize cards
+   - AI turn and explicit End Turn button
+------------------------------------------------------- */
+function makeBattleCard(c) {
+  const hp = parseInt(c.hp,10);
+  const firstAttack = c.attacks?.[0];
+  const damageText = String(firstAttack?.damage || "20");
+  const damage = parseInt(damageText.replace(/[^0-9]/g,""),10) || 20;
+  const energyCost = firstAttack?.convertedEnergyCost ??
+    (firstAttack?.cost?.length || 1);
+  return {
+    id:c.id,
+    name:c.name || "Pokémon",
+    image:cardImage(c) || fallbackImage(c.name),
+    hp:Number.isFinite(hp) && hp>0 ? hp : 100,
+    maxHp:Number.isFinite(hp) && hp>0 ? hp : 100,
+    damage:Math.min(300,damage),
+    attack:firstAttack?.name || "Quick Attack",
+    energyCost:Math.max(1,Math.min(5,Number(energyCost)||1)),
+    energy:0,
+    type:c.types?.[0] || "Colorless",
+    source:c
+  };
+}
+
+function defaultBattlePool() {
+  const eligible=cards.filter(c=>c.supertype==="Pokémon");
+  return eligible.length ? eligible : [];
+}
+
+function randomBattleCard(pool) {
+  if (!pool.length) return null;
+  const c=pool[Math.floor(Math.random()*pool.length)];
+  return makeBattleCard(c);
+}
+
+function shuffle(array) {
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+  return array;
+}
+
+function startBattle() {
+  const playerDeck=deckCardsFlat().filter(c=>c.supertype==="Pokémon");
+  let pool=playerDeck.length ? playerDeck : defaultBattlePool();
+  if (!pool.length) {
+    $("turnInfo").textContent="Load some Pokémon cards first using the Card Explorer, then start a battle.";
+    showPage("cards");
+    return;
+  }
+  const opponentPool=defaultBattlePool();
+  if (!opponentPool.length) {
+    $("turnInfo").textContent="Please load Pokémon cards from the catalogue first.";
+    showPage("cards");
+    return;
+  }
+
+  const playerCards=shuffle([...pool]);
+  const aiCards=shuffle([...opponentPool]);
+  const playerActive=makeBattleCard(playerCards[0]);
+  const aiActive=makeBattleCard(aiCards[0]);
+
+  battle={
+    player:{active:playerActive,bench:[],prizes:6},
+    ai:{active:aiActive,bench:[],prizes:6},
+    turn:"player",
+    turnNumber:1,
+    energyUsed:false,
+    drew:false,
+    busy:false,
+    over:false,
+    log:[],
+    playerPool:playerCards,
+    aiPool:aiCards
+  };
+  addLog("The battle begins! You go first.");
+  addLog("Your active Pokémon is " + playerActive.name + ".");
+  addLog("Opponent's active Pokémon is " + aiActive.name + ".");
+  showPage("battle");
+  renderBattle();
+}
+
+function addLog(message) {
+  if (!battle) return;
+  battle.log.unshift(message);
+  battle.log=battle.log.slice(0,35);
+}
+
+function renderPokemonSlot(pokemon, side, isActive) {
+  if (!pokemon) return `
+    <div class="battle-pokemon">
+      <p class="meta">Empty ${isActive ? "Active slot" : "Bench slot"}</p>
+    </div>`;
+  const remaining=Math.max(0,pokemon.hp-pokemon.damageTaken);
+  const hpPercent=Math.max(0,remaining/pokemon.hp*100);
+  return `
+    <div class="battle-pokemon">
+      <img src="${esc(pokemon.image)}" alt="${esc(pokemon.name)}"
+        onerror="this.src='${fallbackImage(pokemon.name)}'">
+      <strong>${esc(pokemon.name)} ${isActive?"⭐":""}</strong>
+      <div class="hpbar"><span style="width:${hpPercent}%"></span></div>
+      <div class="meta">${remaining}/${pokemon.hp} HP · ⚡ ${pokemon.energy||0}</div>
+      <div class="meta">${esc(pokemon.type||"Colorless")}</div>
+      ${side==="player" && !isActive ? `<button class="btn small" onclick="promoteBench(${battle.player.bench.indexOf(pokemon)})">Promote</button>`:""}
+    </div>`;
+}
+
+function renderBattle() {
+  const area=$("battleArea");
+  if (!battle) {
+    area.innerHTML='<div class="panel empty">Press Start new battle to begin.</div>';
+    $("turnInfo").textContent="Start a battle to play.";
+    $("endTurnBtn").disabled=true;
+    return;
+  }
+  $("endTurnBtn").disabled=battle.over || battle.busy || battle.turn!=="player";
+  $("turnInfo").textContent=battle.over
+    ? (battle.player.prizes<=0 ? "You win!" : "Battle over.")
+    : battle.busy ? "Opponent is taking its turn…"
+    : `Turn ${battle.turnNumber} · ${battle.turn==="player"?"Your turn":"Opponent's turn"}`;
+
+  const sideHTML=(side,key)=>`
+    <div class="battle-side">
+      <h3><span>${key==="player"?"🧑 Your team":"🤖 Computer"}</span>
+        <span>🏆 ${side.prizes} prizes</span></h3>
+      <p class="notice">Active Pokémon</p>
+      <div class="battle-slots">${renderPokemonSlot(side.active,key,true)}</div>
+      <p class="notice">Bench (${side.bench.length}/5)</p>
+      <div class="battle-slots">${[0,1,2,3,4].map(i=>renderPokemonSlot(side.bench[i],key,false)).join("")}</div>
+    </div>`;
+
+  area.innerHTML=`
+    <div class="battle-board">
+      ${sideHTML(battle.player,"player")}
+      ${sideHTML(battle.ai,"ai")}
+    </div>
+    <div class="panel">
+      <h3>Your actions</h3>
+      <p class="notice">Simplified attacks use the first attack listed for each Pokémon. Energy is simplified to one energy per attachment.</p>
+      <div class="actions">
+        <button class="btn primary" onclick="playerAttack()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>⚔️ Attack</button>
+        <button class="btn" onclick="attachEnergy()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>⚡ Attach Energy</button>
+        <button class="btn" onclick="drawBattlePokemon()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>🃏 Draw Pokémon</button>
+        <button class="btn green" onclick="endPlayerTurn()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>➡️ End Turn</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Battle log</h3>
+      <div class="log">${battle.log.map(line=>`<p>• ${esc(line)}</p>`).join("")}</div>
+    </div>`;
+}
+
+function attachEnergy() {
+  if (!battle || battle.over || battle.busy || battle.turn!=="player" || battle.energyUsed) return;
+  battle.player.active.energy=(battle.player.active.energy||0)+1;
+  battle.energyUsed=true;
+  addLog("You attached 1 Energy to " + battle.player.active.name + ".");
+  renderBattle();
+}
+
+function drawBattlePokemon() {
+  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
+  if (battle.player.bench.length>=5) {
+    addLog("Your Bench is full.");
+    renderBattle();
+    return;
+  }
+  const next=randomBattleCard(battle.playerPool);
+  if (!next) {
+    addLog("No more Pokémon available to draw.");
+    renderBattle();
+    return;
+  }
+  battle.player.bench.push(next);
+  addLog("You put " + next.name + " on your Bench.");
+  renderBattle();
+}
+
+function promoteBench(index) {
+  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
+  const chosen=battle.player.bench[index];
+  if (!chosen) return;
+  battle.player.bench.splice(index,1);
+  battle.player.bench.push(battle.player.active);
+  battle.player.active=chosen;
+  addLog("You promoted " + chosen.name + " to Active Pokémon.");
+  renderBattle();
+}
+
+function knockOut(sideKey) {
+  const side=battle[sideKey];
+  const defeated=side.active;
+  const winnerKey=sideKey==="player"?"ai":"player";
+  const winner=battle[winnerKey];
+  addLog(defeated.name + " was knocked out!");
+  winner.prizes=Math.max(0,winner.prizes-1);
+  addLog((winnerKey==="player"?"You take":"Opponent takes")+" a Prize card.");
+  if (winner.prizes<=0) {
+    battle.over=true;
+    addLog(winnerKey==="player"?"🎉 You win the battle!":"The computer wins this battle.");
+    return;
+  }
+  const bench=side.bench.shift();
+  if (bench) {
+    side.active=bench;
+    addLog(sideKey==="player"?"You promote "+bench.name+".":"Opponent promotes "+bench.name+".");
+  } else {
+    battle.over=true;
+    addLog(sideKey==="player"?"You have no Pokémon left. You lose!":"The opponent has no Pokémon left. You win!");
+  }
+}
+
+function playerAttack() {
+  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
+  const attacker=battle.player.active;
+  const defender=battle.ai.active;
+  if ((attacker.energy||0)<attacker.energyCost) {
+    addLog(`${attacker.name} needs ${attacker.energyCost} Energy to attack.`);
+    renderBattle();
+    return;
+  }
+  attacker.energy-=attacker.energyCost;
+  defender.damageTaken=(defender.damageTaken||0)+attacker.damage;
+  addLog(`${attacker.name} used ${attacker.attack} for ${attacker.damage} damage!`);
+  if (defender.damageTaken>=defender.hp) knockOut("ai");
+  if (battle.over) {
+    renderBattle();
+    return;
+  }
+  battle.busy=true;
+  renderBattle();
+  setTimeout(aiTurn,700);
+}
+
+function endPlayerTurn() {
+  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
+  battle.busy=true;
+  addLog("You ended your turn.");
+  renderBattle();
+  setTimeout(aiTurn,350);
+}
+
+function aiTurn() {
+  if (!battle || battle.over) return;
+  battle.turn="ai";
+  renderBattle();
+
+  const ai=battle.ai;
+  const player=battle.player;
+
+  if (ai.bench.length<5 && Math.random()<0.75) {
+    const next=randomBattleCard(battle.aiPool);
+    if (next) {
+      ai.bench.push(next);
+      addLog("Opponent put "+next.name+" on the Bench.");
+    }
+  }
+
+  ai.active.energy=(ai.active.energy||0)+1;
+  addLog("Opponent attached Energy to "+ai.active.name+".");
+
+  if ((ai.active.energy||0)>=ai.active.energyCost) {
+    ai.active.energy-=ai.active.energyCost;
+    player.active.damageTaken=(player.active.damageTaken||0)+ai.active.damage;
+    addLog("Opponent's "+ai.active.name+" used "+ai.active.attack+
+      " for "+ai.active.damage+" damage!");
+    if (player.active.damageTaken>=player.active.hp) knockOut("player");
+  } else {
+    addLog("Opponent is preparing an attack.");
+  }
+
+  if (!battle.over) {
+    battle.turnNumber++;
+    battle.turn="player";
+    battle.energyUsed=false;
+    battle.drew=false;
+    battle.busy=false;
+    addLog("Your turn. Attach Energy, attack, or end your turn.");
+  } else {
+    battle.busy=false;
+  }
+  renderBattle();
+}
+
+/* Initialise the site */
+async function init() {
+  $("savedCount").textContent=savedCards.size;
+  saveDeck();
+  renderDeck();
+  await loadSets();
+  await searchCards();
+}
+init();
 </script>
 </body>
 </html>
+```
