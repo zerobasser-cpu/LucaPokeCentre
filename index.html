@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101323">
+<title>Luca's Pokémon Centre</title>
+<meta name="description" content="Explore Pokémon trading cards, sets, market prices and build and compare decks.">
+
+<style>
+:root {
+  --bg:#0d1020; --panel:#171b30; --panel2:#202640;
+  --text:#f5f6ff; --muted:#a5aec9; --blue:#65a8ff;
+  --purple:#9d80ff; --gold:#ffd66b; --green:#72e3b1;
+  --border:#303854; --red:#ff8090;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.topbar{position:sticky;top:0;z-index:10;background:#101323f5;
+border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.nav{max-width:1450px;margin:auto;padding:13px 22px;display:flex;
+align-items:center;gap:20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;
+letter-spacing:-.6px;margin-right:auto}
+.ball{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;
+background:linear-gradient(#ff6478 0 47%,#fff 48% 53%,#2b3045 54%);
+border:3px solid #f5f6ff;color:#171b30;font-size:12px}
+.navlinks{display:flex;gap:6px;flex-wrap:wrap}
+.navlinks button,.btn{border:1px solid var(--border);border-radius:10px;
+padding:9px 13px;background:var(--panel2);color:var(--text)}
+.navlinks button.active,.btn.primary{background:var(--blue);color:#101323;
+border-color:var(--blue);font-weight:800}
+button:hover{filter:brightness(1.12)}
+main{max-width:1450px;margin:auto;padding:25px 22px 65px}
+.hero{position:relative;overflow:hidden;padding:34px;border:1px solid #3b4264;
+border-radius:24px;background:radial-gradient(ellipse at 90% 10%,#51418a 0,transparent 40%),
+linear-gradient(125deg,#202746,#15192d 70%);margin-bottom:23px}
+.hero:after{content:"";position:absolute;right:40px;top:-70px;width:200px;height:200px;
+border-radius:50%;border:24px solid #ffffff0b;box-shadow:0 0 0 30px #ffffff05,0 0 0 65px #ffffff03}
+.eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(30px,5vw,54px);letter-spacing:-2px;line-height:1.05;
+margin:12px 0;max-width:750px}
+h2{font-size:23px;letter-spacing:-.5px;margin:0 0 6px}
+h3{margin:0 0 8px}
+p{color:var(--muted)}
+.hero p{max-width:640px}
+.searchrow{display:flex;gap:9px;max-width:850px;margin-top:23px;position:relative;z-index:1}
+input,select{background:#101528;color:var(--text);border:1px solid var(--border);
+border-radius:10px;padding:11px 12px;min-width:0;width:100%}
+.searchrow input{font-size:16px;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 28px}
+.stat,.panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:17px}
+.stat strong{display:block;font-size:25px;margin-top:5px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;
+flex-wrap:wrap;margin:27px 0 15px}
+.filters{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 1.1fr 1fr;gap:10px;margin:16px 0}
+.filter label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px}
+.card{overflow:hidden;background:var(--panel);border:1px solid var(--border);
+border-radius:15px;min-width:0;transition:transform .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);border-color:#7585c1}
+.cardimg{height:220px;background:radial-gradient(ellipse,#343d5b,#15192b);
+display:flex;align-items:center;justify-content:center;padding:10px;position:relative}
+.cardimg img{height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 8px #0008)}
+.cardbody{padding:12px}
+.cardname{font-size:15px;font-weight:850;line-height:1.3}
+.setname{font-size:12px;color:var(--muted);margin:5px 0}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
+.tag{font-size:10px;border-radius:5px;background:#303753;padding:3px 6px;color:#dce2ff}
+.price{color:var(--gold);font-weight:900;font-size:18px}
+.price small{font-size:11px;color:var(--muted);font-weight:500}
+.cardbuttons{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
+.cardbuttons button{font-size:11px;padding:8px 4px}
+.iconbtn{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px}
+.pagination{display:flex;gap:8px;justify-content:center;align-items:center;margin:24px 0}
+.view{display:none}.view.active{display:block}
+.notice{padding:12px 14px;border:1px solid #59648b;background:#1b2340;
+border-radius:10px;color:#dce3ff;margin:14px 0}
+.error{color:var(--red)}
+.setgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.settile{background:var(--panel);border:1px solid var(--border);border-radius:13px;
+padding:15px;cursor:pointer;min-width:0}
+.settile img{width:100%;height:75px;object-fit:contain;margin-bottom:10px}
+.settile strong{display:block}
+.deckcols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.decklist{min-height:150px;margin-top:12px}
+.deckrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
+.deckrow img{width:40px;height:55px;object-fit:contain}
+.deckrow .grow{flex:1;min-width:0}
+.deckrow .grow strong{display:block;overflow-wrap:anywhere}
+.deckrow button{padding:4px 9px}
+.decksummary{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.decksummary span{background:var(--panel2);padding:7px 10px;border-radius:8px;font-size:12px}
+.bar{height:7px;background:#303753;border-radius:9px;overflow:hidden;margin:7px 0 14px}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple))}
+.collectiontools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.empty{text-align:center;padding:45px 15px;color:var(--muted)}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--muted);font-size:12px}
+.toast{position:fixed;bottom:18px;right:18px;z-index:30;background:#293352;
+border:1px solid #59648b;padding:13px 17px;border-radius:12px;display:none;max-width:90vw}
+.modal{position:fixed;inset:0;z-index:25;background:#060916df;display:none;
+align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.modalbox{width:min(850px,100%);max-height:90vh;overflow:auto;background:var(--panel);
+border:1px solid var(--border);border-radius:20px;padding:20px}
+.detailgrid{display:grid;grid-template-columns:minmax(160px, .8fr) 1.2fr;gap:20px}
+.detailgrid img{width:100%;max-height:460px;object-fit:contain}
+.pricegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.pricebox{background:var(--panel2);padding:12px;border-radius:10px}
+.hidden{display:none!important}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.setgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:750px){main{padding:15px 12px 45px}.nav{padding:10px 12px}
+.navlinks{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
+.navlinks button{font-size:12px;padding:9px 4px}.hero{padding:23px 17px}
+.hero:after{right:-100px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.cardimg{height:190px}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+.setgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.deckcols{grid-template-columns:1fr}.detailgrid{grid-template-columns:1fr 1.2fr;gap:12px}
+.searchrow{flex-wrap:wrap}.searchrow input{flex-basis:100%}}
+@media(max-width:400px){.cardimg{height:155px}.cardbody{padding:9px}
+.filters{grid-template-columns:1fr 1fr}.detailgrid{grid-template-columns:1fr}
+.detailgrid img{max-height:290px}.pricegrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="nav">
+    <div class="brand"><span class="ball">●</span><span>Luca's <span style="color:var(--blue)">Pokémon</span> Centre</span></div>
+    <nav class="navlinks" aria-label="Main navigation">
+      <button class="active" data-view="explorer">Cards</button>
+      <button data-view="sets">Sets</button>
+      <button data-view="decks">Deck Builder</button>
+      <button data-view="compare">Compare Decks</button>
+      <button data-view="collection">My Collection</button>
+      <button data-view="about">About</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow">Your trading card headquarters</div>
+    <h1>Every card.<br>Every set. Your collection.</h1>
+    <p>Discover Pokémon cards, explore expansions, check available market prices and build your dream decks.</p>
+    <div class="searchrow">
+      <input id="search" type="search" placeholder="Search Pokémon, card name, set or number..." aria-label="Search cards">
+      <button class="btn primary" id="searchBtn">Search cards</button>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><span class="muted">Cards found</span><strong id="found">—</strong><span class="small muted">Matching your search</span></div>
+    <div class="stat"><span class="muted">Sets loaded</span><strong id="setCount">—</strong><span class="small muted">Available expansions</span></div>
+    <div class="stat"><span class="muted">Cards collected</span><strong id="ownedCount">0</strong><span class="small muted">Your saved collection</span></div>
+    <div class="stat"><span class="muted">Collection value</span><strong id="collectionValue">£0.00</strong><span class="small muted">Estimated from available prices</span></div>
+  </section>
+
+  <section id="explorer" class="view active">
+    <div class="sectionhead">
+      <div><h2>Card Explorer</h2><div class="muted small">Search, filter, inspect and add cards to your decks.</div></div>
+      <button class="btn" id="clearFilters">Clear filters</button>
+    </div>
+    <div class="filters">
+      <div class="filter"><label for="setFilter">Expansion / set</label><select id="setFilter"><option value="">All sets</option></select></div>
+      <div class="filter"><label for="typeFilter">Pokémon type</label><select id="typeFilter"><option value="">All types</option><option>Grass</option><option>Fire</option><option>Water</option><option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option><option>Metal</option><option>Dragon</option><option>Fairy</option><option>Colorless</option></select></div>
+      <div class="filter"><label for="rarityFilter">Rarity</label><select id="rarityFilter"><option value="">All rarities</option></select></div>
+      <div class="filter"><label for="categoryFilter">Card category</label><select id="categoryFilter"><option value="">All categories</option><option>Pokémon</option><option>Trainer</option><option>Energy</option></select></div>
+      <div class="filter"><label for="sortFilter">Sort cards</label><select id="sortFilter"><option value="name">Name A–Z</option><option value="priceHigh">Price: high to low</option><option value="priceLow">Price: low to high</option><option value="number">Card number</option></select></div>
+    </div>
+    <div class="notice" id="status" role="status">Connecting to the Pokémon TCG card database...</div>
+    <div class="cards" id="cards"></div>
+    <div class="pagination">
+      <button class="btn" id="prevPage">← Previous</button>
+      <span id="pageLabel" class="muted">Page 1</span>
+      <button class="btn" id="nextPage">Next →</button>
+    </div>
+  </section>
+
+  <section id="sets" class="view">
+    <div class="sectionhead"><div><h2>Explore Sets</h2><p>Choose an expansion to see its cards.</p></div></div>
+    <input id="setSearch" type="search" placeholder="Find an expansion..." style="max-width:500px;margin-bottom:15px">
+    <div class="setgrid" id="setGrid"></div>
+    <div class="pagination"><button class="btn" id="moreSets">Load more sets</button></div>
+  </section>
+
+  <section id="decks" class="view">
+    <div class="sectionhead"><div><h2>Deck Builder</h2><p>Build two decks and calculate their card values. Standard constructed decks usually contain 60 cards.</p></div></div>
+    <div class="notice">Choose cards in Card Explorer and press “+ Deck A” or “+ Deck B”. Deck lists are saved in this browser.</div>
+    <div class="deckcols">
+      <div class="panel">
+        <h3>🔵 Deck A</h3>
+        <input id="deckAName" value="My Pokémon Deck" aria-label="Deck A name">
+        <div class="decksummary" id="deckASummary"></div>
+        <div class="decklist" id="deckAList"></div>
+        <button class="btn" id="clearA">Clear Deck A</button>
+      </div>
+      <div class="panel">
+        <h3>🟣 Deck B</h3>
+        <input id="deckBName" value="My Rival's Deck" aria-label="Deck B name">
+        <div class="decksummary" id="deckBSummary"></div>
+        <div class="decklist" id="deckBList"></div>
+        <button class="btn" id="clearB">Clear Deck B</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <h3>Deck notes</h3>
+      <p>Use the Compare Decks tab to compare card counts, types and estimated market values. This is a deck-building aid, not an official game simulator or tournament legality checker.</p>
+    </div>
+  </section>
+
+  <section id="compare" class="view">
+    <div class="sectionhead"><div><h2>Deck Comparison</h2><p>Compare your saved lists side by side.</p></div><button class="btn primary" id="runCompare">Compare now</button></div>
+    <div id="comparison" class="deckcols"></div>
+    <div class="panel" style="margin-top:16px">
+      <h3>Cards in both decks</h3>
+      <div id="sharedCards" class="muted">Build your decks to see shared cards.</div>
+    </div>
+  </section>
+
+  <section id="collection" class="view">
+    <div class="sectionhead"><div><h2>My Collection</h2><p>Cards marked as owned on this device.</p></div>
+      <button class="btn" id="exportCollection">Export collection CSV</button></div>
+    <div class="notice">Use the “♡ Own” button on any card to add it to or remove it from your collection.</div>
+    <div class="cards" id="ownedCards"></div>
+  </section>
+
+  <section id="about" class="view">
+    <div class="panel">
+      <h2>About Luca's Pokémon Centre</h2>
+      <p>A Pokémon Trading Card Game collection and deck-building companion.</p>
+      <h3>Where does the card information come from?</h3>
+      <p>This site retrieves card details, expansion information, artwork and available price data from the public Pokémon TCG API. Card prices are not guaranteed to be live, complete or available for every printing. Prices are estimates, and USD prices are converted to GBP using an adjustable approximate exchange rate.</p>
+      <p>Price availability depends on the data supplied for each card. Clicking a price-source link opens the provider's card listing when one is available.</p>
+      <h3>Your data</h3>
+      <p>Your deck lists and collection are stored in your browser using local storage. They are not automatically synced to another device.</p>
+      <h3>Important</h3>
+      <p>This is an unofficial fan-made project and is not affiliated with or endorsed by The Pokémon Company. Pokémon and related names and imagery belong to their respective owners.</p>
+    </div>
+  </section>
+</main>
+
+<footer>Luca's Pokémon Centre · Unofficial fan project · Card prices are estimates, not offers to sell.</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Card details">
+  <div class="modalbox">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px">
+      <h2 id="modalTitle">Card details</h2>
+      <button class="btn" id="closeModal">✕ Close</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+// ======================================================
+// SETTINGS
+// ======================================================
+const API = "https://api.pokemontcg.io/v2";
+const PAGE_SIZE = 30;
+const USD_TO_GBP = 0.79; // Approximate conversion; change when needed.
+const $ = id => document.getElementById(id);
+
+let currentPage = 1;
+let totalCards = 0;
+let loadedSets = [];
+let setOffset = 0;
+let lastCards = [];
+let allLoadedCards = new Map();
+let requestNumber = 0;
+let toastTimer;
+let owned = readStore("lpc_owned", {});
+let decks = readStore("lpc_decks", {A:[],B:[]});
+let deckNames = readStore("lpc_decknames", {A:"My Pokémon Deck",B:"My Rival's Deck"});
+
+function readStore(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function saveStore(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch { showToast("Browser storage is full. Export your data and remove some entries."); }
+}
+function escapeHTML(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function money(n) {
+  return n == null || !Number.isFinite(Number(n)) ? "N/A" :
+    new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP"}).format(Number(n));
+}
+function getPrices(card) {
+  const p = card.tcgplayer?.prices;
+  if (!p) return [];
+  return Object.entries(p).map(([variant,v]) => ({
+    source:"TCGplayer", variant, usd:v.market ?? v.mid ?? v.low ?? null,
+    gbp:(v.market ?? v.mid ?? v.low) == null ? null : (v.market ?? v.mid ?? v.low)*USD_TO_GBP,
+    url:card.tcgplayer?.url || ""
+  }));
+}
+function bestPrice(card) {
+  const prices = getPrices(card).filter(p=>p.gbp != null);
+  if (!prices.length) return null;
+  return Math.min(...prices.map(p=>p.gbp));
+}
+function priceLabel(card) {
+  const p=bestPrice(card);
+  return p == null ? "Price unavailable" : money(p);
+}
+function showToast(message) {
+  $("toast").textContent=message;
+  $("toast").style.display="block";
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("toast").style.display="none",2600);
+}
+function imageURL(card, large=false) {
+  return card.images?.[large ? "large":"small"] || "";
+}
+function category(card) {
+  if (card.supertype === "Pokémon") return "Pokémon";
+  if (card.supertype === "Trainer") return "Trainer";
+  if (card.supertype === "Energy") return "Energy";
+  return card.supertype || "Other";
+}
+function cardTypes(card) {
+  return [...(card.types || [])].join(", ");
+}
+function updateStats() {
+  $("ownedCount").textContent=Object.keys(owned).length;
+  let total=0;
+  for (const [id,entry] of Object.entries(owned)) {
+    const c=allLoadedCards.get(id);
+    const p=c ? bestPrice(c) : entry.price;
+    if (p != null) total += Number(p)*(entry.quantity || 1);
+  }
+  $("collectionValue").textContent=money(total);
+}
+function apiHeaders() {
+  // Optional API key. Never put a private server credential in a public HTML file.
+  return {};
+}
+async function fetchJSON(url) {
+  const res=await fetch(url,{headers:apiHeaders()});
+  if(!res.ok) throw new Error("API returned HTTP "+res.status);
+  return res.json();
+}
+
+// ======================================================
+// NAVIGATION
+// ======================================================
+document.querySelectorAll("[data-view]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b===button));
+    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===button.dataset.view));
+    if(button.dataset.view==="collection") renderCollection();
+    if(button.dataset.view==="decks") renderDecks();
+    if(button.dataset.view==="compare") renderComparison();
+    if(button.dataset.view==="sets") renderSets();
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+
+// ======================================================
+// CARD SEARCH AND FILTERS
+// ======================================================
+function makeQuery() {
+  const terms=[];
+  const raw=$("search").value.trim();
+  if(raw) {
+    const safe=raw.replace(/["\\]/g," ").trim();
+    if(safe) terms.push('name:"*'+safe+'*"');
+  }
+  if($("setFilter").value) terms.push('set.id:'+safeQuery($("setFilter").value));
+  if($("typeFilter").value) terms.push('types:'+safeQuery($("typeFilter").value));
+  if($("rarityFilter").value) terms.push('rarity:"'+safeQuery($("rarityFilter").value)+'"');
+  if($("categoryFilter").value) terms.push('supertype:"'+safeQuery($("categoryFilter").value)+'"');
+  return terms.join(" ");
+}
+function safeQuery(s){return String(s).replace(/[{}[\]^~*?:\\" ]/g," ").trim();}
+function updateStatus(msg, error=false) {
+  $("status").textContent=msg;
+  $("status").classList.toggle("error",error);
+}
+async function loadCards(reset=true) {
+  if(reset) currentPage=1;
+  const ticket=++requestNumber;
+  $("cards").innerHTML='<div class="empty">Loading cards…</div>';
+  updateStatus("Searching the card database…");
+  $("prevPage").disabled=currentPage<=1;
+  $("nextPage").disabled=true;
+  const query=makeQuery();
+  const params=new URLSearchParams({page:String(currentPage),pageSize:String(PAGE_SIZE),orderBy:"name"});
+  if(query) params.set("q",query);
+  try {
+    const result=await fetchJSON(API+"/cards?"+params.toString());
+    if(ticket!==requestNumber)return;
+    lastCards=result.data || [];
+    totalCards=result.totalCount || 0;
+    lastCards.forEach(c=>allLoadedCards.set(c.id,c));
+    $("found").textContent=totalCards.toLocaleString("en-GB");
+    $("pageLabel").textContent=`Page ${currentPage} · ${lastCards.length} cards`;
+    $("prevPage").disabled=currentPage<=1;
+    $("nextPage").disabled=currentPage*PAGE_SIZE>=totalCards;
+    updateStatus(`${totalCards.toLocaleString("en-GB")} matching cards. Prices are shown where available.`);
+    renderCards(lastCards,$("cards"));
+    updateStats();
+  } catch(err) {
+    if(ticket!==requestNumber)return;
+    $("cards").innerHTML="";
+    updateStatus("Could not load cards. Check your internet connection or try a simpler search. "+err.message,true);
+  }
+}
+function renderCards(cards, container) {
+  container.innerHTML="";
+  if(!cards.length){container.innerHTML='<div class="empty">No cards found. Try changing your filters.</div>';return;}
+  for(const c of cards) {
+    const img=imageURL(c);
+    const isOwned=!!owned[c.id];
+    const article=document.createElement("article");
+    article.className="card";
+    article.innerHTML=`
+      <div class="cardimg">${img?`<img loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(c.name)}" onerror="this.style.display='none'">`:'<span class="muted">No image</span>'}</div>
+      <div class="cardbody">
+        <div class="cardname">${escapeHTML(c.name)}</div>
+        <div class="setname">${escapeHTML(c.set?.name||"Unknown set")} · #${escapeHTML(c.number||"—")}</div>
+        <div class="tags"><span class="tag">${escapeHTML(c.rarity||"Rarity unknown")}</span><span class="tag">${escapeHTML(category(c))}</span></div>
+        <div class="price">${escapeHTML(priceLabel(c))}</div>
+        <div class="small muted">${getPrices(c).length?"TCGplayer market estimate · converted to GBP":"No market price supplied"}</div>
+        <div class="cardbuttons">
+          <button class="btn" data-action="details">Details</button>
+          <button class="iconbtn" data-action="own">${isOwned?"♥ Owned":"♡ Own"}</button>
+          <button class="iconbtn" data-action="A">+ Deck A</button>
+          <button class="iconbtn" data-action="B">+ Deck B</button>
+        </div>
+      </div>`;
+    article.querySelector('[data-action="details"]').addEventListener("click",()=>showDetails(c));
+    article.querySelector('[data-action="own"]').addEventListener("click",()=>toggleOwned(c));
+    article.querySelector('[data-action="A"]').addEventListener("click",()=>addToDeck("A",c));
+    article.querySelector('[data-action="B"]').addEventListener("click",()=>addToDeck("B",c));
+    container.appendChild(article);
+  }
+}
+$("searchBtn").addEventListener("click",()=>loadCards(true));
+$("search").addEventListener("keydown",e=>{if(e.key==="Enter")loadCards(true)});
+["setFilter","typeFilter","rarityFilter","categoryFilter","sortFilter"].forEach(id=>{
+  $(id).addEventListener("change",()=>{
+    if(id==="sortFilter"){sortVisibleCards();return;}
+    loadCards(true);
+  });
+});
+$("clearFilters").addEventListener("click",()=>{
+  $("search").value="";
+  ["setFilter","typeFilter","rarityFilter","categoryFilter"].forEach(id=>$(id).value="");
+  $("sortFilter").value="name";
+  loadCards(true);
+});
+$("prevPage").addEventListener("click",()=>{if(currentPage>1){currentPage--;loadCards(false)}});
+$("nextPage").addEventListener("click",()=>{if(currentPage*PAGE_SIZE<totalCards){currentPage++;loadCards(false)}});
+function sortVisibleCards() {
+  const mode=$("sortFilter").value;
+  let list=[...lastCards];
+  if(mode==="priceHigh")list.sort((a,b)=>(bestPrice(b)??-1)-(bestPrice(a)??-1));
+  if(mode==="priceLow")list.sort((a,b)=>(bestPrice(a)??Infinity)-(bestPrice(b)??Infinity));
+  if(mode==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(mode==="number")list.sort((a,b)=>(parseInt(a.number)||0)-(parseInt(b.number)||0));
+  renderCards(list,$("cards"));
+}
+
+// ======================================================
+// SETS
+// ======================================================
+async function loadSets() {
+  try {
+    const result=await fetchJSON(API+"/sets?pageSize=250&orderBy=-releaseDate");
+    loadedSets=result.data||[];
+    $("setCount").textContent=loadedSets.length.toLocaleString("en-GB");
+    const old=$("setFilter").value;
+    $("setFilter").innerHTML='<option value="">All sets</option>';
+    [...loadedSets].sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
+      const o=document.createElement("option");o.value=s.id;o.textContent=s.name;$("setFilter").appendChild(o);
+    });
+    $("setFilter").value=old;
+    renderSets();
+    const rarities=new Set();
+    // Populate rarity options from cards returned by the first search.
+    lastCards.forEach(c=>{if(c.rarity)rarities.add(c.rarity)});
+    if(rarities.size) {
+      const select=$("rarityFilter"), current=select.value;
+      select.innerHTML='<option value="">All rarities</option>';
+      [...rarities].sort().forEach(r=>{const o=document.createElement("option");o.value=r;o.textContent=r;select.appendChild(o)});
+      select.value=current;
+    }
+  } catch(e) {
+    $("setCount").textContent="—";
+    $("setGrid").innerHTML='<div class="notice">Could not load sets. Try refreshing the page.</div>';
+  }
+}
+function renderSets() {
+  const q=$("setSearch").value.trim().toLowerCase();
+  const filtered=loadedSets.filter(s=>s.name.toLowerCase().includes(q));
+  const slice=filtered.slice(0,setOffset+24);
+  $("setGrid").innerHTML="";
+  slice.forEach(s=>{
+    const tile=document.createElement("div");tile.className="settile";
+    tile.innerHTML=`<img loading="lazy" src="${escapeHTML(s.images?.logo||s.images?.symbol||"")}" alt=""><strong>${escapeHTML(s.name)}</strong><div class="small muted">${escapeHTML(s.series||"")} · ${escapeHTML(s.releaseDate||"")}</div><div class="small muted">${s.printedTotal??"?"} cards in set</div>`;
+    tile.addEventListener("click",()=>{
+      $("setFilter").value=s.id;$("search").value="";
+      document.querySelector('[data-view="explorer"]').click();loadCards(true);
+    });
+    $("setGrid").appendChild(tile);
+  });
+  $("moreSets").style.display=slice.length<filtered.length?"inline-block":"none";
+}
+$("setSearch").addEventListener("input",()=>{setOffset=0;renderSets()});
+$("moreSets").addEventListener("click",()=>{setOffset+=24;renderSets()});
+
+// ======================================================
+// CARD DETAILS
+// ======================================================
+function showDetails(c) {
+  const img=imageURL(c,true);
+  const prices=getPrices(c);
+  $("modalTitle").textContent=c.name;
+  $("modalContent").innerHTML=`
+    <div class="detailgrid">
+      <div>${img?`<img src="${escapeHTML(img)}" alt="${escapeHTML(c.name)}">`:""}</div>
+      <div>
+        <div class="eyebrow">${escapeHTML(c.set?.name||"Pokémon card")}</div>
+        <h2>${escapeHTML(c.name)}</h2>
+        <p>${escapeHTML(category(c))} · Card ${escapeHTML(c.number||"—")} of ${escapeHTML(c.set?.printedTotal||c.set?.total||"—")}</p>
+        <div class="price" style="font-size:25px">${escapeHTML(priceLabel(c))}</div>
+        <div class="tags">${(c.types||[]).map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join("")}<span class="tag">${escapeHTML(c.rarity||"Unknown rarity")}</span></div>
+        <div class="pricegrid">
+          <div class="pricebox"><div class="muted small">HP</div><strong>${escapeHTML(c.hp||"—")}</strong></div>
+          <div class="pricebox"><div class="muted small">Artist</div><strong>${escapeHTML(c.artist||"Unknown")}</strong></div>
+          <div class="pricebox"><div class="muted small">Set release</div><strong>${escapeHTML(c.set?.releaseDate||"—")}</strong></div>
+          <div class="pricebox"><div class="muted small">Set total</div><strong>${escapeHTML(c.set?.printedTotal||c.set?.total||"—")}</strong></div>
+        </div>
+        <h3 style="margin-top:18px">Market price information</h3>
+        ${prices.length?prices.map(p=>`<div class="pricebox" style="margin:7px 0"><strong>${escapeHTML(p.variant)}</strong><br>${money(p.gbp)} <span class="muted small">(approximate GBP conversion)</span>${p.url?`<br><a style="color:var(--blue)" target="_blank" rel="noopener noreferrer" href="${escapeHTML(p.url)}">View TCGplayer listing ↗</a>`:""}</div>`).join(""):'<p>No TCGplayer market prices are currently supplied for this card.</p>'}
+        <h3 style="margin-top:18px">Attacks</h3>
+        ${(c.attacks||[]).map(a=>`<div class="pricebox" style="margin:6px 0"><strong>${escapeHTML(a.name)}</strong> <span style="float:right">${escapeHTML(a.damage||"—")}</span><div class="small muted">${escapeHTML((a.cost||[]).join(" · "))}</div><div class="small">${escapeHTML(a.text||"")}</div></div>`).join("")||'<p class="muted">No attacks listed.</p>'}
+        <h3 style="margin-top:18px">Weaknesses and retreat</h3>
+        <p>${escapeHTML((c.weaknesses||[]).map(w=>w.type+" "+w.value).join(", ")||"—")} · Retreat: ${escapeHTML((c.retreatCost||[]).join(", ")||"—")}</p>
+        <div class="cardbuttons">
+          <button class="btn primary" id="detailA">+ Deck A</button>
+          <button class="btn" id="detailB">+ Deck B</button>
+          <button class="btn" id="detailOwn">${owned[c.id]?"♥ Owned":"♡ Add to collection"}</button>
+          ${c.tcgplayer?.url?`<a class="btn" target="_blank" rel="noopener noreferrer" href="${escapeHTML(c.tcgplayer.url)}">Price source ↗</a>`:""}
+        </div>
+      </div>
+    </div>`;
+  $("detailA").addEventListener("click",()=>addToDeck("A",c));
+  $("detailB").addEventListener("click",()=>addToDeck("B",c));
+  $("detailOwn").addEventListener("click",()=>{toggleOwned(c);$("detailOwn").textContent=owned[c.id]?"♥ Owned":"♡ Add to collection"});
+  $("modal").classList.add("open");
+}
+$("closeModal").addEventListener("click",()=>$("modal").classList.remove("open"));
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").classList.remove("open")});
+
+// ======================================================
+// COLLECTION
+// ======================================================
+function toggleOwned(c) {
+  if(owned[c.id]) delete owned[c.id];
+  else owned[c.id]={id:c.id,name:c.name,set:c.set?.name||"",price:bestPrice(c),quantity:1};
+  allLoadedCards.set(c.id,c);
+  saveStore("lpc_owned",owned);updateStats();
+  renderCards(lastCards,$("cards"));
+  showToast(owned[c.id]?"Added to your collection":"Removed from your collection");
+}
+function renderCollection() {
+  const container=$("ownedCards");
+  container.innerHTML="";
+  const entries=Object.keys(owned);
+  if(!entries.length){container.innerHTML='<div class="empty">Your collection is empty. Explore cards and tap ♡ Own to get started.</div>';return;}
+  const cards=entries.map(id=>allLoadedCards.get(id)).filter(Boolean);
+  renderCards(cards,container);
+  const missing=entries.filter(id=>!allLoadedCards.has(id));
+  if(missing.length) {
+    const note=document.createElement("div");note.className="notice";
+    note.textContent=`${missing.length} saved card(s) are not currently loaded into the page. Search for those cards to see their artwork and current available prices.`;
+    container.prepend(note);
+  }
+}
+$("exportCollection").addEventListener("click",()=>{
+  const rows=[["ID","Name","Set","Quantity","Estimated GBP"]];
+  Object.entries(owned).forEach(([id,e])=>rows.push([id,e.name,e.set,e.quantity||1,e.price??""]));
+  downloadCSV("lucas-pokemon-collection.csv",rows);
+});
+function downloadCSV(filename,rows) {
+  const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=filename;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ======================================================
+// DECK BUILDER
+// ======================================================
+function addToDeck(which,c) {
+  const list=decks[which];
+  const existing=list.find(x=>x.id===c.id);
+  if(existing) {
+    if(existing.qty>=4 && c.supertype!=="Energy") {showToast("Most cards are limited to four copies per deck.");return;}
+    existing.qty++;
+  } else list.push({id:c.id,name:c.name,set:c.set?.name||"",qty:1,price:bestPrice(c),supertype:c.supertype,types:c.types||[],image:imageURL(c)});
+  allLoadedCards.set(c.id,c);
+  saveStore("lpc_decks",decks);
+  renderDecks();
+  showToast("Added to Deck "+which);
+}
+function deckTotals(which) {
+  const list=decks[which];
+  let count=0,value=0,pokemon=0,trainer=0,energy=0;
+  list.forEach(x=>{
+    count+=x.qty;
+    value+=(bestPrice(allLoadedCards.get(x.id)||{})??x.price??0)*x.qty;
+    const c=allLoadedCards.get(x.id);
+    const cat=c?category(c):x.supertype;
+    if(cat==="Pokémon")pokemon+=x.qty;
+    else if(cat==="Trainer")trainer+=x.qty;
+    else if(cat==="Energy")energy+=x.qty;
+  });
+  return {count,value,pokemon,trainer,energy};
+}
+function renderDecks() {
+  ["A","B"].forEach(which=>{
+    const input=$("deck"+which+"Name");
+    if(document.activeElement!==input)input.value=deckNames[which]||("Deck "+which);
+    const t=deckTotals(which);
+    $("deck"+which+"Summary").innerHTML=`<span>${t.count}/60 cards</span><span>${money(t.value)}</span><span>Pokémon ${t.pokemon}</span><span>Trainers ${t.trainer}</span><span>Energy ${t.energy}</span>`;
+    $("deck"+which+"List").innerHTML="";
+    if(!decks[which].length)$("deck"+which+"List").innerHTML='<div class="empty">No cards yet. Visit Card Explorer to add cards.</div>';
+    decks[which].forEach(entry=>{
+      const row=document.createElement("div");row.className="deckrow";
+      row.innerHTML=`${entry.image?`<img src="${escapeHTML(entry.image)}" alt="">`:""}<div class="grow"><strong>${escapeHTML(entry.name)}</strong><span class="small muted">${escapeHTML(entry.set||"")}</span><br><span class="small">${entry.qty} × ${money(bestPrice(allLoadedCards.get(entry.id)||{})??entry.price)}</span></div><button class="iconbtn" data-less>−</button><strong>${entry.qty}</strong><button class="iconbtn" data-more>+</button><button class="iconbtn" data-remove>✕</button>`;
+      row.querySelector("[data-less]").addEventListener("click",()=>changeQty(which,entry.id,-1));
+      row.querySelector("[data-more]").addEventListener("click",()=>changeQty(which,entry.id,1));
+      row.querySelector("[data-remove]").addEventListener("click",()=>removeDeckCard(which,entry.id));
+      $("deck"+which+"List").appendChild(row);
+    });
+  });
+  updateStats();
+}
+function changeQty(which,id,delta) {
+  const entry=decks[which].find(x=>x.id===id);if(!entry)return;
+  const card=allLoadedCards.get(id);
+  const limit=card?.supertype==="Energy"?60:4;
+  if(delta>0&&entry.qty>=limit){showToast("Copy limit reached for this card.");return;}
+  entry.qty+=delta;if(entry.qty<=0)decks[which]=decks[which].filter(x=>x.id!==id);
+  saveStore("lpc_decks",decks);renderDecks();
+}
+function removeDeckCard(which,id){decks[which]=decks[which].filter(x=>x.id!==id);saveStore("lpc_decks",decks);renderDecks()}
+["A","B"].forEach(which=>{
+  $("clear"+which).addEventListener("click",()=>{
+    if(confirm("Clear all cards from Deck "+which+"?")){decks[which]=[];saveStore("lpc_decks",decks);renderDecks()}
+  });
+  $("deck"+which+"Name").addEventListener("input",e=>{
+    deckNames[which]=e.target.value;saveStore("lpc_decknames",deckNames);
+  });
+});
+
+// ======================================================
+// COMPARE DECKS
+// ======================================================
+function renderComparison() {
+  renderDecks();
+  const a=deckTotals("A"),b=deckTotals("B");
+  const decksHTML=[["A",a],["B",b]].map(([key,t])=>`
+    <div class="panel">
+      <h3>${escapeHTML(deckNames[key]||("Deck "+key))}</h3>
+      <div class="price" style="font-size:26px">${money(t.value)}</div>
+      <p>${t.count} total cards ${t.count===60?"✓":t.count>60?"· over 60 cards":"· fewer than 60 cards"}</p>
+      <div class="muted small">Pokémon: ${t.pokemon}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.pokemon/t.count*100:0)}%"></span></div>
+      <div class="muted small">Trainers: ${t.trainer}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.trainer/t.count*100:0)}%"></span></div>
+      <div class="muted small">Energy: ${t.energy}</div><div class="bar"><span style="width:${Math.min(100,t.count?t.energy/t.count*100:0)}%"></span></div>
+    </div>`).join("");
+  $("comparison").innerHTML=decksHTML;
+  const bMap=new Map(decks.B.map(c=>[c.id,c.qty]));
+  const shared=decks.A.filter(c=>bMap.has(c.id));
+  $("sharedCards").innerHTML=shared.length?
+    shared.map(c=>`<div class="deckrow"><div class="grow"><strong>${escapeHTML(c.name)}</strong><span class="small muted">${escapeHTML(c.set||"")}</span></div><span>${c.qty} in A · ${bMap.get(c.id)} in B</span></div>`).join("")
+    :"No shared card printings yet.";
+}
+$("runCompare").addEventListener("click",renderComparison);
+
+// ======================================================
+// STARTUP
+// ======================================================
+loadSets();
+loadCards(true);
+updateStats();
+renderDecks();
+})();
+</script>
+</body>
+</html>
