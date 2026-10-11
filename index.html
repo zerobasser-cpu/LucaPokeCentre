@@ -3,1130 +3,808 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
 <title>Luca's Pokémon Centre</title>
 <style>
 :root {
-  --bg:#0b1020;
-  --panel:#141c30;
-  --panel2:#1b2640;
-  --line:#2c3b58;
-  --text:#f4f7ff;
-  --muted:#aab6ce;
-  --yellow:#ffd447;
-  --blue:#59a9ff;
-  --green:#4ade80;
-  --red:#fb7185;
+  --bg:#0b1020;--panel:#141e33;--panel2:#1b2943;
+  --line:#334563;--text:#f4f7ff;--muted:#aab8d0;
+  --yellow:#ffd447;--green:#4ade80;--red:#fb7185;--blue:#60a5fa;
 }
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:radial-gradient(ellipse at top,#1c2c4c 0,#0b1020 55%);
-  color:var(--text);
-  min-height:100vh;
-}
-button,input,select { font:inherit; }
-button { cursor:pointer; }
-button:disabled { opacity:.45;cursor:not-allowed; }
-header {
-  padding:25px 16px;
-  text-align:center;
-  background:linear-gradient(120deg,#17294c,#39256b,#163a58);
-  border-bottom:2px solid #435c88;
-}
-.logo {
-  font-size:clamp(28px,5vw,48px);
-  font-weight:1000;
-  letter-spacing:-1.5px;
-}
-.logo span { color:var(--yellow); }
-header p { color:#d5def3;margin:9px 0 0; }
-.status {
-  display:inline-block;
-  margin-top:13px;
-  padding:7px 12px;
-  background:#0b1326a8;
-  border:1px solid #647ba4;
-  border-radius:20px;
-  color:#dbeafe;
-  font-size:12px;
-}
-nav {
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  flex-wrap:wrap;
-  padding:13px;
-  background:#0c1425;
-  border-bottom:1px solid var(--line);
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-nav button,.btn {
-  border:1px solid #405474;
-  border-radius:10px;
-  padding:10px 14px;
-  color:var(--text);
-  background:#1b2942;
-  font-weight:700;
-}
-nav button.active, .btn.primary {
-  background:var(--yellow);
-  color:#171717;
-  border-color:var(--yellow);
-}
-.btn.green { background:#166534;border-color:#22c55e; }
-.btn.red { background:#7f1d1d;border-color:#ef4444; }
-.btn.small { padding:6px 9px;font-size:12px; }
-main { max-width:1450px;margin:auto;padding:20px 16px 55px; }
-.page { display:none; }
-.page.active { display:block; }
-h2 { margin:0 0 8px;font-size:25px; }
-h3 { margin:0 0 10px; }
-.sub { color:var(--muted);line-height:1.55;margin:0 0 18px; }
-.panel {
-  background:linear-gradient(145deg,#17223a,#111a2c);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:17px;
-  margin-bottom:17px;
-  min-width:0;
-}
-.controls {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-label { display:block;font-size:12px;color:var(--muted);margin-bottom:6px; }
-input,select {
-  width:100%;
-  min-width:0;
-  background:#0b1324;
-  color:var(--text);
-  border:1px solid #354765;
-  border-radius:9px;
-  padding:11px;
-}
-.actions { display:flex;gap:8px;flex-wrap:wrap;margin-top:12px; }
-.stats {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-  margin-bottom:17px;
-}
-.stat {
-  background:#17223a;
-  border:1px solid var(--line);
-  padding:14px;
-  border-radius:12px;
-}
-.stat strong { display:block;font-size:24px;color:var(--yellow); }
-.stat span { font-size:12px;color:var(--muted); }
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
-  gap:15px;
-}
-.card {
-  min-width:0;
-  background:#17223a;
-  border:1px solid #334563;
-  border-radius:13px;
-  padding:10px;
-  overflow:hidden;
-  transition:transform .15s,border-color .15s;
-}
-.card:hover { transform:translateY(-3px);border-color:#facc15; }
-.card img {
-  width:100%;
-  display:block;
-  object-fit:contain;
-  aspect-ratio:2.5/3.5;
-  border-radius:8px;
-  background:#0c1425;
-}
-.card h3 { font-size:14px;margin:10px 0 5px;line-height:1.35; }
-.card .meta { color:var(--muted);font-size:11px;line-height:1.55; }
-.price { color:#86efac;font-size:14px;font-weight:800;margin:8px 0; }
-.card .actions button { flex:1; }
-.empty {
-  padding:35px 15px;
-  text-align:center;
-  color:var(--muted);
-  border:1px dashed #3c4e70;
-  border-radius:13px;
-}
-.toolbar {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;flex-wrap:wrap;margin:12px 0;
-}
-.notice { color:#c6d4ef;font-size:12px;line-height:1.6; }
-.badge {
-  display:inline-block;
-  border:1px solid #53698d;
-  color:#dbeafe;
-  border-radius:20px;
-  padding:3px 7px;
-  font-size:10px;
-  margin:2px 2px 2px 0;
-}
-.set-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-  gap:12px;
-}
-.set-card {
-  display:flex;gap:12px;align-items:center;
-  background:#17223a;border:1px solid var(--line);
-  border-radius:12px;padding:12px;
-}
-.set-card img { width:55px;height:55px;object-fit:contain; }
-.set-card h3 { font-size:13px;margin:0 0 5px; }
-.set-card p { color:var(--muted);font-size:11px;margin:0 0 7px; }
-.two-col { display:grid;grid-template-columns:1fr 1fr;gap:15px; }
-.deck-row {
-  display:flex;align-items:center;gap:10px;
-  padding:9px 0;border-bottom:1px solid var(--line);
-}
-.deck-row img { width:42px;height:58px;object-fit:contain; }
-.deck-row .grow { flex:1;min-width:0; }
-.deck-row strong { display:block;font-size:13px; }
-.deck-row small { color:var(--muted); }
-.deck-row button { padding:5px 9px; }
-.battle-board {
-  display:grid;grid-template-columns:1fr 1fr;gap:15px;
-}
-.battle-side {
-  background:#101a2e;border:1px solid #354765;
-  border-radius:13px;padding:13px;min-width:0;
-}
-.battle-side h3 { display:flex;justify-content:space-between;gap:8px; }
-.battle-slots { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
-.battle-pokemon {
-  min-width:0;text-align:center;border:1px dashed #3a4e70;
-  border-radius:12px;padding:8px;background:#17223a;
-}
-.battle-pokemon img {
-  width:100%;max-width:145px;aspect-ratio:2.5/3.5;
-  object-fit:contain;display:block;margin:auto;
-}
-.battle-pokemon strong { display:block;font-size:12px;margin:6px 0; }
-.hpbar { background:#35415a;height:8px;border-radius:20px;overflow:hidden; }
-.hpbar span { display:block;height:100%;background:#4ade80; }
-.battle-pokemon .meta { color:var(--muted);font-size:11px; }
-.log {
-  background:#080e1a;border:1px solid #2e3d58;
-  border-radius:10px;padding:12px;min-height:105px;
-  max-height:220px;overflow:auto;font-size:12px;line-height:1.65;
-}
-.log p { margin:0 0 5px; }
-footer { text-align:center;padding:25px;color:#8998b4;font-size:12px; }
-@media(max-width:850px) {
-  .controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .two-col { grid-template-columns:1fr; }
-}
-@media(max-width:560px) {
-  main { padding:14px 10px 35px; }
-  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:9px; }
-  .card { padding:7px; }
-  .card .actions { flex-direction:column; }
-  nav { position:static; }
-  nav button { flex:1; }
-  .battle-board { grid-template-columns:1fr; }
-}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#203354,#0b1020 60%);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+header{text-align:center;padding:26px 14px;background:linear-gradient(120deg,#17294c,#39256b,#163a58);border-bottom:2px solid #435c88}
+.logo{font-size:clamp(27px,5vw,47px);font-weight:1000;letter-spacing:-1px}
+.logo span{color:var(--yellow)}
+header p{color:#d5def3;margin:9px 0}
+.status{display:inline-block;margin-top:10px;padding:7px 12px;border:1px solid #647ba4;border-radius:20px;background:#0b1326a8;font-size:12px;color:#dbeafe}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px;background:#0c1425;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav button,.btn{border:1px solid #405474;border-radius:10px;padding:10px 13px;background:#1b2942;color:var(--text);font-weight:700}
+nav button.active,.btn.primary{background:var(--yellow);color:#171717;border-color:var(--yellow)}
+.btn.green{background:#166534;border-color:#22c55e}
+.btn.red{background:#7f1d1d;border-color:#ef4444}
+.btn.small{padding:6px 9px;font-size:12px}
+main{max-width:1450px;margin:auto;padding:20px 15px 55px}
+.page{display:none}.page.active{display:block}
+h2{font-size:25px;margin:0 0 8px}h3{margin:0 0 10px}
+.sub{color:var(--muted);line-height:1.55;margin:0 0 18px}
+.panel{background:linear-gradient(145deg,#17223a,#111a2c);border:1px solid var(--line);border-radius:16px;padding:17px;margin-bottom:17px;min-width:0}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input,select{width:100%;min-width:0;background:#0b1324;color:var(--text);border:1px solid #354765;border-radius:9px;padding:11px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.stat{background:#17223a;border:1px solid var(--line);padding:14px;border-radius:12px}
+.stat strong{display:block;font-size:24px;color:var(--yellow)}
+.stat span{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
+.card{min-width:0;background:#17223a;border:1px solid #334563;border-radius:13px;padding:9px;overflow:hidden}
+.card img{width:100%;display:block;object-fit:contain;aspect-ratio:2.5/3.5;border-radius:8px;background:#0c1425}
+.card h3{font-size:14px;margin:10px 0 5px;line-height:1.35}
+.meta{color:var(--muted);font-size:11px;line-height:1.6}
+.price{color:#86efac;font-size:14px;font-weight:800;margin:8px 0}
+.card .actions button{flex:1}
+.notice{font-size:12px;line-height:1.6;color:#c6d4ef}
+.empty{padding:30px 15px;text-align:center;color:var(--muted);border:1px dashed #3c4e70;border-radius:13px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.set-card{display:flex;gap:12px;align-items:center;background:#17223a;border:1px solid var(--line);border-radius:12px;padding:12px}
+.set-card img{width:55px;height:55px;object-fit:contain}
+.set-card h3{font-size:13px;margin:0 0 5px}.set-card p{color:var(--muted);font-size:11px;margin:0 0 7px}
+.deck-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line)}
+.deck-row img{width:43px;height:60px;object-fit:contain}
+.deck-row .grow{flex:1;min-width:0;overflow-wrap:anywhere}
+.deck-row strong{display:block;font-size:13px}.deck-row small{color:var(--muted)}
+.import-box{border:1px dashed #58739d;background:#101a2d;padding:15px;border-radius:12px;margin-top:12px}
+.import-results{margin-top:12px;font-size:12px;line-height:1.7}
+.import-results .ok{color:#86efac}.import-results .bad{color:#fda4af}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.battle-board{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.battle-side{background:#101a2e;border:1px solid #354765;border-radius:13px;padding:13px;min-width:0}
+.battle-side h3{display:flex;justify-content:space-between;gap:8px}
+.battle-slots{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.battle-pokemon{text-align:center;border:1px dashed #3a4e70;border-radius:12px;padding:8px;background:#17223a;min-width:0}
+.battle-pokemon img{width:100%;max-width:145px;aspect-ratio:2.5/3.5;object-fit:contain;display:block;margin:auto}
+.battle-pokemon strong{display:block;font-size:12px;margin:6px 0}
+.hpbar{background:#35415a;height:8px;border-radius:20px;overflow:hidden}.hpbar span{display:block;height:100%;background:#4ade80}
+.log{background:#080e1a;border:1px solid #2e3d58;border-radius:10px;padding:12px;min-height:90px;max-height:220px;overflow:auto;font-size:12px;line-height:1.65}
+.log p{margin:0 0 5px}
+footer{text-align:center;padding:25px;color:#8998b4;font-size:12px}
+@media(max-width:850px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
+@media(max-width:560px){main{padding:13px 9px 35px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:7px}.card .actions{flex-direction:column}nav{position:static}nav button{flex:1}.battle-board{grid-template-columns:1fr}.deck-row{gap:6px}.deck-row .btn{padding:5px 7px}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">⚡ LUCA'S <span>POKÉMON</span> CENTRE</div>
-  <p>Your card collection, set explorer, prices and Pokémon battles — all in one place.</p>
-  <div class="status" id="connectionStatus">Connecting to the card catalogue…</div>
+  <p>Your card collection, sets, prices, decks and battles — all in one place.</p>
+  <div class="status" id="connectionStatus">Connecting to Pokémon card catalogue…</div>
 </header>
 
 <nav>
   <button class="active" data-page="home">🏠 Home</button>
   <button data-page="cards">🃏 Card Explorer</button>
   <button data-page="sets">📚 All Sets</button>
-  <button data-page="prices">💰 Price Centre</button>
   <button data-page="deck">🧩 Deck Builder</button>
   <button data-page="battle">⚔️ Battle Simulator</button>
 </nav>
 
 <main>
-  <section class="page active" id="home">
-    <div class="panel">
-      <h2>Welcome to your Pokémon card hub!</h2>
-      <p class="sub">Search Pokémon cards, browse expansions, check available market prices, build a deck and battle the computer.</p>
-      <div class="controls">
-        <div class="stat"><strong id="setCount">—</strong><span>Sets discovered</span></div>
-        <div class="stat"><strong id="cardCount">—</strong><span>Cards loaded this session</span></div>
-        <div class="stat"><strong id="deckCount">0 / 60</strong><span>Cards in your deck</span></div>
-        <div class="stat"><strong id="savedCount">0</strong><span>Saved cards</span></div>
+<section class="page active" id="home">
+  <div class="panel">
+    <h2>Welcome to your Pokémon card hub!</h2>
+    <p class="sub">Explore Pokémon cards, search expansions, view available market prices, import your decklist and battle the computer.</p>
+    <div class="stats">
+      <div class="stat"><strong id="setCount">—</strong><span>Sets loaded</span></div>
+      <div class="stat"><strong id="cardCount">0</strong><span>Cards loaded this session</span></div>
+      <div class="stat"><strong id="deckCount">0 / 60</strong><span>Cards in your deck</span></div>
+      <div class="stat"><strong id="savedCount">0</strong><span>Saved cards</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="showPage('cards')">Explore cards</button>
+      <button class="btn" onclick="showPage('sets')">Browse sets</button>
+      <button class="btn" onclick="showPage('deck')">Build or upload a deck</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>✨ Quick search</h2>
+    <div class="controls">
+      <div style="grid-column:span 3">
+        <label for="homeSearch">Pokémon or card name</label>
+        <input id="homeSearch" placeholder="Charizard, Pikachu, Mew…" />
       </div>
+      <div style="display:flex;align-items:end">
+        <button class="btn primary" style="width:100%" onclick="homeSearch()">Search</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>🌟 Cards from the catalogue</h2>
+    <div id="featuredGrid" class="grid"></div>
+  </div>
+</section>
+
+<section class="page" id="cards">
+  <div class="panel">
+    <h2>🃏 Card Explorer</h2>
+    <p class="sub">Search cards by name, set, type or rarity. Prices appear here when available from the card data provider.</p>
+    <div class="controls">
+      <div><label for="cardSearch">Card name</label><input id="cardSearch" placeholder="Charizard, Pikachu…"></div>
+      <div><label for="setFilter">Set</label><select id="setFilter"><option value="">All sets</option></select></div>
+      <div><label for="typeFilter">Type</label><select id="typeFilter">
+        <option value="">All types</option><option>Grass</option><option>Fire</option><option>Water</option>
+        <option>Lightning</option><option>Psychic</option><option>Fighting</option><option>Darkness</option>
+        <option>Metal</option><option>Colorless</option><option>Dragon</option><option>Fairy</option>
+      </select></div>
+      <div><label for="rarityFilter">Rarity contains</label><input id="rarityFilter" placeholder="Illustration Rare…"></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="searchCards()">🔍 Search cards</button>
+      <button class="btn" onclick="loadSelectedSet()">Load selected set</button>
+      <button class="btn" onclick="resetCardFilters()">Reset filters</button>
+    </div>
+    <div class="toolbar">
+      <span class="notice" id="cardResultsInfo">Search for a card or select a set.</span>
+      <button class="btn small" onclick="loadMoreCards()">Load next results page</button>
+    </div>
+  </div>
+  <div id="cardsGrid" class="grid"></div>
+</section>
+
+<section class="page" id="sets">
+  <div class="panel">
+    <h2>📚 Pokémon TCG Set Catalogue</h2>
+    <p class="sub">Search sets by expansion name, series or set code, then open a set to browse its cards.</p>
+    <div class="controls">
+      <div style="grid-column:span 3"><label for="setSearch">Find a set</label><input id="setSearch" placeholder="Search set name or series…" oninput="renderSets()"></div>
+      <div style="display:flex;align-items:end"><button class="btn primary" style="width:100%" onclick="loadSets(true)">Refresh sets</button></div>
+    </div>
+    <p class="notice" id="setInfo">Loading sets…</p>
+  </div>
+  <div id="setsGrid" class="set-grid"></div>
+</section>
+
+<section class="page" id="deck">
+  <div class="panel">
+    <h2>🧩 Deck Builder</h2>
+    <p class="sub">Build a deck manually or import a decklist file. A standard constructed Pokémon TCG deck usually contains 60 cards.</p>
+    <div class="stats">
+      <div class="stat"><strong id="deckTotal">0</strong><span>Total cards</span></div>
+      <div class="stat"><strong id="pokemonTotal">0</strong><span>Pokémon</span></div>
+      <div class="stat"><strong id="energyTotal">0</strong><span>Energy</span></div>
+      <div class="stat"><strong id="trainerTotal">0</strong><span>Trainer cards</span></div>
+    </div>
+
+    <div class="import-box">
+      <h3>📥 Upload a decklist</h3>
+      <p class="notice">Choose a plain-text <b>.txt</b> decklist. Common formats are supported, such as <code>4 Pikachu</code> or <code>4 Pikachu (MEW) 25</code>. The importer searches the online catalogue for each card.</p>
+      <label for="deckFile">Choose your decklist file (.txt)</label>
+      <input id="deckFile" type="file" accept=".txt,text/plain">
       <div class="actions">
-        <button class="btn primary" onclick="showPage('cards')">Explore cards</button>
-        <button class="btn" onclick="showPage('sets')">Browse every set</button>
-        <button class="btn" onclick="showPage('deck')">Build a deck</button>
+        <button class="btn primary" id="importBtn" onclick="importDeckFile()">Import decklist</button>
+        <button class="btn" onclick="showExampleDecklist()">Show example format</button>
+      </div>
+      <div id="importResults" class="import-results"></div>
+      <div id="exampleDeck" class="notice" style="display:none;margin-top:10px">
+        <pre style="white-space:pre-wrap;background:#080e1a;padding:12px;border-radius:8px">Pokémon:
+4 Pikachu (MEW) 25
+2 Charizard (OBF) 125
+
+Trainer:
+4 Professor's Research (SIT) 189
+
+Energy:
+10 Basic Lightning Energy
+10 Basic Fire Energy</pre>
+        This is an example of the format only. Your exact set codes and card numbers may differ.
       </div>
     </div>
 
-    <div class="panel">
-      <h2>✨ Quick card search</h2>
-      <p class="sub">Search the online catalogue by Pokémon name.</p>
-      <div class="controls">
-        <div style="grid-column:span 3">
-          <label for="homeSearch">Card or Pokémon name</label>
-          <input id="homeSearch" placeholder="Try Charizard, Pikachu, Mew…" />
-        </div>
-        <div style="display:flex;align-items:end">
-          <button class="btn primary" style="width:100%" onclick="homeSearch()">Search</button>
-        </div>
-      </div>
+    <div class="actions">
+      <button class="btn" onclick="showPage('cards')">Find cards to add</button>
+      <button class="btn green" onclick="startBattle()">⚔️ Battle with this deck</button>
+      <button class="btn" onclick="exportDeck()">Export decklist</button>
+      <button class="btn red" onclick="clearDeck()">Clear deck</button>
     </div>
+    <p class="notice" id="deckMessage">Your deck is saved in this browser.</p>
+  </div>
+  <div class="panel">
+    <h3>Your deck</h3>
+    <div id="deckList"></div>
+  </div>
+</section>
 
-    <div class="panel">
-      <h2>🌟 Featured cards</h2>
-      <p class="sub">A selection from the latest cards loaded into the catalogue.</p>
-      <div id="featuredGrid" class="grid"></div>
+<section class="page" id="battle">
+  <div class="panel">
+    <h2>⚔️ Battle Simulator</h2>
+    <p class="sub">A simplified fan-made battle mode. It is not a complete official Pokémon TCG rules engine.</p>
+    <div class="actions">
+      <button class="btn primary" onclick="startBattle()">Start new battle</button>
+      <button class="btn" onclick="showPage('deck')">Edit my deck</button>
+      <button class="btn green" id="endTurnBtn" onclick="endPlayerTurn()">➡️ End Turn</button>
     </div>
-  </section>
-
-  <section class="page" id="cards">
-    <div class="panel">
-      <h2>🃏 Card Explorer</h2>
-      <p class="sub">Search the online card database or load a complete set. Results include genuine card artwork when supplied by the API.</p>
-      <div class="controls">
-        <div>
-          <label for="cardSearch">Name search</label>
-          <input id="cardSearch" placeholder="Charizard, Pikachu…" />
-        </div>
-        <div>
-          <label for="setFilter">Set</label>
-          <select id="setFilter"><option value="">All sets</option></select>
-        </div>
-        <div>
-          <label for="typeFilter">Pokémon type</label>
-          <select id="typeFilter">
-            <option value="">All types</option>
-            <option>Grass</option><option>Fire</option><option>Water</option>
-            <option>Lightning</option><option>Psychic</option><option>Fighting</option>
-            <option>Darkness</option><option>Metal</option><option>Colorless</option>
-            <option>Dragon</option><option>Fairy</option>
-          </select>
-        </div>
-        <div>
-          <label for="rarityFilter">Rarity contains</label>
-          <input id="rarityFilter" placeholder="Illustration Rare…" />
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn primary" onclick="searchCards()">🔍 Search cards</button>
-        <button class="btn" onclick="loadSelectedSet()">Load selected set</button>
-        <button class="btn" onclick="resetCardFilters()">Reset filters</button>
-      </div>
-      <div class="toolbar">
-        <span class="notice" id="cardResultsInfo">Search for a card or select a set.</span>
-        <button class="btn small" onclick="loadMoreCards()">Load next results page</button>
-      </div>
-    </div>
-    <div id="cardsGrid" class="grid"></div>
-  </section>
-
-  <section class="page" id="sets">
-    <div class="panel">
-      <h2>📚 Pokémon TCG Set Catalogue</h2>
-      <p class="sub">Browse the sets returned by the online catalogue, from older expansions to newer releases. Select a set to load its cards.</p>
-      <div class="controls">
-        <div style="grid-column:span 3">
-          <label for="setSearch">Find a set</label>
-          <input id="setSearch" placeholder="Search set name or series…" oninput="renderSets()" />
-        </div>
-        <div style="display:flex;align-items:end">
-          <button class="btn primary" style="width:100%" onclick="loadSets(true)">Refresh sets</button>
-        </div>
-      </div>
-      <p class="notice" id="setInfo">Loading set catalogue…</p>
-    </div>
-    <div id="setsGrid" class="set-grid"></div>
-  </section>
-
-  <section class="page" id="prices">
-    <div class="panel">
-      <h2>💰 Price Centre</h2>
-      <p class="sub">Check market-price fields supplied for cards. TCGplayer prices are in USD and Cardmarket prices are in EUR. The GBP figures below are estimates, not live exchange rates.</p>
-      <div class="controls">
-        <div style="grid-column:span 3">
-          <label for="priceSearch">Find a card to price</label>
-          <input id="priceSearch" placeholder="Search for a card name…" />
-        </div>
-        <div style="display:flex;align-items:end">
-          <button class="btn primary" style="width:100%" onclick="searchPriceCards()">Find prices</button>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn" onclick="showPage('cards')">Open Card Explorer</button>
-      </div>
-      <p class="notice">Prices may be missing, stale or unavailable for some cards. The website does not invent a price when a source has no market value.</p>
-    </div>
-    <div id="pricesGrid" class="grid"></div>
-  </section>
-
-  <section class="page" id="deck">
-    <div class="panel">
-      <h2>🧩 Deck Builder</h2>
-      <p class="sub">Add cards from the Card Explorer to build your collection. The usual constructed Pokémon TCG deck size is 60 cards, with a maximum of four cards of the same name in most cases, excluding basic Energy.</p>
-      <div class="stats">
-        <div class="stat"><strong id="deckTotal">0</strong><span>Total cards</span></div>
-        <div class="stat"><strong id="pokemonTotal">0</strong><span>Pokémon cards</span></div>
-        <div class="stat"><strong id="energyTotal">0</strong><span>Energy cards</span></div>
-        <div class="stat"><strong id="trainerTotal">0</strong><span>Trainer cards</span></div>
-      </div>
-      <div class="actions">
-        <button class="btn primary" onclick="showPage('cards')">Find cards to add</button>
-        <button class="btn green" onclick="startBattle()">⚔️ Battle with this deck</button>
-        <button class="btn" onclick="exportDeck()">Export deck list</button>
-        <button class="btn red" onclick="clearDeck()">Clear deck</button>
-      </div>
-      <p class="notice" id="deckMessage">Your deck is saved in this browser.</p>
-    </div>
-    <div class="panel">
-      <h3>Your deck</h3>
-      <div id="deckList"></div>
-    </div>
-  </section>
-
-  <section class="page" id="battle">
-    <div class="panel">
-      <h2>⚔️ Pokémon Battle Simulator</h2>
-      <p class="sub">A simplified fan-made battle mode inspired by the Pokémon TCG. It is not an official rules engine. Build a deck first or use the demo battle deck.</p>
-      <div class="actions">
-        <button class="btn primary" onclick="startBattle()">Start new battle</button>
-        <button class="btn" onclick="showPage('deck')">Edit my deck</button>
-        <button class="btn green" id="endTurnBtn" onclick="endPlayerTurn()">➡️ End Turn</button>
-      </div>
-      <p class="notice" id="turnInfo">Start a battle to play.</p>
-    </div>
-    <div id="battleArea"></div>
-  </section>
+    <p class="notice" id="turnInfo">Start a battle to play.</p>
+  </div>
+  <div id="battleArea"></div>
+</section>
 </main>
 
 <footer>
-  Luca's Pokémon Centre · Fan-made Pokémon TCG collection project · Not affiliated with Nintendo, Game Freak or The Pokémon Company.
+  Luca's Pokémon Centre · Fan-made project · Not affiliated with Nintendo, Game Freak or The Pokémon Company.
 </footer>
 
 <script>
 "use strict";
 
-/* -------------------------------------------------------
-   API AND CATALOGUE
-   The Pokémon TCG API supplies the set and card catalogue.
-------------------------------------------------------- */
-const API = "https://api.pokemontcg.io/v2";
-const GBP_PER_USD_ESTIMATE = 0.79;
-const GBP_PER_EUR_ESTIMATE = 0.86;
+const API="https://api.pokemontcg.io/v2";
+const GBP_PER_USD_ESTIMATE=0.79;
+const GBP_PER_EUR_ESTIMATE=0.86;
 
-let sets = [];
-let cards = [];
-let displayedCards = [];
-let currentPage = 1;
-let currentQuery = "";
-let currentSetId = "";
-let savedCards = new Set();
-let deck = loadSavedDeck();
-let battle = null;
-let requestBusy = false;
+let sets=[];
+let cards=[];
+let displayedCards=[];
+let currentPage=1;
+let savedCards=new Set();
+let deck=loadSavedDeck();
+let battle=null;
+let requestBusy=false;
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
 
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[ch]);
+  })[c]);
 }
-
-function money(value, currency = "GBP") {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return "Unavailable";
-  return new Intl.NumberFormat("en-GB", {
-    style:"currency", currency, maximumFractionDigits:2
-  }).format(n);
+function money(v,currency="GBP"){
+  const n=Number(v);
+  if(!Number.isFinite(n))return "Unavailable";
+  return new Intl.NumberFormat("en-GB",{style:"currency",currency,maximumFractionDigits:2}).format(n);
 }
-
-function priceData(card) {
-  const p = card.tcgplayer?.prices || {};
-  const candidates = [
-    p.holofoil?.market,
-    p.reverseHolofoil?.market,
-    p.normal?.market,
-    p["1stEditionHolofoil"]?.market,
-    p["1stEditionNormal"]?.market
-  ];
-  const usd = candidates.find(v => Number.isFinite(Number(v)) && Number(v) >= 0);
-  const eur = card.cardmarket?.prices?.trendPrice ??
-              card.cardmarket?.prices?.averageSellPrice ??
-              null;
-  return {
-    usd: usd == null ? null : Number(usd),
-    eur: eur == null || !Number.isFinite(Number(eur)) ? null : Number(eur)
-  };
-}
-
-function estimateGBP(card) {
-  const p = priceData(card);
-  if (p.usd !== null) return p.usd * GBP_PER_USD_ESTIMATE;
-  if (p.eur !== null) return p.eur * GBP_PER_EUR_ESTIMATE;
-  return null;
-}
-
-function cardImage(card) {
-  return card.images?.large || card.images?.small || "";
-}
-
-function fallbackImage(name) {
-  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+function cardImage(c){return c.images?.large||c.images?.small||""}
+function fallbackImage(name){
+  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="330">
-      <rect width="100%" height="100%" rx="16" fill="#17223a"/>
-      <circle cx="120" cy="105" r="55" fill="#ffd447" stroke="#fff" stroke-width="7"/>
-      <path d="M65 105h110" stroke="#fff" stroke-width="7"/>
-      <circle cx="120" cy="105" r="17" fill="#17223a" stroke="#fff" stroke-width="6"/>
-      <text x="120" y="205" font-family="Arial" font-size="15" text-anchor="middle" fill="#fff">Card artwork</text>
-      <text x="120" y="230" font-family="Arial" font-size="13" text-anchor="middle" fill="#b9c8e5">${esc(name).slice(0,22)}</text>
+    <rect width="100%" height="100%" rx="16" fill="#17223a"/>
+    <circle cx="120" cy="105" r="55" fill="#ffd447" stroke="#fff" stroke-width="7"/>
+    <path d="M65 105h110" stroke="#fff" stroke-width="7"/>
+    <circle cx="120" cy="105" r="17" fill="#17223a" stroke="#fff" stroke-width="6"/>
+    <text x="120" y="205" font-family="Arial" font-size="15" text-anchor="middle" fill="#fff">Pokémon card</text>
+    <text x="120" y="230" font-family="Arial" font-size="13" text-anchor="middle" fill="#b9c8e5">${esc(name).slice(0,22)}</text>
     </svg>`
   );
 }
-
-async function apiGet(path) {
-  const response = await fetch(API + path);
-  if (!response.ok) {
-    throw new Error("Catalogue request failed (" + response.status + ").");
-  }
-  return response.json();
+async function apiGet(path){
+  const r=await fetch(API+path);
+  if(!r.ok)throw new Error("Catalogue request failed ("+r.status+").");
+  return r.json();
+}
+function setStatus(t){$("connectionStatus").textContent=t}
+function mergeCards(oldList,newList){
+  const m=new Map(oldList.map(c=>[c.id,c]));
+  newList.forEach(c=>m.set(c.id,c));
+  return [...m.values()];
+}
+function priceData(c){
+  const p=c.tcgplayer?.prices||{};
+  const usdValues=[p.holofoil?.market,p.reverseHolofoil?.market,p.normal?.market,p["1stEditionHolofoil"]?.market,p["1stEditionNormal"]?.market];
+  const usd=usdValues.find(v=>v!=null&&Number.isFinite(Number(v))&&Number(v)>=0);
+  const eur=c.cardmarket?.prices?.trendPrice??c.cardmarket?.prices?.averageSellPrice??null;
+  return {
+    usd:usd==null?null:Number(usd),
+    eur:eur==null||!Number.isFinite(Number(eur))?null:Number(eur)
+  };
+}
+function estimateGBP(c){
+  const p=priceData(c);
+  if(p.usd!==null)return p.usd*GBP_PER_USD_ESTIMATE;
+  if(p.eur!==null)return p.eur*GBP_PER_EUR_ESTIMATE;
+  return null;
 }
 
-function setStatus(message) {
-  $("connectionStatus").textContent = message;
-}
-
-async function loadSets(force = false) {
-  if (sets.length && !force) {
+async function loadSets(force=false){
+  if(sets.length&&!force){renderSets();return}
+  $("setInfo").textContent="Loading sets…";
+  setStatus("Loading set catalogue…");
+  try{
+    const result=await apiGet("/sets?orderBy=-releaseDate&pageSize=250");
+    sets=result.data||[];
+    const select=$("setFilter");
+    const previous=select.value;
+    select.innerHTML='<option value="">All sets</option>'+sets.map(s=>
+      `<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.series||"Other")})</option>`
+    ).join("");
+    if([...select.options].some(o=>o.value===previous))select.value=previous;
+    $("setCount").textContent=sets.length;
+    $("setInfo").textContent=`${sets.length} sets loaded. Search below to find an expansion.`;
+    setStatus("Connected · "+sets.length+" sets loaded");
     renderSets();
-    return;
-  }
-  $("setInfo").textContent = "Loading set catalogue…";
-  setStatus("Loading sets…");
-  try {
-    const result = await apiGet("/sets?orderBy=-releaseDate&pageSize=250");
-    sets = result.data || [];
-    populateSetDropdown();
-    renderSets();
-    $("setCount").textContent = sets.length;
-    $("setInfo").textContent =
-      sets.length + " sets loaded on this request. Use the search box to find an expansion.";
-    setStatus("Connected · " + sets.length + " sets loaded");
-  } catch (error) {
-    $("setInfo").textContent = error.message + " Please refresh or try again later.";
+  }catch(e){
+    $("setInfo").textContent=e.message+" Refresh to try again.";
     setStatus("Catalogue unavailable — retry later");
   }
 }
-
-function populateSetDropdown() {
-  const select = $("setFilter");
-  const previous = select.value;
-  select.innerHTML = '<option value="">All sets</option>' +
-    sets.map(s => `<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.series || "Other")})</option>`).join("");
-  if ([...select.options].some(o => o.value === previous)) select.value = previous;
-}
-
-function renderSets() {
-  const q = ($("setSearch")?.value || "").trim().toLowerCase();
-  const filtered = sets.filter(s =>
-    (s.name || "").toLowerCase().includes(q) ||
-    (s.series || "").toLowerCase().includes(q) ||
-    (s.id || "").toLowerCase().includes(q)
+function renderSets(){
+  const q=($("setSearch").value||"").trim().toLowerCase();
+  const list=sets.filter(s=>
+    [s.name,s.series,s.id,s.ptcgoCode].some(v=>(v||"").toLowerCase().includes(q))
   );
-  $("setsGrid").innerHTML = filtered.length ? filtered.map(s => `
+  $("setsGrid").innerHTML=list.length?list.map(s=>`
     <div class="set-card">
-      <img src="${esc(s.images?.logo || s.images?.symbol || fallbackImage(s.name))}"
-           alt="" loading="lazy" onerror="this.src='${fallbackImage("Pokémon set")}'">
+      <img src="${esc(s.images?.logo||s.images?.symbol||fallbackImage(s.name))}" alt="" loading="lazy"
+        onerror="this.onerror=null;this.src='${fallbackImage("Pokémon set")}'">
       <div style="min-width:0">
         <h3>${esc(s.name)}</h3>
-        <p>${esc(s.series || "Pokémon TCG")} · ${esc(s.releaseDate || "Release date unavailable")}</p>
-        <p>${Number(s.total || s.printedTotal || 0)} cards listed</p>
+        <p>${esc(s.series||"Pokémon TCG")} · ${esc(s.releaseDate||"Date unavailable")}</p>
+        <p>${Number(s.total||s.printedTotal||0)} cards listed</p>
         <button class="btn small primary" onclick="openSet('${esc(s.id)}')">View cards</button>
       </div>
-    </div>`).join("") :
-    '<div class="empty">No matching sets found.</div>';
+    </div>`).join(""):'<div class="empty">No matching sets found.</div>';
 }
-
-function openSet(id) {
-  $("setFilter").value = id;
+function openSet(id){
+  $("setFilter").value=id;
+  $("cardSearch").value="";
   showPage("cards");
-  loadSelectedSet();
+  searchCards();
 }
-
-function showPage(page) {
-  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-  const target = $(""+page);
-  if (target) target.classList.add("active");
-  document.querySelectorAll("nav button").forEach(b =>
-    b.classList.toggle("active", b.dataset.page === page)
-  );
-  if (page === "sets" && !sets.length) loadSets();
-  if (page === "deck") renderDeck();
-  if (page === "battle") renderBattle();
+function showPage(page){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  $(page).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  if(page==="sets"&&!sets.length)loadSets();
+  if(page==="deck")renderDeck();
+  if(page==="battle")renderBattle();
   window.scrollTo({top:0,behavior:"smooth"});
 }
-document.querySelectorAll("nav button").forEach(button =>
-  button.addEventListener("click", () => showPage(button.dataset.page))
-);
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 
-function homeSearch() {
-  $("cardSearch").value = $("homeSearch").value;
+function homeSearch(){
+  $("cardSearch").value=$("homeSearch").value;
   showPage("cards");
   searchCards();
 }
-
-async function searchCards(next = false) {
-  if (requestBusy) return;
-  const q = $("cardSearch").value.trim();
-  const setId = $("setFilter").value;
-  const type = $("typeFilter").value;
-  const rarity = $("rarityFilter").value.trim();
-
-  if (!next) {
-    currentPage = 1;
-    currentQuery = q;
-    currentSetId = setId;
-    displayedCards = [];
-  } else {
-    currentPage++;
-  }
-
-  const parts = [];
-  if (q) parts.push(`name:"${q.replace(/["\\]/g,"")}"`
-    );
-  if (setId) parts.push(`set.id:${setId}`);
-  if (type) parts.push(`types:${type}`);
-  if (rarity) parts.push(`rarity:"${rarity.replace(/["\\]/g,"")}"`);
-
-  let url = `/cards?page=${currentPage}&pageSize=50&orderBy=name`;
-  if (parts.length) url += "&q=" + encodeURIComponent(parts.join(" "));
-
-  requestBusy = true;
-  $("cardResultsInfo").textContent = "Searching the online card catalogue…";
-  try {
-    const result = await apiGet(url);
-    const incoming = result.data || [];
-    displayedCards = next ? displayedCards.concat(incoming) : incoming;
-    cards = mergeCards(cards, incoming);
-    $("cardCount").textContent = cards.length;
-    $("cardResultsInfo").textContent =
-      `${displayedCards.length} cards displayed · ${result.totalCount ?? "?"} matching cards in the catalogue`;
-    renderCardGrid("cardsGrid", displayedCards);
+async function searchCards(next=false){
+  if(requestBusy)return;
+  const name=$("cardSearch").value.trim();
+  const setId=$("setFilter").value;
+  const type=$("typeFilter").value;
+  const rarity=$("rarityFilter").value.trim();
+  if(!next){currentPage=1;displayedCards=[]}
+  else currentPage++;
+  const parts=[];
+  if(name)parts.push(`name:"${name.replace(/["\\]/g,"")}"`);
+  if(setId)parts.push(`set.id:${setId}`);
+  if(type)parts.push(`types:${type}`);
+  if(rarity)parts.push(`rarity:"${rarity.replace(/["\\]/g,"")}"`);
+  let url=`/cards?page=${currentPage}&pageSize=50&orderBy=name`;
+  if(parts.length)url+="&q="+encodeURIComponent(parts.join(" "));
+  requestBusy=true;
+  $("cardResultsInfo").textContent="Searching catalogue…";
+  try{
+    const result=await apiGet(url);
+    const incoming=result.data||[];
+    displayedCards=next?displayedCards.concat(incoming):incoming;
+    cards=mergeCards(cards,incoming);
+    $("cardCount").textContent=cards.length;
+    $("cardResultsInfo").textContent=`${displayedCards.length} displayed · ${result.totalCount??"?"} matching cards`;
+    renderCardGrid("cardsGrid",displayedCards);
     renderFeatured();
-  } catch (error) {
-    $("cardResultsInfo").textContent = error.message;
-    if (!displayedCards.length) $("cardsGrid").innerHTML =
-      '<div class="empty">Could not load cards. Check your connection and try again.</div>';
-  } finally {
-    requestBusy = false;
-  }
+  }catch(e){
+    $("cardResultsInfo").textContent=e.message;
+    if(!displayedCards.length)$("cardsGrid").innerHTML='<div class="empty">Could not load cards. Check your connection and try again.</div>';
+  }finally{requestBusy=false}
 }
-
-function mergeCards(existing, incoming) {
-  const map = new Map(existing.map(c => [c.id,c]));
-  incoming.forEach(c => map.set(c.id,c));
-  return [...map.values()];
-}
-
-function loadMoreCards() {
-  searchCards(true);
-}
-
-function loadSelectedSet() {
-  if (!$("setFilter").value) {
-    $("cardResultsInfo").textContent = "Choose a set first, or search by card name.";
-    return;
-  }
-  $("cardSearch").value = "";
-  $("typeFilter").value = "";
-  $("rarityFilter").value = "";
+function loadMoreCards(){searchCards(true)}
+function loadSelectedSet(){
+  if(!$("setFilter").value){$("cardResultsInfo").textContent="Choose a set first, or search by card name.";return}
+  $("cardSearch").value="";$("typeFilter").value="";$("rarityFilter").value="";
   searchCards();
 }
-
-function resetCardFilters() {
-  $("cardSearch").value = "";
-  $("setFilter").value = "";
-  $("typeFilter").value = "";
-  $("rarityFilter").value = "";
-  displayedCards = [];
-  $("cardsGrid").innerHTML = "";
-  $("cardResultsInfo").textContent = "Filters reset. Search for cards or choose a set.";
+function resetCardFilters(){
+  $("cardSearch").value="";$("setFilter").value="";$("typeFilter").value="";$("rarityFilter").value="";
+  displayedCards=[];$("cardsGrid").innerHTML="";
+  $("cardResultsInfo").textContent="Filters reset. Search for cards or choose a set.";
 }
-
-function renderCardGrid(containerId, list) {
-  const container = $(containerId);
-  if (!list.length) {
-    container.innerHTML = '<div class="empty">No cards to show. Try another search.</div>';
-    return;
-  }
-  container.innerHTML = list.map(c => {
-    const p = priceData(c);
-    const gbp = estimateGBP(c);
-    const image = cardImage(c) || fallbackImage(c.name);
-    const isSaved = savedCards.has(c.id);
-    return `
-    <article class="card">
-      <img src="${esc(image)}" alt="${esc(c.name)}" loading="lazy"
-           onerror="this.onerror=null;this.src='${fallbackImage(c.name)}'">
+function renderCardGrid(id,list){
+  const target=$(id);
+  if(!list.length){target.innerHTML='<div class="empty">No cards found. Try another search.</div>';return}
+  target.innerHTML=list.map(c=>{
+    const p=priceData(c),gbp=estimateGBP(c);
+    const img=cardImage(c)||fallbackImage(c.name);
+    return `<article class="card">
+      <img src="${esc(img)}" alt="${esc(c.name)}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackImage(c.name)}'">
       <h3>${esc(c.name)}</h3>
-      <div class="meta">
-        ${esc(c.set?.name || "Unknown set")}<br>
-        No. ${esc(c.number || "—")} · ${esc(c.rarity || "Rarity unknown")}
-      </div>
-      <div class="price">${gbp === null ? "Price unavailable" : "≈ " + money(gbp)}</div>
-      <div class="meta">
-        ${p.usd === null ? "" : "TCGplayer: " + money(p.usd,"USD") + "<br>"}
-        ${p.eur === null ? "" : "Cardmarket: " + money(p.eur,"EUR")}
-      </div>
+      <div class="meta">${esc(c.set?.name||"Unknown set")}<br>No. ${esc(c.number||"—")} · ${esc(c.rarity||"Rarity unknown")}</div>
+      <div class="price">${gbp===null?"Price unavailable":"≈ "+money(gbp)}</div>
+      <div class="meta">${p.usd===null?"":"TCGplayer: "+money(p.usd,"USD")+"<br>"}${p.eur===null?"":"Cardmarket: "+money(p.eur,"EUR")}</div>
       <div class="actions">
         <button class="btn small primary" onclick="addToDeck('${esc(c.id)}')">+ Deck</button>
-        <button class="btn small" onclick="toggleSaved('${esc(c.id)}')">${isSaved ? "★ Saved" : "☆ Save"}</button>
+        <button class="btn small" onclick="toggleSaved('${esc(c.id)}')">${savedCards.has(c.id)?"★ Saved":"☆ Save"}</button>
       </div>
     </article>`;
   }).join("");
 }
+function renderFeatured(){
+  if(cards.length)renderCardGrid("featuredGrid",cards.slice(-8).reverse());
+}
+function toggleSaved(id){
+  savedCards.has(id)?savedCards.delete(id):savedCards.add(id);
+  $("savedCount").textContent=savedCards.size;
+  renderCardGrid("cardsGrid",displayedCards);
+}
+function getCard(id){return cards.find(c=>c.id===id)||displayedCards.find(c=>c.id===id)||null}
 
-function renderFeatured() {
-  const list = cards.slice(-8).reverse();
-  if (list.length) renderCardGrid("featuredGrid", list);
+/* -------------------- DECK BUILDER -------------------- */
+function loadSavedDeck(){
+  try{return JSON.parse(localStorage.getItem("lucasPokemonDeck")||"[]")}catch{return []}
 }
-
-function toggleSaved(id) {
-  if (savedCards.has(id)) savedCards.delete(id);
-  else savedCards.add(id);
-  $("savedCount").textContent = savedCards.size;
-  renderCardGrid("cardsGrid", displayedCards);
+function saveDeck(){
+  try{localStorage.setItem("lucasPokemonDeck",JSON.stringify(deck))}catch{}
+  $("deckCount").textContent=`${deck.reduce((n,d)=>n+d.qty,0)} / 60`;
 }
-
-async function searchPriceCards() {
-  const q = $("priceSearch").value.trim();
-  if (!q) {
-    $("pricesGrid").innerHTML = '<div class="empty">Enter a card name first.</div>';
-    return;
-  }
-  $("pricesGrid").innerHTML = '<div class="empty">Loading price information…</div>';
-  try {
-    const result = await apiGet("/cards?q=" + encodeURIComponent(`name:"${q.replace(/["\\]/g,"")}"`) +
-      "&pageSize=50&orderBy=-set.releaseDate");
-    const list = result.data || [];
-    cards = mergeCards(cards, list);
-    renderCardGrid("pricesGrid", list);
-  } catch (error) {
-    $("pricesGrid").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
-  }
+function addToDeck(id,quantity=1,cardOverride=null){
+  const c=cardOverride||getCard(id);
+  if(!c){$("deckMessage").textContent="Card details aren't loaded yet.";return}
+  const entry=deck.find(d=>d.id===id);
+  if(entry){entry.qty+=quantity;entry.card=c}
+  else deck.push({id,qty:quantity,card:c});
+  saveDeck();renderDeck();
+  $("deckMessage").textContent=`Added ${quantity} × ${c.name}.`;
 }
-
-/* -------------------------------------------------------
-   DECK BUILDER
-------------------------------------------------------- */
-function loadSavedDeck() {
-  try { return JSON.parse(localStorage.getItem("lucasPokemonDeck") || "[]"); }
-  catch { return []; }
+function removeFromDeck(id){
+  const d=deck.find(x=>x.id===id);if(!d)return;
+  d.qty--;if(d.qty<=0)deck=deck.filter(x=>x.id!==id);
+  saveDeck();renderDeck();
 }
-function saveDeck() {
-  try { localStorage.setItem("lucasPokemonDeck",JSON.stringify(deck)); } catch {}
-  $("deckCount").textContent = `${deck.reduce((n,d)=>n+d.qty,0)} / 60`;
+function clearDeck(){
+  if(!confirm("Clear your entire deck?"))return;
+  deck=[];saveDeck();renderDeck();
 }
-function getCard(id) {
-  return cards.find(c => c.id === id) ||
-    displayedCards.find(c => c.id === id) ||
-    null;
-}
-function addToDeck(id) {
-  const c = getCard(id);
-  if (!c) {
-    $("deckMessage").textContent = "Card details are not available yet. Try loading the card again.";
-    showPage("deck");
-    return;
-  }
-  const entry = deck.find(d => d.id === id);
-  if (entry) entry.qty++;
-  else deck.push({id,qty:1,card:c});
-  saveDeck();
-  renderDeck();
-  $("deckMessage").textContent = c.name + " added to your deck.";
-}
-function removeFromDeck(id) {
-  const entry = deck.find(d=>d.id===id);
-  if (!entry) return;
-  entry.qty--;
-  if (entry.qty <= 0) deck = deck.filter(d=>d.id!==id);
-  saveDeck();
-  renderDeck();
-}
-function clearDeck() {
-  if (!confirm("Clear your entire deck?")) return;
-  deck = [];
-  saveDeck();
-  renderDeck();
-}
-function deckCardsFlat() {
-  const list = [];
-  deck.forEach(entry => {
-    const c = entry.card || getCard(entry.id);
-    if (!c) return;
-    for (let i=0;i<entry.qty;i++) list.push(c);
+function deckCardsFlat(){
+  const out=[];
+  deck.forEach(d=>{
+    const c=d.card||getCard(d.id);
+    if(c)for(let i=0;i<d.qty;i++)out.push(c);
   });
-  return list;
+  return out;
 }
-function renderDeck() {
-  const total = deck.reduce((n,d)=>n+d.qty,0);
-  let pokemon=0, energy=0, trainer=0;
-  deck.forEach(d => {
-    const c=d.card || getCard(d.id);
-    if (!c) return;
-    if (c.supertype==="Pokémon") pokemon+=d.qty;
-    else if (c.supertype==="Energy") energy+=d.qty;
+function renderDeck(){
+  const total=deck.reduce((n,d)=>n+d.qty,0);
+  let pokemon=0,energy=0,trainer=0;
+  deck.forEach(d=>{
+    const c=d.card||getCard(d.id);if(!c)return;
+    if(c.supertype==="Pokémon")pokemon+=d.qty;
+    else if(c.supertype==="Energy")energy+=d.qty;
     else trainer+=d.qty;
   });
-  $("deckTotal").textContent=total;
-  $("pokemonTotal").textContent=pokemon;
-  $("energyTotal").textContent=energy;
-  $("trainerTotal").textContent=trainer;
+  $("deckTotal").textContent=total;$("pokemonTotal").textContent=pokemon;
+  $("energyTotal").textContent=energy;$("trainerTotal").textContent=trainer;
   $("deckCount").textContent=`${total} / 60`;
-  $("deckList").innerHTML = deck.length ? deck.map(d=>{
-    const c=d.card || getCard(d.id);
-    if (!c) return "";
+  $("deckList").innerHTML=deck.length?deck.map(d=>{
+    const c=d.card||getCard(d.id);if(!c)return "";
     return `<div class="deck-row">
-      <img src="${esc(cardImage(c)||fallbackImage(c.name))}" alt="" loading="lazy"
-           onerror="this.src='${fallbackImage(c.name)}'">
-      <div class="grow">
-        <strong>${esc(c.name)}</strong>
-        <small>${esc(c.set?.name||"Unknown set")} · ${esc(c.supertype||"Card")}</small>
-      </div>
+      <img src="${esc(cardImage(c)||fallbackImage(c.name))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${fallbackImage(c.name)}'">
+      <div class="grow"><strong>${esc(c.name)}</strong><small>${esc(c.set?.name||"Set unavailable")} · ${esc(c.supertype||"Card")}</small></div>
       <strong>×${d.qty}</strong>
       <button class="btn small" onclick="removeFromDeck('${esc(d.id)}')">−</button>
       <button class="btn small" onclick="addToDeck('${esc(d.id)}')">+</button>
     </div>`;
-  }).join("") : '<div class="empty">Your deck is empty. Explore cards and press + Deck.</div>';
+  }).join(""):'<div class="empty">Your deck is empty. Search for cards and press + Deck, or import a decklist above.</div>';
   saveDeck();
 }
-function exportDeck() {
-  const lines = ["Luca's Pokémon Centre — Deck List",""];
+function exportDeck(){
+  const lines=["Luca's Pokémon Centre — Decklist",""];
   deck.forEach(d=>{
-    const c=d.card || getCard(d.id);
-    if (c) lines.push(`${d.qty}x ${c.name} (${c.set?.name || "Unknown set"} ${c.number || ""})`);
+    const c=d.card||getCard(d.id);
+    if(c)lines.push(`${d.qty} ${c.name} (${c.set?.ptcgoCode||c.set?.id||"SET"}) ${c.number||""}`.trim());
   });
-  const blob = new Blob([lines.join("\n")],{type:"text/plain"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download="pokemon-deck.txt";a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([lines.join("\n")],{type:"text/plain"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="pokemon-decklist.txt";a.click();URL.revokeObjectURL(url);
 }
 
-/* -------------------------------------------------------
-   BATTLE SIMULATOR
-   Simplified fan-made mechanics:
-   - Active Pokémon and Bench
-   - Energy attachment
-   - Attacks and knockouts
-   - Prize cards
-   - AI turn and explicit End Turn button
-------------------------------------------------------- */
-function makeBattleCard(c) {
-  const hp = parseInt(c.hp,10);
-  const firstAttack = c.attacks?.[0];
-  const damageText = String(firstAttack?.damage || "20");
-  const damage = parseInt(damageText.replace(/[^0-9]/g,""),10) || 20;
-  const energyCost = firstAttack?.convertedEnergyCost ??
-    (firstAttack?.cost?.length || 1);
+/* -------------------- DECKLIST IMPORT -------------------- */
+function showExampleDecklist(){
+  const el=$("exampleDeck");
+  el.style.display=el.style.display==="none"?"block":"none";
+}
+function parseDecklist(text){
+  const parsed=[],ignored=[];
+  for(const raw of text.split(/\r?\n/)){
+    const line=raw.trim();
+    if(!line)continue;
+    if(/^(pokemon|pokémon|trainer|trainers|energy|total|deck list|decklist)\s*:?\s*$/i.test(line))continue;
+    if(/^#|^\/\/|^total cards/i.test(line))continue;
+
+    // Typical formats:
+    // 4 Pikachu
+    // 4 Pikachu (MEW) 25
+    // Pikachu x4
+    // 4 Basic Lightning Energy
+    let qty=1,name=line;
+    let m=line.match(/^(\d+)\s*[x×]?\s+(.+)$/i);
+    if(m){qty=parseInt(m[1],10);name=m[2].trim()}
+    else{
+      m=line.match(/^(.+?)\s+[x×]\s*(\d+)$/i);
+      if(m){name=m[1].trim();qty=parseInt(m[2],10)}
+    }
+    if(!Number.isFinite(qty)||qty<1||qty>60){
+      ignored.push(line+" (invalid quantity)");
+      continue;
+    }
+
+    // Strip set code and collector number from standard PTCG-style entries.
+    // Preserve the card name before the first set-code parenthesis.
+    let setCode="",cardNumber="";
+    const setMatch=name.match(/\(([A-Za-z0-9-]+)\)\s*([A-Za-z0-9-]+)?\s*$/);
+    if(setMatch){
+      setCode=setMatch[1].toUpperCase();
+      cardNumber=setMatch[2]||"";
+      name=name.slice(0,setMatch.index).trim();
+    }
+    name=name.replace(/\s+/g," ").trim();
+    if(!name){ignored.push(line+" (could not read card name)");continue}
+    parsed.push({qty,name,setCode,cardNumber,original:line});
+  }
+  return {parsed,ignored};
+}
+function normaliseName(name){
+  return String(name||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+}
+async function findMatchingCard(item){
+  // Exact-name search is preferred to avoid importing a different Pokémon.
+  const q=`name:"${item.name.replace(/["\\]/g,"")}"`;
+  let result;
+  try{
+    result=await apiGet("/cards?q="+encodeURIComponent(q)+"&pageSize=100");
+  }catch{return null}
+  let candidates=result.data||[];
+  if(!candidates.length){
+    try{
+      result=await apiGet("/cards?q="+encodeURIComponent(`name:${item.name.replace(/["\\]/g,"")}`)+"&pageSize=100");
+      candidates=result.data||[];
+    }catch{return null}
+  }
+  if(!candidates.length)return null;
+
+  const wanted=normaliseName(item.name);
+  let matches=candidates.filter(c=>normaliseName(c.name)===wanted);
+  if(!matches.length)matches=candidates;
+  if(item.setCode){
+    const setMatches=matches.filter(c=>
+      (c.set?.ptcgoCode||"").toUpperCase()===item.setCode ||
+      (c.set?.id||"").toUpperCase()===item.setCode ||
+      normaliseName(c.set?.name)===normaliseName(item.setCode)
+    );
+    if(setMatches.length)matches=setMatches;
+  }
+  if(item.cardNumber){
+    const numMatches=matches.filter(c=>String(c.number||"").toUpperCase()===item.cardNumber.toUpperCase());
+    if(numMatches.length)matches=numMatches;
+  }
+  return matches[0]||null;
+}
+async function importDeckFile(){
+  const file=$("deckFile").files[0];
+  const out=$("importResults");
+  if(!file){out.innerHTML='<span class="bad">Choose a .txt decklist file first.</span>';return}
+  if(file.size>1024*1024){out.innerHTML='<span class="bad">Please choose a file smaller than 1 MB.</span>';return}
+  const button=$("importBtn");
+  button.disabled=true;button.textContent="Importing…";
+  out.textContent="Reading decklist…";
+  try{
+    const text=await file.text();
+    const {parsed,ignored}=parseDecklist(text);
+    if(!parsed.length){
+      out.innerHTML='<span class="bad">No card entries were recognised. Check the example format above.</span>';
+      return;
+    }
+
+    const replace=confirm("Import this decklist?\n\nChoose OK to replace your current deck.\nChoose Cancel to add the imported cards to your current deck.");
+    if(replace){deck=[]}
+
+    let imported=0;
+    const matched=[],unmatched=[];
+    for(let i=0;i<parsed.length;i++){
+      const item=parsed[i];
+      out.textContent=`Matching cards ${i+1} of ${parsed.length}: ${item.name}`;
+      const c=await findMatchingCard(item);
+      if(c){
+        cards=mergeCards(cards,[c]);
+        addToDeck(c.id,item.qty,c);
+        imported+=item.qty;
+        matched.push(`${item.qty} × ${c.name}${c.set?.name?" — "+c.set.name:""}`);
+      }else{
+        unmatched.push(`${item.qty} × ${item.name}${item.setCode?" ("+item.setCode+")":""}`);
+      }
+    }
+    renderDeck();
+    const html=[];
+    html.push(`<p><b>Import complete.</b> ${imported} card copies matched.</p>`);
+    if(matched.length)html.push('<p class="ok"><b>Matched:</b><br>'+matched.map(esc).join("<br>")+"</p>");
+    if(unmatched.length)html.push('<p class="bad"><b>Could not match these entries:</b><br>'+unmatched.map(esc).join("<br>")+
+      '<br>Try changing the spelling or checking the set code.</p>');
+    if(ignored.length)html.push('<p class="bad"><b>Skipped lines:</b><br>'+ignored.map(esc).join("<br>")+"</p>");
+    html.push('<p class="notice">Check the imported deck before playing. Some unusual card names, special energy names or set codes may need to be added manually.</p>');
+    out.innerHTML=html.join("");
+    $("deckMessage").textContent=`Imported ${imported} matched card copies.`;
+  }catch(e){
+    out.innerHTML='<span class="bad">Could not read the file: '+esc(e.message)+'</span>';
+  }finally{
+    button.disabled=false;button.textContent="Import decklist";
+  }
+}
+
+/* -------------------- BATTLE SIMULATOR -------------------- */
+function makeBattleCard(c){
+  const hp=parseInt(c.hp,10);
+  const attack=c.attacks?.[0];
+  const damage=parseInt(String(attack?.damage||"20").replace(/[^0-9]/g,""),10)||20;
+  const cost=attack?.convertedEnergyCost??attack?.cost?.length??1;
   return {
-    id:c.id,
-    name:c.name || "Pokémon",
-    image:cardImage(c) || fallbackImage(c.name),
-    hp:Number.isFinite(hp) && hp>0 ? hp : 100,
-    maxHp:Number.isFinite(hp) && hp>0 ? hp : 100,
-    damage:Math.min(300,damage),
-    attack:firstAttack?.name || "Quick Attack",
-    energyCost:Math.max(1,Math.min(5,Number(energyCost)||1)),
-    energy:0,
-    type:c.types?.[0] || "Colorless",
-    source:c
+    id:c.id,name:c.name||"Pokémon",image:cardImage(c)||fallbackImage(c.name),
+    hp:Number.isFinite(hp)&&hp>0?hp:100,
+    damageTaken:0,damage:Math.min(300,damage),
+    attack:attack?.name||"Quick Attack",
+    energyCost:Math.max(1,Math.min(5,Number(cost)||1)),
+    energy:0,type:c.types?.[0]||"Colorless"
   };
 }
-
-function defaultBattlePool() {
-  const eligible=cards.filter(c=>c.supertype==="Pokémon");
-  return eligible.length ? eligible : [];
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
 }
-
-function randomBattleCard(pool) {
-  if (!pool.length) return null;
-  const c=pool[Math.floor(Math.random()*pool.length)];
-  return makeBattleCard(c);
-}
-
-function shuffle(array) {
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
+function startBattle(){
+  const playerPool=deckCardsFlat().filter(c=>c.supertype==="Pokémon");
+  const pool=playerPool.length?playerPool:cards.filter(c=>c.supertype==="Pokémon");
+  if(pool.length<2){
+    $("turnInfo").textContent="Load some Pokémon cards first using Card Explorer.";
+    showPage("cards");return;
   }
-  return array;
-}
-
-function startBattle() {
-  const playerDeck=deckCardsFlat().filter(c=>c.supertype==="Pokémon");
-  let pool=playerDeck.length ? playerDeck : defaultBattlePool();
-  if (!pool.length) {
-    $("turnInfo").textContent="Load some Pokémon cards first using the Card Explorer, then start a battle.";
-    showPage("cards");
-    return;
-  }
-  const opponentPool=defaultBattlePool();
-  if (!opponentPool.length) {
-    $("turnInfo").textContent="Please load Pokémon cards from the catalogue first.";
-    showPage("cards");
-    return;
-  }
-
-  const playerCards=shuffle([...pool]);
-  const aiCards=shuffle([...opponentPool]);
-  const playerActive=makeBattleCard(playerCards[0]);
-  const aiActive=makeBattleCard(aiCards[0]);
-
+  const player=shuffle([...pool]),opponent=shuffle(cards.filter(c=>c.supertype==="Pokémon").slice());
+  const aiPool=opponent.length?opponent:pool;
   battle={
-    player:{active:playerActive,bench:[],prizes:6},
-    ai:{active:aiActive,bench:[],prizes:6},
-    turn:"player",
-    turnNumber:1,
-    energyUsed:false,
-    drew:false,
-    busy:false,
-    over:false,
-    log:[],
-    playerPool:playerCards,
-    aiPool:aiCards
+    player:{active:makeBattleCard(player[0]),bench:[],prizes:6},
+    ai:{active:makeBattleCard(aiPool[0]),bench:[],prizes:6},
+    playerPool:player,aiPool,
+    turn:"player",turnNumber:1,energyUsed:false,busy:false,over:false,log:[]
   };
   addLog("The battle begins! You go first.");
-  addLog("Your active Pokémon is " + playerActive.name + ".");
-  addLog("Opponent's active Pokémon is " + aiActive.name + ".");
-  showPage("battle");
-  renderBattle();
+  addLog("Your Active Pokémon is "+battle.player.active.name+".");
+  addLog("Opponent's Active Pokémon is "+battle.ai.active.name+".");
+  showPage("battle");renderBattle();
 }
-
-function addLog(message) {
-  if (!battle) return;
-  battle.log.unshift(message);
-  battle.log=battle.log.slice(0,35);
+function addLog(message){
+  if(!battle)return;
+  battle.log.unshift(message);battle.log=battle.log.slice(0,30);
 }
-
-function renderPokemonSlot(pokemon, side, isActive) {
-  if (!pokemon) return `
-    <div class="battle-pokemon">
-      <p class="meta">Empty ${isActive ? "Active slot" : "Bench slot"}</p>
-    </div>`;
+function renderPokemonSlot(pokemon,side,isActive){
+  if(!pokemon)return '<div class="battle-pokemon"><p class="meta">Empty bench slot</p></div>';
   const remaining=Math.max(0,pokemon.hp-pokemon.damageTaken);
-  const hpPercent=Math.max(0,remaining/pokemon.hp*100);
-  return `
-    <div class="battle-pokemon">
-      <img src="${esc(pokemon.image)}" alt="${esc(pokemon.name)}"
-        onerror="this.src='${fallbackImage(pokemon.name)}'">
-      <strong>${esc(pokemon.name)} ${isActive?"⭐":""}</strong>
-      <div class="hpbar"><span style="width:${hpPercent}%"></span></div>
-      <div class="meta">${remaining}/${pokemon.hp} HP · ⚡ ${pokemon.energy||0}</div>
-      <div class="meta">${esc(pokemon.type||"Colorless")}</div>
-      ${side==="player" && !isActive ? `<button class="btn small" onclick="promoteBench(${battle.player.bench.indexOf(pokemon)})">Promote</button>`:""}
-    </div>`;
+  const percent=Math.max(0,remaining/pokemon.hp*100);
+  return `<div class="battle-pokemon">
+    <img src="${esc(pokemon.image)}" alt="${esc(pokemon.name)}" onerror="this.onerror=null;this.src='${fallbackImage(pokemon.name)}'">
+    <strong>${esc(pokemon.name)} ${isActive?"⭐":""}</strong>
+    <div class="hpbar"><span style="width:${percent}%"></span></div>
+    <div class="meta">${remaining}/${pokemon.hp} HP · ⚡ ${pokemon.energy}</div>
+    <div class="meta">${esc(pokemon.type)}</div>
+    ${side==="player"&&!isActive?`<button class="btn small" onclick="promoteBench(${battle.player.bench.indexOf(pokemon)})">Promote</button>`:""}
+  </div>`;
 }
-
-function renderBattle() {
+function renderBattle(){
   const area=$("battleArea");
-  if (!battle) {
+  if(!battle){
     area.innerHTML='<div class="panel empty">Press Start new battle to begin.</div>';
     $("turnInfo").textContent="Start a battle to play.";
-    $("endTurnBtn").disabled=true;
-    return;
+    $("endTurnBtn").disabled=true;return;
   }
-  $("endTurnBtn").disabled=battle.over || battle.busy || battle.turn!=="player";
-  $("turnInfo").textContent=battle.over
-    ? (battle.player.prizes<=0 ? "You win!" : "Battle over.")
-    : battle.busy ? "Opponent is taking its turn…"
-    : `Turn ${battle.turnNumber} · ${battle.turn==="player"?"Your turn":"Opponent's turn"}`;
+  $("endTurnBtn").disabled=battle.over||battle.busy||battle.turn!=="player";
+  $("turnInfo").textContent=battle.over?
+    (battle.player.prizes<=0?"You win!":"Battle over."):
+    battle.busy?"Opponent is taking its turn…":
+    `Turn ${battle.turnNumber} · ${battle.turn==="player"?"Your turn":"Opponent's turn"}`;
 
-  const sideHTML=(side,key)=>`
-    <div class="battle-side">
-      <h3><span>${key==="player"?"🧑 Your team":"🤖 Computer"}</span>
-        <span>🏆 ${side.prizes} prizes</span></h3>
-      <p class="notice">Active Pokémon</p>
-      <div class="battle-slots">${renderPokemonSlot(side.active,key,true)}</div>
-      <p class="notice">Bench (${side.bench.length}/5)</p>
-      <div class="battle-slots">${[0,1,2,3,4].map(i=>renderPokemonSlot(side.bench[i],key,false)).join("")}</div>
-    </div>`;
-
-  area.innerHTML=`
-    <div class="battle-board">
-      ${sideHTML(battle.player,"player")}
-      ${sideHTML(battle.ai,"ai")}
+  const sideHTML=(side,key)=>`<div class="battle-side">
+    <h3><span>${key==="player"?"🧑 Your team":"🤖 Computer"}</span><span>🏆 ${side.prizes} prizes</span></h3>
+    <p class="notice">Active Pokémon</p><div class="battle-slots">${renderPokemonSlot(side.active,key,true)}</div>
+    <p class="notice">Bench (${side.bench.length}/5)</p>
+    <div class="battle-slots">${[0,1,2,3,4].map(i=>renderPokemonSlot(side.bench[i],key,false)).join("")}</div>
+  </div>`;
+  const disabled=battle.busy||battle.over||battle.turn!=="player"?"disabled":"";
+  area.innerHTML=`<div class="battle-board">${sideHTML(battle.player,"player")}${sideHTML(battle.ai,"ai")}</div>
+  <div class="panel"><h3>Your actions</h3>
+    <p class="notice">Simplified mechanics: the first attack on each card is used, and one Energy can be attached each turn.</p>
+    <div class="actions">
+      <button class="btn primary" onclick="playerAttack()" ${disabled}>⚔️ Attack</button>
+      <button class="btn" onclick="attachEnergy()" ${disabled}>⚡ Attach Energy</button>
+      <button class="btn" onclick="drawBattlePokemon()" ${disabled}>🃏 Add Pokémon to Bench</button>
+      <button class="btn green" onclick="endPlayerTurn()" ${disabled}>➡️ End Turn</button>
     </div>
-    <div class="panel">
-      <h3>Your actions</h3>
-      <p class="notice">Simplified attacks use the first attack listed for each Pokémon. Energy is simplified to one energy per attachment.</p>
-      <div class="actions">
-        <button class="btn primary" onclick="playerAttack()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>⚔️ Attack</button>
-        <button class="btn" onclick="attachEnergy()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>⚡ Attach Energy</button>
-        <button class="btn" onclick="drawBattlePokemon()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>🃏 Draw Pokémon</button>
-        <button class="btn green" onclick="endPlayerTurn()" ${battle.busy||battle.over||battle.turn!=="player"?"disabled":""}>➡️ End Turn</button>
-      </div>
-    </div>
-    <div class="panel">
-      <h3>Battle log</h3>
-      <div class="log">${battle.log.map(line=>`<p>• ${esc(line)}</p>`).join("")}</div>
-    </div>`;
+  </div>
+  <div class="panel"><h3>Battle log</h3><div class="log">${battle.log.map(x=>`<p>• ${esc(x)}</p>`).join("")}</div></div>`;
 }
-
-function attachEnergy() {
-  if (!battle || battle.over || battle.busy || battle.turn!=="player" || battle.energyUsed) return;
-  battle.player.active.energy=(battle.player.active.energy||0)+1;
-  battle.energyUsed=true;
-  addLog("You attached 1 Energy to " + battle.player.active.name + ".");
-  renderBattle();
+function attachEnergy(){
+  if(!battle||battle.over||battle.busy||battle.turn!=="player"||battle.energyUsed)return;
+  battle.player.active.energy++;battle.energyUsed=true;
+  addLog("You attached Energy to "+battle.player.active.name+".");renderBattle();
 }
-
-function drawBattlePokemon() {
-  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
-  if (battle.player.bench.length>=5) {
-    addLog("Your Bench is full.");
-    renderBattle();
-    return;
-  }
-  const next=randomBattleCard(battle.playerPool);
-  if (!next) {
-    addLog("No more Pokémon available to draw.");
-    renderBattle();
-    return;
-  }
-  battle.player.bench.push(next);
-  addLog("You put " + next.name + " on your Bench.");
-  renderBattle();
+function drawBattlePokemon(){
+  if(!battle||battle.over||battle.busy||battle.turn!=="player")return;
+  if(battle.player.bench.length>=5){addLog("Your Bench is full.");renderBattle();return}
+  const candidates=battle.playerPool.filter(c=>c.id!==battle.player.active.id);
+  if(!candidates.length){addLog("No other Pokémon are available.");renderBattle();return}
+  const c=candidates[Math.floor(Math.random()*candidates.length)];
+  battle.player.bench.push(makeBattleCard(c));
+  addLog("You put "+c.name+" on your Bench.");renderBattle();
 }
-
-function promoteBench(index) {
-  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
-  const chosen=battle.player.bench[index];
-  if (!chosen) return;
-  battle.player.bench.splice(index,1);
-  battle.player.bench.push(battle.player.active);
-  battle.player.active=chosen;
-  addLog("You promoted " + chosen.name + " to Active Pokémon.");
-  renderBattle();
+function promoteBench(index){
+  if(!battle||battle.over||battle.busy||battle.turn!=="player")return;
+  const c=battle.player.bench[index];if(!c)return;
+  battle.player.bench.splice(index,1);battle.player.bench.push(battle.player.active);
+  battle.player.active=c;addLog("You promoted "+c.name+".");renderBattle();
 }
-
-function knockOut(sideKey) {
-  const side=battle[sideKey];
-  const defeated=side.active;
-  const winnerKey=sideKey==="player"?"ai":"player";
-  const winner=battle[winnerKey];
-  addLog(defeated.name + " was knocked out!");
+function knockOut(sideKey){
+  const side=battle[sideKey],winner=battle[sideKey==="player"?"ai":"player"];
+  addLog(side.active.name+" was knocked out!");
   winner.prizes=Math.max(0,winner.prizes-1);
-  addLog((winnerKey==="player"?"You take":"Opponent takes")+" a Prize card.");
-  if (winner.prizes<=0) {
-    battle.over=true;
-    addLog(winnerKey==="player"?"🎉 You win the battle!":"The computer wins this battle.");
-    return;
-  }
-  const bench=side.bench.shift();
-  if (bench) {
-    side.active=bench;
-    addLog(sideKey==="player"?"You promote "+bench.name+".":"Opponent promotes "+bench.name+".");
-  } else {
-    battle.over=true;
-    addLog(sideKey==="player"?"You have no Pokémon left. You lose!":"The opponent has no Pokémon left. You win!");
-  }
+  addLog((sideKey==="player"?"Opponent takes":"You take")+" a Prize card.");
+  if(winner.prizes<=0){battle.over=true;addLog(sideKey==="player"?"Opponent wins!":"🎉 You win!");return}
+  const next=side.bench.shift();
+  if(next){side.active=next;addLog((sideKey==="player"?"You":"Opponent")+" promote "+next.name+".")}
+  else{battle.over=true;addLog(sideKey==="player"?"You have no Pokémon left.":"Opponent has no Pokémon left.")}
 }
-
-function playerAttack() {
-  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
-  const attacker=battle.player.active;
-  const defender=battle.ai.active;
-  if ((attacker.energy||0)<attacker.energyCost) {
-    addLog(`${attacker.name} needs ${attacker.energyCost} Energy to attack.`);
-    renderBattle();
-    return;
-  }
-  attacker.energy-=attacker.energyCost;
-  defender.damageTaken=(defender.damageTaken||0)+attacker.damage;
-  addLog(`${attacker.name} used ${attacker.attack} for ${attacker.damage} damage!`);
-  if (defender.damageTaken>=defender.hp) knockOut("ai");
-  if (battle.over) {
-    renderBattle();
-    return;
-  }
-  battle.busy=true;
-  renderBattle();
-  setTimeout(aiTurn,700);
+function playerAttack(){
+  if(!battle||battle.over||battle.busy||battle.turn!=="player")return;
+  const a=battle.player.active,d=battle.ai.active;
+  if(a.energy<a.energyCost){addLog(`${a.name} needs ${a.energyCost} Energy to attack.`);renderBattle();return}
+  a.energy-=a.energyCost;d.damageTaken+=a.damage;
+  addLog(`${a.name} used ${a.attack} for ${a.damage} damage!`);
+  if(d.damageTaken>=d.hp)knockOut("ai");
+  if(battle.over){renderBattle();return}
+  battle.busy=true;renderBattle();setTimeout(aiTurn,700);
 }
-
-function endPlayerTurn() {
-  if (!battle || battle.over || battle.busy || battle.turn!=="player") return;
-  battle.busy=true;
-  addLog("You ended your turn.");
-  renderBattle();
-  setTimeout(aiTurn,350);
+function endPlayerTurn(){
+  if(!battle||battle.over||battle.busy||battle.turn!=="player")return;
+  battle.busy=true;addLog("You ended your turn.");renderBattle();setTimeout(aiTurn,350);
 }
-
-function aiTurn() {
-  if (!battle || battle.over) return;
-  battle.turn="ai";
-  renderBattle();
-
-  const ai=battle.ai;
-  const player=battle.player;
-
-  if (ai.bench.length<5 && Math.random()<0.75) {
-    const next=randomBattleCard(battle.aiPool);
-    if (next) {
-      ai.bench.push(next);
-      addLog("Opponent put "+next.name+" on the Bench.");
+function aiTurn(){
+  if(!battle||battle.over)return;
+  battle.turn="ai";renderBattle();
+  const ai=battle.ai,player=battle.player;
+  if(ai.bench.length<5&&Math.random()<0.7){
+    const choices=aiPoolCards();
+    if(choices.length){
+      const c=choices[Math.floor(Math.random()*choices.length)];
+      ai.bench.push(makeBattleCard(c));addLog("Opponent put "+c.name+" on the Bench.");
     }
   }
-
-  ai.active.energy=(ai.active.energy||0)+1;
+  ai.active.energy++;
   addLog("Opponent attached Energy to "+ai.active.name+".");
-
-  if ((ai.active.energy||0)>=ai.active.energyCost) {
+  if(ai.active.energy>=ai.active.energyCost){
     ai.active.energy-=ai.active.energyCost;
-    player.active.damageTaken=(player.active.damageTaken||0)+ai.active.damage;
-    addLog("Opponent's "+ai.active.name+" used "+ai.active.attack+
-      " for "+ai.active.damage+" damage!");
-    if (player.active.damageTaken>=player.active.hp) knockOut("player");
-  } else {
-    addLog("Opponent is preparing an attack.");
-  }
+    player.active.damageTaken+=ai.active.damage;
+    addLog(`Opponent's ${ai.active.name} used ${ai.active.attack} for ${ai.active.damage} damage!`);
+    if(player.active.damageTaken>=player.active.hp)knockOut("player");
+  }else addLog("Opponent is preparing an attack.");
 
-  if (!battle.over) {
-    battle.turnNumber++;
-    battle.turn="player";
-    battle.energyUsed=false;
-    battle.drew=false;
-    battle.busy=false;
-    addLog("Your turn. Attach Energy, attack, or end your turn.");
-  } else {
-    battle.busy=false;
-  }
+  if(!battle.over){
+    battle.turnNumber++;battle.turn="player";battle.energyUsed=false;battle.busy=false;
+    addLog("Your turn! Attach Energy, attack, or end your turn.");
+  }else battle.busy=false;
   renderBattle();
 }
+function aiPoolCards(){
+  return battle.aiPool.filter(c=>c.id!==battle.ai.active.id);
+}
 
-/* Initialise the site */
-async function init() {
-  $("savedCount").textContent=savedCards.size;
-  saveDeck();
-  renderDeck();
+/* Start the catalogue and restore the saved deck. */
+async function init(){
+  saveDeck();renderDeck();
   await loadSets();
   await searchCards();
 }
